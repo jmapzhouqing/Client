@@ -25,7 +25,7 @@ public class LogHandler : ILogHandler
         writer.WriteLine(builder);
         writer.Flush();
 
-        UnityLogHandler.LogFormat(logType, context, format, args);
+        //UnityLogHandler.LogFormat(logType, context, format, args);
     }
 
     public void LogException(Exception exception, UnityEngine.Object context){

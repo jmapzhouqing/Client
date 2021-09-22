@@ -56,5 +56,13 @@ namespace Scanner.Serial
                 communication.StartReceiveData(delay);
             }
         }
+
+        public void StopReceiveData()
+        {
+            if (communication != null)
+            {
+                communication.StopReceiveData();
+            }
+        }
     }
 }

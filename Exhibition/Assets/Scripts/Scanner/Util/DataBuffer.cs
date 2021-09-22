@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading;
 using System.Net.Sockets;
 
+using UnityEngine;
+
 namespace Scanner.Util
 {
     class DataBuffer
@@ -15,7 +17,7 @@ namespace Scanner.Util
 
         private SocketType data_type;
 
-        private readonly Object locker = new Object();
+        private readonly System.Object locker = new System.Object();
 
         private KMPSearch<byte> start_pattern;
         private KMPSearch<byte> end_pattern;
@@ -164,6 +166,7 @@ namespace Scanner.Util
             try
             {
                 Monitor.Enter(locker);
+                
                 byte[] result = null;
 
                 while (data_queue.Count == 0){
@@ -176,11 +179,16 @@ namespace Scanner.Util
                         result = this.PopData(0, length);
                     }
                 }
+
+               
+
                 return result;
             }
             finally
             {
+                
                 Monitor.Exit(locker);
+
             }
         }
 

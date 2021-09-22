@@ -33,7 +33,6 @@ namespace Scanner.Scanister
 
             }
         }
-        protected override void StatusHandler(bool connected) { }
 
         public override void SearchData() { }
 

@@ -62,6 +62,7 @@ namespace Scanner.Scanister
             }
         }
 
+        /*
         protected override void StatusHandler(bool connected){
             if(connected){
                 System.Threading.Thread.Sleep(100);
@@ -69,7 +70,7 @@ namespace Scanner.Scanister
             }else{
 
             }
-        }
+        }*/
 
         public override void SearchData(){
             byte[] data = null;
@@ -164,8 +165,6 @@ namespace Scanner.Scanister
         }
 
         public void LMDscandataProcess(string[] fields){
-            datacheng(receive_size++);
-
             int index = 0;
             int length = fields.Length;
 

@@ -97,12 +97,12 @@ namespace Scanner.Livox
 
         public override void Connect(){
             command_client = new Client();
-            command_client.DataReceiveHandler += ReceiveCommandData;
+            command_client.DataReceived += ReceiveCommandData;
             command_client.Connect(this.remote_address, this.command_address, ProtocolType.Udp);
 
 
             data_client = new Client();
-            data_client.DataReceiveHandler += ReceivePointCloud;
+            data_client.DataReceived += ReceivePointCloud;
             data_client.Connect(this.remote_address, this.data_address, ProtocolType.Udp);
 
             this.StartCommandDealTask(100);
@@ -342,11 +342,6 @@ namespace Scanner.Livox
         }
 
         protected override void start_scan_data()
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void StatusHandler(bool connected)
         {
             throw new NotImplementedException();
         }

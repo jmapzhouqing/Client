@@ -134,7 +134,7 @@ namespace Scanner.Communicate
 
             if (args.BytesTransferred > 0)
             {
-                this.OnData(args.Buffer, args.Offset, args.BytesTransferred,args.RemoteEndPoint as IPEndPoint);
+                this.OnDataReceived(args.Buffer, args.Offset, args.BytesTransferred,args.RemoteEndPoint as IPEndPoint);
             }
 
             bool willRaiseEvent = socket.ReceiveAsync(args);

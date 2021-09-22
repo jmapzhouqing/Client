@@ -78,23 +78,21 @@ namespace Scanner.Communicate
 
                 bool willRaiseEvent = false;
 
-                if (this.protocol.Equals(ProtocolType.Udp))
-                {
+                if (this.protocol.Equals(ProtocolType.Udp)){
                     receive_args.RemoteEndPoint = server_address;
                     willRaiseEvent = socket.ReceiveFromAsync(receive_args);
                     if (!willRaiseEvent){
                         this.ProcessReceive(receive_args);
                     }
-                }else{
+                }else if(this.protocol.Equals(ProtocolType.Tcp)){
                     connect_args.RemoteEndPoint = server_address;
                     willRaiseEvent = socket.ConnectAsync(connect_args);
-                    if (!willRaiseEvent)
-                    {
+                    if(!willRaiseEvent){
                         this.ProcessConnect(connect_args);
                     }
                 }
 
-
+                this.StartHeart();
             }
             catch (Exception e) {
                 Console.WriteLine(e.Message);
@@ -175,10 +173,8 @@ namespace Scanner.Communicate
 
         private void ProcessReceive(SocketAsyncEventArgs args){
             if (args.SocketError == SocketError.Success){
-
-                if (args.BytesTransferred > 0)
-                {
-                    this.OnData(args.Buffer, args.Offset, args.BytesTransferred,args.RemoteEndPoint as IPEndPoint);
+                if (args.BytesTransferred > 0){
+                    this.OnDataReceived(args.Buffer, args.Offset, args.BytesTransferred,args.RemoteEndPoint as IPEndPoint);
                 }
 
                 bool willRaiseEvent = false;

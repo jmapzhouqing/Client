@@ -257,3 +257,4 @@ E:\Git\Scanner\Exhibition\Temp\bin\Debug\LitJson.dll
 E:\Git\Scanner\Exhibition\Temp\bin\Debug\DemiLib.xml
 E:\Git\Scanner\Exhibition\Temp\bin\Debug\DOTween.xml
 E:\Git\Scanner\Exhibition\Temp\bin\Debug\Newtonsoft.Json.dll
+E:\Git\Scanner\Exhibition\Temp\bin\Debug\HslCommunication.dll

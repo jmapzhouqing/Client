@@ -60,7 +60,7 @@ namespace Scanner.Livox
 
         public void Connect() {
             this.client = new Client();
-            this.client.DataReceiveHandler += this.ReceiveData;
+            this.client.DataReceived += this.ReceiveData;
 
             this.StartDataDealTask(100);
             this.client.Connect(this.server_address, this.client_address, this.protocol);

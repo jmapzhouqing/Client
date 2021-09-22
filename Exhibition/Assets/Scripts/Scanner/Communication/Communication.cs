@@ -20,11 +20,13 @@ namespace Scanner.Communicate
 
         protected IPEndPoint client_address;
 
-        public delegate void data_receive_handle(byte[] buff,int offset,int length);
-        public delegate void status_handle(bool status);
+        public delegate void DataReceiveHandle(byte[] buff,int offset,int length);
+        public delegate void StatusChangedHandle(int status);
+        public delegate void ErrorHandle(Exception exception);
 
-        public event data_receive_handle DataReceiveHandler;
-        public event status_handle StatusHandler;
+        public event DataReceiveHandle DataReceived;
+        public event StatusChangedHandle StatusChanged;
+        public event ErrorHandle Error;
 
         public bool IsConnected {
             get {
@@ -33,7 +35,7 @@ namespace Scanner.Communicate
             set {
                 if (this.connected != value) {
                     this.connected = value;
-                    this.OnStatus(value);
+                    //this.OnStatus(value);
                 }
             }
         }
@@ -42,24 +44,35 @@ namespace Scanner.Communicate
 
         public abstract void DisConnect();
 
-
         public abstract void SendData(byte[] data);
 
         public virtual void ReceiveData() { }
 
-        public virtual void StartHeart() { }
+        public virtual void StartHeart() {
 
-        protected void OnData(byte[] buffer,int offset,int length,IPEndPoint remote_address)
+        }
+
+        public virtual void StopHeart() {
+
+        }
+
+        protected void OnDataReceived(byte[] buffer,int offset,int length,IPEndPoint remote_address)
         {
             this.server_address = remote_address;
-            if (this.DataReceiveHandler != null) {
-                this.DataReceiveHandler(buffer,offset,length);
+            if(this.DataReceived != null){
+                this.DataReceived(buffer,offset,length);
             }
         }
 
-        protected void OnStatus(bool status) {
-            if (this.StatusHandler != null) {
-                this.StatusHandler(status);
+        protected void OnStatusChanged(int status) {
+            if (this.StatusChanged != null) {
+                this.StatusChanged(status);
+            }
+        }
+
+        protected void OnError(Exception exception){
+            if (this.Error != null) {
+                this.Error(exception);
             }
         }
     }

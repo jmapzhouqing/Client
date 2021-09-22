@@ -1,18 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System;
 
-public class ExceptionHandler : MonoBehaviour
-{
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+public class ExceptionHandler:Exception{
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

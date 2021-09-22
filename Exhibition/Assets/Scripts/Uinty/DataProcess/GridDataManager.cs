@@ -79,6 +79,8 @@ public class GridDataManager : MonoBehaviour{
             update_vertices.Clear();
             Monitor.Pulse(update_vertices);
 
+
+            //bug.Log(vertices.Count);
             foreach (CoordinateIndex index in vertices)
             {
                 UpdateCoalYard(index.x,index.z);
@@ -371,7 +373,7 @@ public class GridDataManager : MonoBehaviour{
 
             need_update.Add(new CoordinateIndex(x,z));
         }
-
+        //Debug.Log(need_update.Count);
         this.UpdateCoalYard(need_update);
     }
 

@@ -38,13 +38,11 @@ namespace Scanner.Serial
         }
 
         public WIT(String name, Int32 baud_rate,Parity parity = Parity.None, Int32 data_bits = 8, StopBits stop_bits = StopBits.One):base(name,baud_rate,parity,data_bits,stop_bits) {
-            cancel_source = new CancellationTokenSource();
-            cancel_token = cancel_source.Token;
+            
         }
 
         public override void DataProcess(byte[] data,int length){
-
-            Debug.Log("Enter");
+            //Debug.Log("Enter");
             int pos = length - 2;
             UInt16 value = DataConvert.GetNumberFromBuffer<UInt16>(data,ref pos);
             int crc = DataConvert.CaculateModbusCRC(data, 0, length - 2);
@@ -54,11 +52,16 @@ namespace Scanner.Serial
         }
 
         public override void Close() {
+            if (cancel_source != null){
+                cancel_source.Cancel();
+            }
             base.Close();
-            cancel_source.Cancel();
         }
 
         public void StartReadData(int delay){
+            cancel_source = new CancellationTokenSource();
+            cancel_token = cancel_source.Token;
+
             send_task = new Task(async()=>{
                 while (true) {
                     if(cancel_token.IsCancellationRequested){
@@ -69,8 +72,13 @@ namespace Scanner.Serial
                 }
             });
             send_task.Start();
-
             this.StartReceiveData(delay);
+        }
+
+        public void StopReadData() {
+            if(cancel_source != null){
+                cancel_source.Cancel();
+            }
         }
 
         public void ReadData() {

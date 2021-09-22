@@ -35,10 +35,6 @@ namespace Scanner.Serial
         public SerialCommunication(String name, Int32 baud_rate, Parity parity = Parity.None, Int32 data_bits = 8, StopBits stop_bits = StopBits.One)
         {
             try{
-
-                cancel_source = new CancellationTokenSource();
-                cancel_token = cancel_source.Token;
-
                 port = new SerialPort(name, baud_rate, parity, data_bits, stop_bits);
                 port.ReadTimeout = 5000;
                 port.ErrorReceived += SerialPort_ErrorReceived;
@@ -51,13 +47,16 @@ namespace Scanner.Serial
         }
 
         public void StartReceiveData(int delay) {
+            cancel_source = new CancellationTokenSource();
+            cancel_token = cancel_source.Token;
+
             read_task = new Task(() => {
                 ReadDataAsync(delay);
             });
             read_task.Start();
         }
 
-        public void StopReadData() {
+        public void StopReceiveData() {
             if (cancel_source != null) {
                 cancel_source.Cancel();
             }
@@ -74,7 +73,7 @@ namespace Scanner.Serial
         }
 
         public void Close() {
-            this.StopReadData();
+            this.StopReceiveData();
             if (port != null && port.IsOpen) {
                 port.Close();
                 port.Dispose();

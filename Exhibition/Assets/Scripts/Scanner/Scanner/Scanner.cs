@@ -36,27 +36,13 @@ namespace Scanner.Scanister
 
         public int receive_size = 0;
 
-        public delegate void size_change(int data);
+        public delegate void DataDecodeCompleteHandle(List<RayInfo> rays);
+        public delegate void StatusChangedHandle(int status);
+        public delegate void ErrorHandle(Exception exception);
 
-        public size_change datacheng;
-
-        public float Rotation {
-            get {
-                return this.rotation;
-            }
-            set {
-                if (this.rotation != value){
-                    encoder_run = true;
-                    timer.Stop();
-                    timer.Start();
-                }
-                this.rotation = value;
-            }
-        }
-
-        public delegate void data_transform_handle(List<RayInfo> rays);
-
-        public event data_transform_handle DataTransform;
+        public event DataDecodeCompleteHandle DataDecodeComplete;
+        public event StatusChangedHandle StatusChanged;
+        public event ErrorHandle Error;
 
         protected virtual void OnTimedEvent(object source, ElapsedEventArgs e){
             encoder_run = false;
@@ -70,13 +56,17 @@ namespace Scanner.Scanister
 
         public virtual void Connect(){
             communication = new Client();
-            communication.DataReceiveHandler += ReceiveData;
-            communication.StatusHandler += StatusHandler;
+            communication.DataReceived += ReceiveData;
+            communication.StatusChanged += this.OnStatusChanged;
+            communication.Error += this.OnError;
+
             communication.Connect(this.end_point,this.self_end_point,this.protocol);
         }
 
         public virtual void DisConnect(){
-            communication.DisConnect();
+            if (communication != null){
+                communication.DisConnect();
+            }
         }
         public virtual void SendData(byte[] data) {
             this.communication.SendData(data);
@@ -93,8 +83,6 @@ namespace Scanner.Scanister
         public virtual void Stop(){
             this.stop_scan();
         }
-
-        protected abstract void StatusHandler(bool connected);
 
         public abstract void SearchData();
 
@@ -123,7 +111,7 @@ namespace Scanner.Scanister
 
         #endregion
 
-        protected virtual void StartDataDealTask(int delay){
+        protected virtual void StartProcessData(int delay){
             deal_data_token_source = new CancellationTokenSource();
             deal_data_token = deal_data_token_source.Token;
 
@@ -142,25 +130,37 @@ namespace Scanner.Scanister
             deal_data_task.Start();
         }
 
-        protected virtual void StopDataDealTask(){
+        protected virtual void StopProcessData(){
             if (deal_data_token_source != null) {
                 deal_data_token_source.Cancel();
             }
         }
 
-        protected void OnDataTransform(List<RayInfo> rays){
-            if (this.DataTransform != null){
-                this.DataTransform(rays);
+        protected void OnDataDecodeComplete(List<RayInfo> rays){
+            if (this.DataDecodeComplete != null){
+                this.DataDecodeComplete(rays);
+            }
+        }
+
+        protected void OnStatusChanged(int status)
+        {
+            if (this.StatusChanged != null)
+            {
+                this.StatusChanged(status);
+            }
+        }
+
+        protected void OnError(Exception exception){
+            if (this.Error != null){
+                this.Error(exception);
             }
         }
 
         public virtual void Close() {
             this.stop_scan_data();
             this.stop_scan();
-            this.StopDataDealTask();
-            if (communication != null) {
-                communication.DisConnect();
-            }
+            this.StopProcessData();
+            this.DisConnect();
         }
     }
 }

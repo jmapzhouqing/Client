@@ -35,10 +35,8 @@ namespace Scanner.Scanister
         public override void Connect()
         {
             base.Connect();
-            this.StartDataDealTask(100);
+            this.StartProcessData(100);
         }
-
-        protected override void StatusHandler(bool connected) { }
 
         public override void SearchData() { }
 

@@ -47,15 +47,8 @@ namespace Scanner.Scanister
         }
 
         public override void Connect() {
-            this.communication = new Client();
-            this.communication.DataReceiveHandler += this.ReceiveData;
-
-            this.StartDataDealTask(100);
-            this.communication.Connect(this.end_point,this.self_end_point,this.protocol);
-        }
-
-        protected override void StatusHandler(bool connected){
-
+            this.StartProcessData(100);
+            base.Connect();
         }
 
         public override void SearchData(){
@@ -187,8 +180,6 @@ namespace Scanner.Scanister
 
             UInt32 time_stamp = fields[2];
 
-            //Console.WriteLine("{0},{1}", time_stamp, DateTime.UtcNow.Ticks / 10000);
-
             float scan_start_dir = fields[3]/1000.0f;
             float scan_angle = fields[4]/1000.0f;
 
@@ -216,7 +207,7 @@ namespace Scanner.Scanister
                 rays.Add(info);
             }
 
-            this.OnDataTransform(rays);
+            this.OnDataDecodeComplete(rays);
         }
 
         private void StartReceiveScanDataTask() {

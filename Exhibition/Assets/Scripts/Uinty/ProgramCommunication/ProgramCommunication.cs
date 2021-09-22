@@ -14,12 +14,13 @@ public class ProgramCommunication : MonoBehaviour
     private IPEndPoint client_address;
 
     void Start(){
+        /*
         server_address = new IPEndPoint(IPAddress.Parse(""), 0);
         client_address = new IPEndPoint(IPAddress.Any, 0);
 
         client = new Client();
         client.DataReceiveHandler += DataReceive;
-        client.Connect(server_address, client_address, ProtocolType.Tcp);
+        client.Connect(server_address, client_address, ProtocolType.Tcp);*/
     }
 
     public void DataReceive(byte[] buff, int offset, int length){
