@@ -7,10 +7,13 @@ using System.Threading;
 
 using System.IO.Ports;
 
+using System.Net;
+
 using Scanner.Serial;
 using Scanner.Scanister;
 using Scanner.Struct;
 using Scanner.Holder;
+using Scanner.Communicate;
 
 using System.Net.Sockets;
 
@@ -18,9 +21,11 @@ public class ScannerPoint : MonoBehaviour
 {
     private WIT wit;
     //private 
-    private Triple triple;
+    private Scanner.Scanister.Scanner triple;
 
     private Holder holder;
+
+    private Client client;
 
     GridDataManager grid_data_manager;
 
@@ -32,25 +37,40 @@ public class ScannerPoint : MonoBehaviour
     }
     // Start is called before the first frame update
     void Start(){
-        //wit = new WIT("COM4", 9600);
-        //wit.Open();
+        /*wit = new WIT("COM4", 9600);
+        wit.Open();*/
 
-        LoggerInfo.Log(typeof(ScannerPoint), "Error", this.transform);
+        //LoggerInfo.Log(typeof(ScannerPoint), "Error", this.transform);
+
+        
+        /*
+        client = new Client();
+
+        IPEndPoint server_address = new IPEndPoint(IPAddress.Parse("192.168.90.247"), 1024);
+        IPEndPoint client_address = new IPEndPoint(IPAddress.Any,0);
+
+        client.StatusChanged += StatusChanged;
+        client.Error += OnError;
+
+        client.Connect(server_address, client_address, ProtocolType.Udp);*/
 
 
-        triple = new Triple("192.168.90.247", 1024, ProtocolType.Udp);
-        triple.DataDecodeComplete += DataTransform;
-        triple.Connect();
+        //triple = new Triple("192.168.90.247", 1024, ProtocolType.Udp);
+        //triple.DataDecodeComplete += DataTransform;
+        //triple.Connect();
 
+        /*
         holder = new Holder("COM2", 4800);
-        holder.Open();
+        holder.Open();*/
 
         //holder.HorizontalScan();
+
+        
+
     }
 
     public void DataTransform(List<RayInfo> rays){
-        try
-        {
+        try{
             Vector3 scanner_line_dir = -1 * Vector3.right;
             Vector3 scanner_rotate_dir = -1 * Vector3.up;
             Vector3 scanner_line_rotate_dir = Vector3.forward;
@@ -70,8 +90,6 @@ public class ScannerPoint : MonoBehaviour
 
                 origin = matrix.MultiplyPoint(scanner_line_dir * info.distance);
 
-                //Debug.Log(wit.Rotation);
-
                 Vector3 rotation = wit.Rotation;
 
                 quaternion = Quaternion.Euler(rotation.x, -1 * holder.horizontal, rotation.y);
@@ -81,7 +99,7 @@ public class ScannerPoint : MonoBehaviour
 
                 vertices.Add(origin);
             }
-            //Debug.Log("Enter:"+vertices.Count);
+
             grid_data_manager.UpdateGridData(vertices);
         }
         catch (Exception e) {
@@ -90,32 +108,32 @@ public class ScannerPoint : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
-    {
-        
+    void Update(){
+
     }
 
     public void StartDevice() {
         CoalDumpInfo info = new CoalDumpInfo();
-        info.vertices = new List<Vector2> { new Vector2(0, 0), new Vector2(100, 0), new Vector2(100, 100), new Vector2(0, 100) };
+        info.vertices = new List<Vector2>{new Vector2(0, 0), new Vector2(100, 0), new Vector2(100, 100), new Vector2(0, 100) };
 
-        grid_data_manager.CreateCoalDump(new List<CoalDumpInfo> { info });
+        grid_data_manager.CreateCoalDump(new List<CoalDumpInfo>{info});
 
-
-        //wit.StartReadData(10);
+        wit.StartReadData(10);
         triple.Start();
         holder.StartScan(1, 359);
     }
 
-    private void OnGUI()
-    {
+    private void OnGUI(){
         if(GUI.Button(new Rect(0, 0, 100, 60), "Click")){
-            this.StartDevice();
+            //this.StartDevice();
+            client.SendData(new byte[] {0x00});
+
+            //triple.Start();
         }
     }
 
     private void StopDevice(){
-
+        
     }
 
     private void OnDisable()
@@ -132,21 +150,23 @@ public class ScannerPoint : MonoBehaviour
         if (holder != null) {
             holder.Close();
         }
-    }
 
-    void OnApplicationQuit(){
-        
-        if (wit != null) {
-            Debug.Log("Quit");
-            wit.Close();
+        if (client != null) {
+            client.DisConnect();
         }
     }
 
     private void OnApplicationPause(bool pause)
     {
-        if (wit != null)
-        {
-            wit.Close();
-        }
+       
+    }
+
+    private void StatusChanged(DeviceStatus status) {
+        Debug.Log("状态改变");
+    }
+
+    private void OnError(ExceptionHandler handler) {
+        //Debug.Log(handler.GetExceptionCode());
+        Debug.Log(handler.Message);
     }
 }

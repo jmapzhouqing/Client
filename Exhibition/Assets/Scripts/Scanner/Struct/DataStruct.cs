@@ -45,8 +45,11 @@ namespace Scanner.Struct
         public UInt16 amount_data;
     }
 
-    public struct ScannerSector {
-        public float rotation;
+    public struct ScannerSector{
+        public float yaw;
+        public float pitch;
+        public float roll;
+        public float distance;
         public List<RayInfo> rays;
     }
 

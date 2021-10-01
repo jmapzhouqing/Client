@@ -14,15 +14,13 @@ namespace Scanner.Scanister
     class GL: Scanner
     {
         private Dictionary<int, Action<List<UInt32>>> reply_process;
-        public GL(string ip, int port, ProtocolType protocol){
+        public GL(string name,string ip, int port, ProtocolType protocol):base(name){
             try
             {
                 reply_process = new Dictionary<int, Action<List<UInt32>>>();
                 data_buffer = new DataBuffer(102400, SocketType.Dgram);
                 this.end_point = new IPEndPoint(IPAddress.Parse(ip), port);
                 this.protocol = protocol;
-
-                sectors = new RecvQueue<ScannerSector>();
 
                 //reply_process.Add("SCAN", MeasurementStatusProcess);
                 //reply_process.Add("GSCN", ScandataProcess);
@@ -34,7 +32,7 @@ namespace Scanner.Scanister
             }
         }
 
-        public override void SearchData() { }
+        //public override void SearchData() { }
 
         #region 设备参数
         public override void GetDeviceInfo() { }

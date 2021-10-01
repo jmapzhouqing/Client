@@ -9,20 +9,18 @@ using System.Net.Sockets;
 using System.Threading;
 using UnityEngine;
 
-namespace Scanner.Scanister
-{
+namespace Scanner.Scanister{
     class Triple : Scanner {
         private Dictionary<string, Action<List<UInt32>>> reply_process;
 
         private CancellationTokenSource get_scan_token_source;
         private CancellationToken get_scan_token;
 
-       
         private Task get_data_task;
 
         private long start_time_stamp;
 
-        public Triple(string ip,int port,ProtocolType protocol) {
+        public Triple(string name,string ip,int port,ProtocolType protocol):base(name) {
             try{
                 reply_process = new Dictionary<string, Action<List<UInt32>>>();
 
@@ -31,11 +29,8 @@ namespace Scanner.Scanister
                 this.end_point = new IPEndPoint(IPAddress.Parse(ip), port);
                 this.protocol = protocol;
 
-                sectors = new RecvQueue<ScannerSector>();
-
                 reply_process.Add("SCAN", MeasurementStatusProcess);
                 reply_process.Add("GSCN", ScandataProcess);
-
             }catch (Exception e) {
 
             }
@@ -51,13 +46,10 @@ namespace Scanner.Scanister
             base.Connect();
         }
 
+        /*
         public override void SearchData(){
-            byte[] data = null;
-            while ((data = data_buffer.SearchData()) != null)
-            {
-                this.ProcessData(data);
-            }
-        }
+           
+        }*/
 
         #region 设备参数
         public override void GetDeviceInfo() {
@@ -94,7 +86,28 @@ namespace Scanner.Scanister
         }
 
         protected override void start_scan_data(){
+            get_scan_token_source = new CancellationTokenSource();
+            get_scan_token = get_scan_token_source.Token;
+            get_data_task = new Task(async () => {
+                while (true)
+                {
+                    if (get_scan_token.IsCancellationRequested)
+                    {
+                        return;
+                    }
+                    this.get_latest_scan();
+                    await Task.Delay(10);
+                }
+            });
+            get_data_task.Start();
+        }
 
+        protected override void stop_scan_data()
+        {
+            if (get_scan_token_source != null)
+            {
+                get_scan_token_source.Cancel();
+            }
         }
 
         protected virtual void get_latest_scan(){
@@ -108,19 +121,12 @@ namespace Scanner.Scanister
             this.SendData(list.ToArray());
         }
 
-        protected override void stop_scan_data(){
-
-        }
-
         public override byte[] CommandConstruct(string command){
             return null;
         }
 
-        public override void DisConnect(){
-
-        }
-
         public override void ProcessData(byte[] data){
+
             int pos = data.Length - 4;
 
             UInt32 crc_value = DataConvert.GetNumberFromBuffer<UInt32>(data, ref pos);
@@ -128,8 +134,7 @@ namespace Scanner.Scanister
             CRC32 crc = new CRC32();
             UInt32 calc_value = crc.get(data, data.Length - 4);
 
-            if (crc_value == calc_value)
-            {
+            if (crc_value == calc_value){
                 pos = 0;
                 string resCode = DataConvert.GetStringFromBuffer(data, ref pos, 4);
                 UInt32 data_length = DataConvert.GetNumberFromBuffer<UInt32>(data, ref pos);
@@ -160,11 +165,11 @@ namespace Scanner.Scanister
         public void MeasurementStatusProcess(List<UInt32> fields){
             bool status = Convert.ToBoolean(fields[0]);
             if (status){
-                start_time_stamp = DateTime.UtcNow.Ticks / 10000;
-                this.StartReceiveScanDataTask();
+                start_time_stamp = DateTime.UtcNow.Ticks/10000;
+                this.start_scan_data();
             }
             else {
-                this.StopReceiveScanDataTask();
+                this.stop_scan_data();
             }
         }
 
@@ -196,7 +201,6 @@ namespace Scanner.Scanister
             List<RayInfo> rays = new List<RayInfo>();
 
             for (int i = 0; i < points_number; i++){
-
                 if (fields[param_number + 2 + split * i] > 400 * 10000) {
                     continue;
                 }
@@ -206,29 +210,15 @@ namespace Scanner.Scanister
                 info.degree = scan_start_dir + i * 0.09f;
                 rays.Add(info);
             }
-
             this.OnDataDecodeComplete(rays);
         }
 
-        private void StartReceiveScanDataTask() {
-            get_scan_token_source = new CancellationTokenSource();
-            get_scan_token = get_scan_token_source.Token;
-            get_data_task = new Task(async () => {
-                while (true){
-                    if (get_scan_token.IsCancellationRequested){
-                        return;
-                    }
-                    this.get_latest_scan();
-                    await Task.Delay(100);
-                }
-            });
-            get_data_task.Start();
+        private void StartReceiveScanData(){
+           
         }
 
-        private void StopReceiveScanDataTask() {
-            if (get_scan_token_source != null) {
-                get_scan_token_source.Cancel();
-            }
+        private void StopReceiveScanData() {
+            
         }
         #endregion
     }

@@ -1,10 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
+
 
 public class HardWareDataMonitor : MonoBehaviour
 {
+    public DeviceMonitor device_monitor;
+
     private DataMonitor<DeviceData> data_monitor;
+
     private void Awake(){
         data_monitor = new DataMonitor<DeviceData>("192.168.0.144");
 
@@ -15,8 +18,7 @@ public class HardWareDataMonitor : MonoBehaviour
     }
 
     // Start is called before the first frame update
-    void Start()
-    {
+    void Start(){
         
     }
 
@@ -25,11 +27,11 @@ public class HardWareDataMonitor : MonoBehaviour
         
     }
 
-    void OnDataUpate(DeviceData data) {
+    void OnDataUpate(DeviceData data){
 
     }
 
-    void OnError(string data){
+    void OnError(Exception data){
         Debug.Log(data);
     }
 

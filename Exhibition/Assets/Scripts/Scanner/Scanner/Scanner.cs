@@ -14,7 +14,15 @@ namespace Scanner.Scanister
 {
     abstract class Scanner
     {
-        protected Task deal_data_task;
+        private string device_name;
+
+        protected Dictionary<string, Action<string[]>> reply_process;
+
+        protected CancellationTokenSource process_data_token_source;
+
+        protected CancellationToken process_data_token;
+
+        protected Task process_data_task;
 
         protected ProtocolType protocol;
 
@@ -26,33 +34,29 @@ namespace Scanner.Scanister
 
         protected IPEndPoint self_end_point = null;
 
-        protected CancellationTokenSource deal_data_token_source;
-
-        protected CancellationToken deal_data_token;
-
-        protected float rotation;
-
-        protected bool encoder_run = false;
-
         public int receive_size = 0;
 
         public delegate void DataDecodeCompleteHandle(List<RayInfo> rays);
-        public delegate void StatusChangedHandle(int status);
-        public delegate void ErrorHandle(Exception exception);
+        public delegate void StatusChangedHandle(DeviceStatus status);
+        public delegate void ErrorHandle(ExceptionHandler exception);
 
         public event DataDecodeCompleteHandle DataDecodeComplete;
         public event StatusChangedHandle StatusChanged;
         public event ErrorHandle Error;
 
         protected virtual void OnTimedEvent(object source, ElapsedEventArgs e){
-            encoder_run = false;
+
         }
 
         protected System.Timers.Timer timer;
 
-        protected Task data_process_task;
+        public Scanner(string device_name) {
+            this.device_name = device_name;
+        }
 
-        protected RecvQueue<ScannerSector> sectors;
+        public bool IsConnected {
+            get { return this.communication.IsConnected; }
+        }
 
         public virtual void Connect(){
             communication = new Client();
@@ -69,7 +73,9 @@ namespace Scanner.Scanister
             }
         }
         public virtual void SendData(byte[] data) {
-            this.communication.SendData(data);
+            if (this.IsConnected) {
+                this.communication.SendData(data);
+            }
         }
 
         protected virtual void ReceiveData(byte[] buffer, int offset, int length){
@@ -84,7 +90,12 @@ namespace Scanner.Scanister
             this.stop_scan();
         }
 
-        public abstract void SearchData();
+        private void SearchData() {
+            byte[] data = null;
+            while ((data = data_buffer.SearchData()) != null){
+                this.ProcessData(data);
+            }
+        }
 
         #region 设备参数
         public abstract void GetDeviceInfo();
@@ -112,12 +123,12 @@ namespace Scanner.Scanister
         #endregion
 
         protected virtual void StartProcessData(int delay){
-            deal_data_token_source = new CancellationTokenSource();
-            deal_data_token = deal_data_token_source.Token;
+            process_data_token_source = new CancellationTokenSource();
+            process_data_token = process_data_token_source.Token;
 
-            deal_data_task = new Task(async () => {
+            process_data_task = new Task(async () => {
                 while (true){
-                    if (deal_data_token.IsCancellationRequested){
+                    if (process_data_token.IsCancellationRequested){
                         return;
                     }
                     byte[] data = data_buffer.SearchData();
@@ -127,12 +138,12 @@ namespace Scanner.Scanister
                     await Task.Delay(delay);
                 }
             });
-            deal_data_task.Start();
+            process_data_task.Start();
         }
 
         protected virtual void StopProcessData(){
-            if (deal_data_token_source != null) {
-                deal_data_token_source.Cancel();
+            if (process_data_token_source != null) {
+                process_data_token_source.Cancel();
             }
         }
 
@@ -142,7 +153,7 @@ namespace Scanner.Scanister
             }
         }
 
-        protected void OnStatusChanged(int status)
+        protected void OnStatusChanged(DeviceStatus status)
         {
             if (this.StatusChanged != null)
             {
@@ -150,7 +161,7 @@ namespace Scanner.Scanister
             }
         }
 
-        protected void OnError(Exception exception){
+        protected void OnError(ExceptionHandler exception){
             if (this.Error != null){
                 this.Error(exception);
             }

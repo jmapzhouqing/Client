@@ -138,7 +138,7 @@ namespace Scanner.Livox
                 IPEndPoint command_address = new IPEndPoint(address,this.ListenPort + this.CmdPortOffset + deviceOffset);
                 IPEndPoint data_address = new IPEndPoint(address, this.ListenPort + this.DataPortOffset + deviceOffset);
 
-                device = new LivoxDevice(remote,command_address,data_address);
+                device = new LivoxDevice("LvioxDevice",remote,command_address,data_address);
                 device.Connect();
 
                 devices.Add(info.broadcast_code, device);

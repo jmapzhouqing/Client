@@ -51,7 +51,7 @@ namespace Scanner.Livox
 
         private StreamWriter stream;
 
-        public LivoxDevice(IPEndPoint server_address,IPEndPoint command_address,IPEndPoint data_address)
+        public LivoxDevice(string name,IPEndPoint server_address,IPEndPoint command_address,IPEndPoint data_address):base(name)
         {
             try
             {
@@ -85,7 +85,7 @@ namespace Scanner.Livox
             }
         }
 
-        public LivoxDevice(IPAddress ip_address, int port, ProtocolType protocol)
+        public LivoxDevice(string name,IPAddress ip_address, int port, ProtocolType protocol):base(name)
         {
 
         }
@@ -326,10 +326,11 @@ namespace Scanner.Livox
             }
         }
 
+        /*
         public override void SearchData()
         {
             throw new NotImplementedException();
-        }
+        }*/
 
         protected override void scanner_login()
         {

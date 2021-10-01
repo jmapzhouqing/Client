@@ -5,6 +5,14 @@ using UnityEngine;
 
 namespace Scanner.Communicate
 {
+    public enum DeviceStatus{
+        None = 0,
+        OnLine = 1,
+        OffLine = 2,
+        Idle = 3,
+        Working = 4
+    }
+
     class Client : Communication
     {
         private BufferManager bufferManager;
@@ -44,14 +52,14 @@ namespace Scanner.Communicate
                 connect_args = new SocketAsyncEventArgs();
                 connect_args.Completed += new EventHandler<SocketAsyncEventArgs>(IO_Completed);
             }
-            catch (Exception e) {
-                throw (e);
+            catch (Exception e){
+                throw(e);
             }
         }
 
         public override void Connect(IPEndPoint server_address, IPEndPoint client_address, ProtocolType protocol){
             try{
-                if (client_address == null) {
+                if(client_address == null){
                     client_address = new IPEndPoint(IPAddress.Any,0);
                 }
 
@@ -62,6 +70,7 @@ namespace Scanner.Communicate
                 this.protocol = protocol;
                 this.client_address = client_address;
                 this.server_address = server_address;
+
                 if (protocol.Equals(ProtocolType.Udp)){
                     socket = new Socket(client_address.AddressFamily, SocketType.Dgram, ProtocolType.Udp);
                 }else if (protocol.Equals(ProtocolType.Tcp)){
@@ -84,7 +93,8 @@ namespace Scanner.Communicate
                     if (!willRaiseEvent){
                         this.ProcessReceive(receive_args);
                     }
-                }else if(this.protocol.Equals(ProtocolType.Tcp)){
+                }
+                else if(this.protocol.Equals(ProtocolType.Tcp)){
                     connect_args.RemoteEndPoint = server_address;
                     willRaiseEvent = socket.ConnectAsync(connect_args);
                     if(!willRaiseEvent){
@@ -92,37 +102,44 @@ namespace Scanner.Communicate
                     }
                 }
 
-                this.StartHeart();
+                this.StartHeart(1000);
             }
             catch (Exception e) {
-                Console.WriteLine(e.Message);
+                //this.OnError(new ExceptionHandler(e.Message, ExceptionCode.internal_error));
+                throw (e);
             }
         }
 
+        bool is_sending = false;
         public override void SendData(byte[] data) {
-            send_args.RemoteEndPoint = this.server_address;
-            //if (this.IsConnected){
+            try{
+                send_args.RemoteEndPoint = this.server_address;
+                //if (this.IsConnected){
                 //SocketAsyncEventArgs args = readWritePool.Pop();
                 Buffer.BlockCopy(data, 0, send_args.Buffer, 0, data.Length);
                 send_args.SetBuffer(0, data.Length);
+
                 bool willRaiseEvent = false;
-                if (this.protocol.Equals(ProtocolType.Udp)) {
+                if (this.protocol.Equals(ProtocolType.Udp)){
                     willRaiseEvent = socket.SendToAsync(send_args);
-                } else if (this.protocol.Equals(ProtocolType.Tcp)){
+                }else if (this.protocol.Equals(ProtocolType.Tcp)){
                     willRaiseEvent = socket.SendAsync(send_args);
                 }
+
+                //Debug.Log(DateTime.Now.Ticks + ":"+willRaiseEvent);
 
                 if (!willRaiseEvent)
                 {
                     this.ProcessSend(send_args);
                 }
-            //}
+                //}
+            }catch(Exception e){
+                throw (e);
+            }
         }
     
-        void IO_Completed(object sender, SocketAsyncEventArgs e)
-        {
-            switch (e.LastOperation)
-            {
+        void IO_Completed(object sender, SocketAsyncEventArgs e){
+            switch (e.LastOperation){
                 case SocketAsyncOperation.Connect:
                     this.ProcessConnect(e);
                     break;
@@ -141,38 +158,30 @@ namespace Scanner.Communicate
             }
         }
 
-        private void ProcessConnect(SocketAsyncEventArgs args) {
-            try
-            {
-                bool status = socket.Connected;
+        private void ProcessConnect(SocketAsyncEventArgs args){
+            try{
+                if (args.SocketError == SocketError.IsConnected){
+                    this.IsConnected = args.ConnectSocket.Connected;
 
-                receive_args.RemoteEndPoint = args.RemoteEndPoint;
-                //if (status){
-                bool willRaiseEvent = false;
-                if (this.protocol.Equals(ProtocolType.Tcp))
-                {
-                    willRaiseEvent = socket.ReceiveAsync(receive_args);
-                }
-                else if (this.protocol.Equals(ProtocolType.Udp))
-                {
-                    willRaiseEvent = socket.ReceiveFromAsync(receive_args);
-                }
+                    receive_args.RemoteEndPoint = args.RemoteEndPoint;
 
-                if (!willRaiseEvent)
-                {
-                    this.ProcessReceive(receive_args);
+                    bool willRaiseEvent = willRaiseEvent = socket.ReceiveAsync(receive_args);
+
+                    if (!willRaiseEvent){
+                        this.ProcessReceive(receive_args);
+                    }
+                }else {
+                    this.IsConnected = false;
+                    this.OnError(new ExceptionHandler("设备连接异常", this.HandlerError(args.SocketError)));
                 }
-                //}
-                this.IsConnected = status;
+            }catch (Exception e) {
+                this.OnError(new ExceptionHandler(e.Message, ExceptionCode.InternalError));
             }
-            catch (Exception e) {
-                Debug.Log(e.Message);
-            }
-            
         }
 
         private void ProcessReceive(SocketAsyncEventArgs args){
-            if (args.SocketError == SocketError.Success){
+            this.UpdateReceiveTicks();
+            if(args.SocketError == SocketError.Success){
                 if (args.BytesTransferred > 0){
                     this.OnDataReceived(args.Buffer, args.Offset, args.BytesTransferred,args.RemoteEndPoint as IPEndPoint);
                 }
@@ -185,47 +194,48 @@ namespace Scanner.Communicate
                     willRaiseEvent = socket.ReceiveFromAsync(receive_args);
                 }
 
-                if (!willRaiseEvent)
-                {
+                if (!willRaiseEvent){
                     this.ProcessReceive(args);
                 }
             }else{
-
+                this.OnError(new ExceptionHandler("数据接收异常", this.HandlerError(args.SocketError)));
             }
         }
 
         private void ProcessSend(SocketAsyncEventArgs args){
-            if (args.SocketError == SocketError.Success)
-            {
-
+            if (args.SocketError == SocketError.Success){
+                //Debug.Log(args.SocketError.ToString());
             }else {
-
+                this.OnError(new ExceptionHandler("数据发送异常",this.HandlerError(args.SocketError)));
             }
         }
 
         private void ProcessDisConnect(SocketAsyncEventArgs args){
-            
+            Debug.Log(args.SocketError);
         }
 
-        public override void DisConnect(){
-            if(socket!=null){
+        public override void DisConnect()
+        {
+            this.StopHeart();
+            if (socket != null && this.IsConnected){
                 try{
                     socket.Shutdown(SocketShutdown.Both);
                     socket.Close();
-                }catch (Exception e) {
-                    Console.WriteLine(e.Message);
+                    this.socket = null;
+                }catch (Exception e){
+                    this.OnError(new ExceptionHandler(e.Message, ExceptionCode.InternalError));
                 }
             }
         }
 
-        ~Client()
-        {
+        ~Client(){
             this.DisConnect();
             bufferManager.FreeBuffer(send_args);
             bufferManager.FreeBuffer(receive_args);
 
             readWritePool.Push(send_args);
-            readWritePool.Push(send_args);
+            readWritePool.Push(receive_args);
+            this.socket = null;
         }
     }
 }

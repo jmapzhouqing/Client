@@ -105,6 +105,8 @@ namespace Scanner.Serial
 
             this.Rotation = new Vector3(roll,pitch,yaw);
 
+            //Debug.Log(this.rotation);
+
             //Debug.Log(Rotation);
         } 
     }

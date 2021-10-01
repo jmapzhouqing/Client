@@ -51,6 +51,7 @@ namespace Scanner.Util
         }
 
         public void PushData(byte[] src, int offset, int length) {
+            //Debug.Log("PushData");
             if (this.data_type.Equals(SocketType.Stream))
             {
                 this.PushStreamData(src, offset, length);
@@ -62,6 +63,7 @@ namespace Scanner.Util
         private void PushDgramData(byte[] src, int offset, int length) {
             try
             {
+                //Debug.Log(DateTime.Now.Ticks + ":push:" + used);
                 Monitor.Enter(locker);
 
                 length = src.Length - offset < length ? src.Length - offset : length;
@@ -74,10 +76,12 @@ namespace Scanner.Util
                 Buffer.BlockCopy(src, offset, buffer, used, length);
                 data_queue.Enqueue(length);
                 used += length;
+
+                
             }
             finally
             {
-                Monitor.Pulse(locker);
+                Monitor.PulseAll(locker);
                 Monitor.Exit(locker);
             }
         }
@@ -98,14 +102,14 @@ namespace Scanner.Util
             }
             finally
             {
-                Monitor.Pulse(locker);
+                Monitor.PulseAll(locker);
                 Monitor.Exit(locker);
             }
         }
 
         public byte[] PopData(int offset, int length) {
             try{
-                Monitor.Enter(locker);
+                //Monitor.Enter(locker);
 
                 byte[] data = new byte[length];
                 Buffer.BlockCopy(buffer, offset, data, 0, length);
@@ -119,17 +123,15 @@ namespace Scanner.Util
 
                 return data;
             }finally{
-                Monitor.Pulse(locker);
-                Monitor.Exit(locker);
+                //Monitor.PulseAll(locker);
+                //Monitor.Exit(locker);
             }
         }
 
         public byte[] SearchData() {
-            if (this.data_type.Equals(SocketType.Stream))
-            {
+            if(this.data_type.Equals(SocketType.Stream)){
                 return this.SearchStreamData();
-            }
-            else if (this.data_type.Equals(SocketType.Dgram)) {
+            }else if (this.data_type.Equals(SocketType.Dgram)){
                 return this.SearchDgramData();
             }
 
@@ -158,6 +160,7 @@ namespace Scanner.Util
             }
             finally
             {
+                Monitor.PulseAll(locker);
                 Monitor.Exit(locker);
             }
         }
@@ -166,10 +169,10 @@ namespace Scanner.Util
             try
             {
                 Monitor.Enter(locker);
-                
                 byte[] result = null;
-
+                //Debug.Log(DateTime.Now.Ticks + ":search:" + used);
                 while (data_queue.Count == 0){
+                    //Debug.Log("Enter Zero");
                     Monitor.Wait(locker);
                 }
 
@@ -180,15 +183,11 @@ namespace Scanner.Util
                     }
                 }
 
-               
-
                 return result;
             }
-            finally
-            {
-                
+            finally{
+                Monitor.PulseAll(locker);
                 Monitor.Exit(locker);
-
             }
         }
 

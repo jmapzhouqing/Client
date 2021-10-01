@@ -48,7 +48,7 @@ public class GridDataManager : MonoBehaviour{
 
         this.initialize();
         
-        GridDataPersistence.ReadData(@"D:\CoalYard\data.txt",mesh_data);
+        //GridDataPersistence.ReadData(@"D:\CoalYard\data.txt",mesh_data);
     }
 
     /*
@@ -369,8 +369,11 @@ public class GridDataManager : MonoBehaviour{
             int x = Mathf.FloorToInt(vertice.x / precision);
             int z = Mathf.FloorToInt(vertice.z / precision);
 
-            mesh_data[x, z] = vertice;
+            if (x < 0 || x > width_segment_number || z < 0 || z > height_segment_number) {
+                continue;
+            }
 
+            mesh_data[x, z] = vertice;
             need_update.Add(new CoordinateIndex(x,z));
         }
         //Debug.Log(need_update.Count);

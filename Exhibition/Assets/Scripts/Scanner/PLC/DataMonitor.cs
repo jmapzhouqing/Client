@@ -20,11 +20,11 @@ public class DataMonitor<T> where T:class,new()
 
     private bool connect_station;
 
-    public delegate void data_update(T data);
-    public event data_update OnDataUpdate;
+    public delegate void DataUpdate(T data);
+    public event DataUpdate OnDataUpdate;
 
-    public delegate void error_callback(string data);
-    public event error_callback OnError;
+    public delegate void ErrorCallback(Exception e);
+    public event ErrorCallback OnError;
 
     private T data;
 
@@ -34,10 +34,10 @@ public class DataMonitor<T> where T:class,new()
                 allenBradleyNet = new AllenBradleyNet(ip);
                 allenBradleyNet.ConnectTimeOut = 1000;
                 allenBradleyNet.SetPersistentConnection();
-            }else {
-                this.OnError("HslCommunication 授权未成功");
+            }else{
+                this.OnError(new ExceptionHandler("HslCommunication 授权未成功",ExceptionCode.Unauthorized));
             }
-        }catch (Exception e) {
+        }catch(Exception e){
 
         }
     }
@@ -50,14 +50,14 @@ public class DataMonitor<T> where T:class,new()
                 if (connect_station){
                     this.StartReadData(100);
                 }else {
-                    this.OnError("PLC断连");
+                    this.OnError(new ExceptionHandler("PLC断连",ExceptionCode.DeviceDisconnect));
                 }
             }
         });
         task.Start();
     }
 
-    public void DisConnect() {
+    public void DisConnect(){
         this.StopReadData();
         if (allenBradleyNet!=null) {
             allenBradleyNet.ConnectClose();
@@ -74,7 +74,7 @@ public class DataMonitor<T> where T:class,new()
                     return;
                 }
                 this.ReadData();
-                await Task.Delay(100);
+                await Task.Delay(delay);
             }
         });
         task.Start();
@@ -88,13 +88,13 @@ public class DataMonitor<T> where T:class,new()
 
     private void ReadData(){
         OperateResult<T> operate = allenBradleyNet.Read<T>();
-        if (operate.IsSuccess){
+        if(operate.IsSuccess){
             data = operate.Content;
             if (this.OnDataUpdate != null){
                 this.OnDataUpdate(data);
             }
         }else{
-            this.OnError("PLC断连");
+            this.OnError(new ExceptionHandler("PLC断连", ExceptionCode.DeviceDisconnect));
         }
     }
 }

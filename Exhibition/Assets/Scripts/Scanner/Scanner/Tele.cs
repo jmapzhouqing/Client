@@ -12,7 +12,7 @@ namespace Scanner.Scanister
 {
 
     class Tele:Scanner{
-        public Tele(IPEndPoint remote,IPEndPoint self, ProtocolType protocol){
+        public Tele(string name,IPEndPoint remote,IPEndPoint self, ProtocolType protocol):base(name){
             try{
                 this.end_point = remote;
                 this.self_end_point = self;
@@ -28,7 +28,7 @@ namespace Scanner.Scanister
             }
         }
 
-        public Tele(IPAddress ip_address, int port, ProtocolType protocol) {
+        public Tele(string name,IPAddress ip_address, int port, ProtocolType protocol):base(name){
             
         }
 
@@ -38,7 +38,7 @@ namespace Scanner.Scanister
             this.StartProcessData(100);
         }
 
-        public override void SearchData() { }
+        //public override void SearchData() { }
 
         #region 设备参数
         public override void GetDeviceInfo() { }
