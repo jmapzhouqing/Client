@@ -21,7 +21,7 @@ namespace Scanner.Communicate
         SocketAsyncEventArgsPool readWritePool;
 
 
-        public TCP()
+        public TCP(byte[] heartbeat_data) : base(heartbeat_data)
         {
             try
             {
@@ -58,7 +58,7 @@ namespace Scanner.Communicate
 
             Console.WriteLine(socket.Connected);
 
-            this.IsConnected = socket.Connected;
+            //this.IsConnected = socket.Connected;
 
             socket.BeginReceive(buffer, 0, buffer.Length,SocketFlags.None,new AsyncCallback(ReceiveCallback),null);
         }
@@ -168,6 +168,11 @@ namespace Scanner.Communicate
 
                 }
             }
+        }
+
+        public override void Connect(Socket socket)
+        {
+            throw new NotImplementedException();
         }
     }
 }

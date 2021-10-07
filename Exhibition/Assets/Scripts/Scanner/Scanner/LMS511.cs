@@ -9,7 +9,7 @@ namespace Scanner.Scanister
 {
     class LMS511:SickScanner
     {
-        public LMS511(string name,string ip, int port,ProtocolType protocol) :base(name,ip,port,protocol){
+        public LMS511(string name,string ip, int port) :base(name,ip,port){
 
         }
     }

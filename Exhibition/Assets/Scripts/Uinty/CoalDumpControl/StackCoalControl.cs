@@ -5,16 +5,18 @@ using UnityEngine.UI;
 
 public class StackCoalControl : MonoBehaviour
 {
-    public StackCoalInfo info;
+    private StackCoalInfo info;
 
     public InputField interior_edge;
     public InputField external_edge;
 
     public Slider use_config_corner;
+
+    private ProgramCommunication communication;
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
-        
+        communication = FindObjectOfType<ProgramCommunication>();
     }
 
     public void SetProperty(StackCoalInfo info){
@@ -32,7 +34,7 @@ public class StackCoalControl : MonoBehaviour
 
         info.use_config_corner = Convert.ToBoolean(use_config_corner.value);
 
-        Debug.Log(info.use_config_corner);
+        communication.SendData("StackCoal Command " + JsonUtility.ToJson(info));
 
         this.Cancel();
     }

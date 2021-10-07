@@ -65,7 +65,7 @@ public class CoalDumpEditorAddControl : MonoBehaviour
 
                 CoalDumpInfo info = new CoalDumpInfo(Guid.NewGuid().ToString("N"));
 
-                RectTransform confirm = UIManager.LoadUserInterface("CoalDumpInfo");
+                RectTransform confirm = UIManager.instance.LoadUserInterface("CoalDumpInfo");
                 CoalDumpInfoEditorControl control = confirm?.GetComponent<CoalDumpInfoEditorControl>();
                 control?.SetProperty(rect_line, info);
             }

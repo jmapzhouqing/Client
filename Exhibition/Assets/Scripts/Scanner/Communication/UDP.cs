@@ -13,7 +13,7 @@ namespace Scanner.Communicate
         private EndPoint remote;
         private byte[] buffer = new byte[2048];
 
-        public UDP()
+        public UDP(byte[] heartbeat_data) : base(heartbeat_data)
         {
 
         }
@@ -74,6 +74,11 @@ namespace Scanner.Communicate
         }
 
         public override void DisConnect(){
+        }
+
+        public override void Connect(Socket socket)
+        {
+            throw new NotImplementedException();
         }
     }
 }

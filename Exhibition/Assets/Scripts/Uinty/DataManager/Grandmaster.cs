@@ -51,4 +51,17 @@ public class Grandmaster : MonoBehaviour{
     public static Vector3 GetGridCoordinate(int x, int z) {
         return grid_data.mesh_data[x, z];
     }
+
+    /*
+    private void OnGUI()
+    {
+        if (GUI.Button(new Rect(0, 0, 100, 60), "Click"))
+        {
+            GridDataPersistence.SaveData("", grid_data.precision, grid_data.mesh_data);
+        }
+    }*/
+
+    private void OnApplicationQuit(){
+        
+    }
 }

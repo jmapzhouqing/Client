@@ -35,6 +35,18 @@ namespace Scanner.Util
             end_pattern = new KMPSearch<byte>(new byte[] {0x03 });*/
         }
 
+        public DataBuffer(int capacity, SocketType type,byte[] start_pattern,byte[] end_pattern)
+        {
+            used = 0;
+            buffer = new byte[capacity];
+
+            this.data_type = type;
+            data_queue = new Queue<int>();
+
+            this.start_pattern = new KMPSearch<byte>(start_pattern);
+            this.end_pattern = new KMPSearch<byte>(end_pattern);
+        }
+
         public DataBuffer(int capacity, byte[] start) {
             used = 0;
             buffer = new byte[capacity];
@@ -51,7 +63,6 @@ namespace Scanner.Util
         }
 
         public void PushData(byte[] src, int offset, int length) {
-            //Debug.Log("PushData");
             if (this.data_type.Equals(SocketType.Stream))
             {
                 this.PushStreamData(src, offset, length);
@@ -147,7 +158,7 @@ namespace Scanner.Util
                     Monitor.Wait(locker);
                 }
 
-                if (used > 0) {
+                if (used > 0){
                     int start = start_pattern.Search(buffer, 0,used);
                     if (start != -1){
                         int end = end_pattern.Search(buffer, start, used);

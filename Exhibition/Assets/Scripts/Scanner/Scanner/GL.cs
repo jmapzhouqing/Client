@@ -14,13 +14,12 @@ namespace Scanner.Scanister
     class GL: Scanner
     {
         private Dictionary<int, Action<List<UInt32>>> reply_process;
-        public GL(string name,string ip, int port, ProtocolType protocol):base(name){
+        public GL(string name,string ip, int port):base(name){
             try
             {
                 reply_process = new Dictionary<int, Action<List<UInt32>>>();
                 data_buffer = new DataBuffer(102400, SocketType.Dgram);
-                this.end_point = new IPEndPoint(IPAddress.Parse(ip), port);
-                this.protocol = protocol;
+                this.server_address = new IPEndPoint(IPAddress.Parse(ip), port);
 
                 //reply_process.Add("SCAN", MeasurementStatusProcess);
                 //reply_process.Add("GSCN", ScandataProcess);

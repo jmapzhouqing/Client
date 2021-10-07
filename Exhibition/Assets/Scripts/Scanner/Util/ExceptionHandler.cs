@@ -2,12 +2,20 @@
 
 public enum ExceptionCode{
     None = 0,
+    Success,
+    TimedOut,
     InternalError,
     Unauthorized,
     NetworkUnreachable,
-    DeviceDisconnect,
-    DeviceConnect,
-    DeviceConnectionRefused
+    Disconnect,
+    Connect,
+    ConnectionRefused,
+    OperationAborted,
+    NotConnected,
+    ConnectionAborted,
+    Shutdown,
+    ConnectionReset,
+    HostUnreachable
 }
 
 [Serializable]

@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 using System.Threading;
+using System.Threading.Tasks;
 
 using UnityEngine;
 using Vectrosity;
+
 
 
 
@@ -38,6 +40,13 @@ public class GridDataManager : MonoBehaviour{
 
     private Material material;
 
+    private Task save_grid_data_task;
+
+    private CancellationTokenSource save_grid_data_cancle_token_source;
+
+    private CancellationToken save_grid_data_cancle_token;
+
+
     void Awake(){
 
         data_list = new List<Vector3>();
@@ -48,7 +57,27 @@ public class GridDataManager : MonoBehaviour{
 
         this.initialize();
         
-        //GridDataPersistence.ReadData(@"D:\CoalYard\data.txt",mesh_data);
+        GridDataPersistence.ReadData(@"D:\CoalYard\coal_data.txt",mesh_data);
+
+        this.SaveGridData();
+    }
+
+    private void SaveGridData() {
+        save_grid_data_cancle_token_source = new CancellationTokenSource();
+        save_grid_data_cancle_token = save_grid_data_cancle_token_source.Token;
+
+        save_grid_data_task = new Task(async () => {
+            while (true) {
+                if (save_grid_data_cancle_token.IsCancellationRequested) {
+                    break;
+                }
+                await Task.Delay(20000);
+                GridDataPersistence.SaveData("", this.precision, this.mesh_data);
+            }
+            
+        });
+
+        save_grid_data_task.Start();
     }
 
     /*
@@ -79,16 +108,11 @@ public class GridDataManager : MonoBehaviour{
             update_vertices.Clear();
             Monitor.Pulse(update_vertices);
 
-
-            //bug.Log(vertices.Count);
-            foreach (CoordinateIndex index in vertices)
-            {
+            foreach (CoordinateIndex index in vertices){
                 UpdateCoalYard(index.x,index.z);
             }
             //this.UpdateCoalYard(vertices);
-        }
-        finally
-        {
+        }finally{
             Monitor.Exit(update_vertices);
         }
     }
@@ -527,5 +551,13 @@ public class GridDataManager : MonoBehaviour{
     public CoalDumpManager SearchCoalDump(string name) {
         CoalDumpManager coalDumpManager = coaldump_container.Find(name)?.GetComponent<CoalDumpManager>();
         return coalDumpManager;
+    }
+
+    private void OnApplicationQuit()
+    {
+        if (save_grid_data_cancle_token_source != null) {
+            save_grid_data_cancle_token_source.Cancel();
+        }
+        GridDataPersistence.SaveData("", this.precision, this.mesh_data);
     }
 }

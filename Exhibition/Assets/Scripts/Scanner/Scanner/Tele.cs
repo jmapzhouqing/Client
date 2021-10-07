@@ -12,11 +12,10 @@ namespace Scanner.Scanister
 {
 
     class Tele:Scanner{
-        public Tele(string name,IPEndPoint remote,IPEndPoint self, ProtocolType protocol):base(name){
+        public Tele(string name,IPEndPoint server_address,IPEndPoint client_address):base(name){
             try{
-                this.end_point = remote;
-                this.self_end_point = self;
-                this.protocol = protocol;
+                this.server_address = server_address;
+                this.client_address = client_address;
 
                 data_buffer = new DataBuffer(102400, SocketType.Dgram);
 

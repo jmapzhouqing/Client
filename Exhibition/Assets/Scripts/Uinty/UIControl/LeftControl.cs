@@ -32,6 +32,8 @@ public class LeftControl : MonoBehaviour
 
     private RectTransform coaldump_prefab;
 
+    private bool is_lock = false;
+
     private void Awake(){
         manager = FindObjectOfType<UIManager>();
 
@@ -63,7 +65,7 @@ public class LeftControl : MonoBehaviour
     public void CreateCoalDump(CoalDumpInfo info) {
         RectTransform coal_dump = GameObject.Instantiate<RectTransform>(coaldump_prefab, container);
         CoalDumpOperation operation = coal_dump.GetComponent<CoalDumpOperation>();
-        operation.dump_info = info;
+        operation.SetInfo(info);
     } 
 
     public void UpdateCoalDump(List<CoalDumpInfo> data){
@@ -77,10 +79,12 @@ public class LeftControl : MonoBehaviour
     }
 
     public void Expand() {
-        this.Expand(!is_expand);
+        if (!is_lock) {
+            this.Expand(!is_expand);
+        } 
     }
 
-    public void Expand(bool station) {
+    private void Expand(bool station) {
         if (left_expand != null && left_expand.IsPlaying()) {
             left_expand.Pause();
         }
@@ -90,6 +94,13 @@ public class LeftControl : MonoBehaviour
             left_expand.PlayBackwards();
         }
         this.is_expand = station;
+    }
+
+    public void Lock(bool status) {
+        is_lock = status;
+        if (is_lock) {
+            this.Expand(false);
+        }
     }
 
     private void ChangeIcon() {

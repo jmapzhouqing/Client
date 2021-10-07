@@ -11,12 +11,12 @@ namespace Scanner.Scanister
 {
     class KYLE : Scanner{
 
-        public KYLE(string name, string ip, int port, ProtocolType protocol):base(name){
+        public KYLE(string name, string ip, int port):base(name){
             try{
                 reply_process = new Dictionary<string, Action<string[]>>();
                 data_buffer = new DataBuffer(1024000, SocketType.Stream);
-                this.protocol = protocol;
-                this.end_point = new IPEndPoint(IPAddress.Parse(ip), port);
+
+                this.server_address = new IPEndPoint(IPAddress.Parse(ip), port);
 
                 reply_process.Add("sANSetAccessMode", AccessModeProcess);
                 reply_process.Add("sANLMCstartmeas", StartmeasProcess);

@@ -5,26 +5,38 @@ using System.Net.Sockets;
 using UnityEngine;
 
 using Scanner.Communicate;
+using Scanner.Scanister;
+using Scanner.Struct;
 
 public class ProgramCommunication : MonoBehaviour
 {
-    private Client client;
+    //private Correspond client;
+    public string ip;
+    public int port;
 
-    private IPEndPoint server_address;
-    private IPEndPoint client_address;
+    public int timeout;
+
+    private Triple triple;
+
+    private ClientTransmission client;
 
     void Start(){
+        //server_address = new IPEndPoint(IPAddress.Parse("192.168.90.252"), 8100);
+        //client_address = new IPEndPoint(IPAddress.Any,0);
+
+        client = new ClientTransmission(ip,port);
+        client.StatusChanged += StatusChanged;
+        client.Error += OnError;
+        client.Connect(timeout);
+
+        //client.Connect(server_address, client_address, ProtocolType.Tcp);
+
         /*
-        server_address = new IPEndPoint(IPAddress.Parse(""), 0);
-        client_address = new IPEndPoint(IPAddress.Any, 0);
+        Triple triple = new Triple("", "192.168.90.247", 1024, ProtocolType.Udp);
+        triple.StatusChanged += StatusChanged;
+        triple.Error += OnError;
 
-        client = new Client();
-        client.DataReceiveHandler += DataReceive;
-        client.Connect(server_address, client_address, ProtocolType.Tcp);*/
-    }
-
-    public void DataReceive(byte[] buff, int offset, int length){
-
+        triple.Connect();*/
     }
 
     private void OnDestroy(){
@@ -33,9 +45,33 @@ public class ProgramCommunication : MonoBehaviour
         }
     }
 
+    /*
+    private void OnGUI()
+    {
+        if (GUI.Button(new Rect(0, 0, 100, 60), "Click"))
+        {
+            if (client != null)
+            {
+                client.DisConnect();
+            }
+        }
+    }*/
+
     public void SendData(string data) {
         if (client != null) {
-            client.SendData(Encoding.Default.GetBytes(data));
+            client.SendData(data);
         }
+    }
+
+    private void StatusChanged(DeviceStatus status){
+        if (status.Equals(DeviceStatus.OnLine)){
+            //client.StartProcessData(100);
+        }else {
+            //client.StopProcessData();
+        }
+    }
+
+    private void OnError(ExceptionHandler exception) {
+        Debug.Log(exception.Message+"#"+exception.GetExceptionCode().ToString());
     }
 }

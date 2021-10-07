@@ -1,15 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
 public class CoalDumpOperation : MonoBehaviour,IPointerEnterHandler,IPointerExitHandler{
 
-    public CoalDumpInfo dump_info;
+    public Text coal_type;
 
-    private Transform device;
+    private CoalDumpInfo dump_info;
 
     private Transform wheel;
 
@@ -20,12 +21,17 @@ public class CoalDumpOperation : MonoBehaviour,IPointerEnterHandler,IPointerExit
     private CoalDumpManager coalDumpManager;
     // Start is called before the first frame update
     void Awake(){
-        device = GameObject.Find("Circle001").transform;
+
         wheel = GameObject.Find("wheel").transform;
 
         camera_control = FindObjectOfType<CameraControl>();
 
         delta = new Vector2(5,5);
+    }
+
+    public void SetInfo(CoalDumpInfo info) {
+        this.dump_info = info;
+        coal_type.text = info.dump_name;
     }
 
     public void StackCoal(){
@@ -40,6 +46,9 @@ public class CoalDumpOperation : MonoBehaviour,IPointerEnterHandler,IPointerExit
         BoundaryCoordinate<float> boundary = grid.vertice_boundary;
 
         float max_z = boundary.max_z - delta.y;
+        float min_z = boundary.min_z + delta.y;
+
+       
 
         Vector3 center = ConfigurationParameter.rotation_center;
         float radius = ConfigurationParameter.arm_length;
@@ -51,7 +60,6 @@ public class CoalDumpOperation : MonoBehaviour,IPointerEnterHandler,IPointerExit
 
         float internal_rotation = 0;
         float external_rotation = 0;
-        float z = 0;
 
         if (side == 0){
             internal_rotation = Mathf.Asin((right_x - center.x) / radius);
@@ -62,37 +70,47 @@ public class CoalDumpOperation : MonoBehaviour,IPointerEnterHandler,IPointerExit
             external_rotation = Mathf.Asin((right_x - center.x) / radius);
         }
 
-        z = max_z - Mathf.Cos(internal_rotation) * radius;
+        max_z = max_z - Mathf.Cos(internal_rotation) * radius;
+        min_z = min_z - Mathf.Cos(internal_rotation) * radius;
 
         internal_rotation = (internal_rotation - rotation_offset) * Mathf.Rad2Deg;
         external_rotation = (external_rotation - rotation_offset) * Mathf.Rad2Deg;
 
+        max_z = max_z > 0 ? max_z : 0;
+        min_z = min_z > 0 ? min_z : 0;
+
         StackCoalInfo info = new StackCoalInfo();
+        info.dump_name = dump_info.dump_name;
         info.side = side;
         info.internal_rotation = internal_rotation;
         info.external_rotation = external_rotation;
         info.is_empty_dump = (dump_info.level == 0);
-        info.device_position = z;
+        info.max_z = max_z;
+        info.min_z = min_z;
         info.use_config_corner = false;
 
-        RectTransform rect = UIManager.LoadUserInterface("StackCoal");
+        RectTransform rect = UIManager.instance.LoadUserInterface("StackCoal");
         StackCoalControl stackCoalControl = rect.GetComponentInChildren<StackCoalControl>();
         stackCoalControl.SetProperty(info);
     }
 
     public void TakeCoal() {
-        Grid grid = dump_info.CreateGrid();
 
-        SpatialAnalysis analysis = device.GetComponent<SpatialAnalysis>()??device.gameObject.AddComponent<SpatialAnalysis>();
+        if(dump_info.level == 0){
+            return;
+        }
 
-        Dictionary<string,Vector3> param = analysis.CaculateGridBoundary(grid, 1.9f);
+        RectTransform rect = UIManager.instance.LoadUserInterface("TakeCoal");
+        TakeCoalControl takeCoalControl = rect.GetComponentInChildren<TakeCoalControl>();
+        takeCoalControl.SetProperty(dump_info);
 
+        /*
         if (param != null){
             camera_control.SetCameraFollowing(wheel);
             analysis.SetUpdate(true);
         }else {
             GameObject.DestroyImmediate(analysis);
-        }
+        }*/
     }
 
     private int CheckCoalDumpSide(Grid grid) {

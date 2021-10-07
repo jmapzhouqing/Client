@@ -1,52 +1,23 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Net.Sockets;
 using UnityEngine;
 
 using Scanner.Scanister;
+using Scanner.Struct;
 
 public class ScannerManager : MonoBehaviour
 {
-
-    private LMS511 left_scanner;
-    private LMS511 right_scanner;
-    // Start is called before the first frame update
-    void Start(){
-
-    }
-
-    // Update is called once per frame
-    void Update(){
-
-    }
-
-    public void initialize() {
-        //left_scanner = new LMS511();
-        //right_scanner = new LMS511();
-    }
-
-
     public void StartScanning() {
-        if (left_scanner != null) {
-            left_scanner.Start();
-        }
-
-        if (right_scanner != null){
-            left_scanner.Start();
+        Debug.Log("StartScanning");
+        foreach (ScannerPoint scanner in this.GetComponentsInChildren<ScannerPoint>()) {
+            scanner.StartDevice();
         }
     }
 
     public void StopScanning() {
-        if (left_scanner != null){
-            left_scanner.Stop();
-        }
-
-        if (right_scanner != null) {
-            right_scanner.Stop();
+        Debug.Log("StopScanning");
+        foreach (ScannerPoint scanner in this.GetComponentsInChildren<ScannerPoint>()){
+            scanner.StopDevice();
         }
     }
-
-    private void OnDestroy(){
-        this.StopScanning();
-    }
-
 }

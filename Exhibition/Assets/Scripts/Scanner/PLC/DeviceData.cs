@@ -14,6 +14,15 @@ public class DeviceData{
     [HslDeviceAddress("HS_Luff_Status")]
     public short LuffStatus { get; set; }
 
-    [HslDeviceAddress("HS_Car_POS_KU_R")]
+    [HslDeviceAddress("YK_Car_POS_KU_R")]
     public float CarPos { get; set; }
+
+    [HslDeviceAddress("YK_Luff_Angle")]
+    public float LuffAngle { get; set; }
+
+
+    [HslDeviceAddress("YK_Slew_Angle")]
+    public float SlewAngle { get; set; }
+
+
 }

@@ -22,11 +22,26 @@ public class DataMonitor<T> where T:class,new()
 
     public delegate void DataUpdate(T data);
     public event DataUpdate OnDataUpdate;
+    
 
     public delegate void ErrorCallback(Exception e);
     public event ErrorCallback OnError;
 
+    public delegate void StatusChanged(bool status);
+    public event StatusChanged OnStatusChange;
+
     private T data;
+
+    private bool connected = false;
+    private bool IsConnected {
+        get { return this.connected; }
+        set {
+            if (this.connected != value) {
+                this.connected = value;
+                this.OnStatusChange(value);
+            }
+        }
+    }
 
     public DataMonitor(string ip){
         try{
@@ -48,9 +63,11 @@ public class DataMonitor<T> where T:class,new()
                 OperateResult connect = allenBradleyNet.ConnectServer();
                 connect_station = connect.IsSuccess;
                 if (connect_station){
+                    this.IsConnected = true;
                     this.StartReadData(100);
                 }else {
-                    this.OnError(new ExceptionHandler("PLC断连",ExceptionCode.DeviceDisconnect));
+                    this.IsConnected = false;
+                    this.OnError(new ExceptionHandler("PLC未连接成功",ExceptionCode.Disconnect));
                 }
             }
         });
@@ -89,12 +106,14 @@ public class DataMonitor<T> where T:class,new()
     private void ReadData(){
         OperateResult<T> operate = allenBradleyNet.Read<T>();
         if(operate.IsSuccess){
+            this.IsConnected = true;
             data = operate.Content;
             if (this.OnDataUpdate != null){
                 this.OnDataUpdate(data);
             }
         }else{
-            this.OnError(new ExceptionHandler("PLC断连", ExceptionCode.DeviceDisconnect));
+            this.IsConnected = false;
+            this.OnError(new ExceptionHandler("PLC数据读取异常", ExceptionCode.Disconnect));
         }
     }
 }

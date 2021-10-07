@@ -6,11 +6,17 @@ using System.Threading.Tasks;
 using UnityEngine;
 using System.Timers;
 
+using Scanner.Struct;
+
 namespace Scanner.Communicate
 {
-    abstract class Communication{
+    abstract class Communication
+    {
+        private System.Timers.Timer heart_timer;
 
-        System.Timers.Timer timer;
+        private System.Timers.Timer ticks_timer;
+
+        protected byte[] heartbeat_data;
 
         protected ProtocolType protocol;
 
@@ -18,13 +24,16 @@ namespace Scanner.Communicate
 
         protected bool connected = false;
 
-        protected double receive_ticks = 0;
+        private double receive_ticks;
 
         public IPEndPoint server_address;
 
         protected IPEndPoint client_address;
 
-        public delegate void DataReceiveHandle(byte[] buff,int offset,int length);
+        private bool heart_work = false;
+
+
+        public delegate void DataReceiveHandle(byte[] buff, int offset, int length);
         public delegate void StatusChangedHandle(DeviceStatus status);
         public delegate void ErrorHandle(ExceptionHandler exception);
 
@@ -32,24 +41,45 @@ namespace Scanner.Communicate
         public event StatusChangedHandle StatusChanged;
         public event ErrorHandle Error;
 
-        private CancellationTokenSource cancel_token_source;
-        private CancellationToken cancel_token;
 
-        private Task heart_task;
-
-        public bool IsConnected{
-            get {
+        public bool IsConnected
+        {
+            get
+            {
                 return this.connected;
             }
-            protected set{
-                if (this.connected != value) {
+            protected set
+            {
+                if (this.connected != value){
                     this.connected = value;
                     this.OnStatusChanged(this.connected ? DeviceStatus.OnLine : DeviceStatus.OffLine);
                 }
             }
         }
 
-        public abstract void Connect(IPEndPoint end_point,IPEndPoint self_end_point,ProtocolType protocol);
+        protected double LastReceiveTicks
+        {
+            get
+            {
+                return this.receive_ticks;
+            }
+
+            set
+            {
+                this.IsConnected = true;
+                this.receive_ticks = value;
+                this.StartMonitorTicks(1000);
+            }
+        }
+
+        public Communication(byte[] heartbeat_data)
+        {
+            this.heartbeat_data = heartbeat_data;
+        }
+
+        public abstract void Connect(IPEndPoint end_point, IPEndPoint self_end_point, ProtocolType protocol);
+
+        public abstract void Connect(Socket socket);
 
         public abstract void DisConnect();
 
@@ -57,92 +87,108 @@ namespace Scanner.Communicate
 
         public virtual void ReceiveData() { }
 
-        public virtual void StartHeart(int delay){
-            cancel_token_source = new CancellationTokenSource();
-            cancel_token = cancel_token_source.Token;
 
-            heart_task = new Task(async() =>{
-                while (true){
-                    if (cancel_token.IsCancellationRequested) {
-                        break;
-                    }
-                    this.SendData(new byte[]{0x00});
-                    await Task.Delay(delay);
-                }
-            });
-            heart_task.Start();
-
-            this.OnTimer(delay);
+        protected void StartHeart(int interval)
+        {
+            heart_timer = new System.Timers.Timer(interval);
+            heart_timer.AutoReset = true;
+            heart_timer.Enabled = true;
+            heart_timer.Elapsed += new ElapsedEventHandler(HeartTimerUp);
         }
 
-        private void OnTimer(int interval) {
-            timer = new System.Timers.Timer(interval);
-            timer.AutoReset = true;
-            timer.Enabled = true;
-            timer.Elapsed += new ElapsedEventHandler(TimerUp);
+        public virtual void StopHeart()
+        {
+            if (heart_timer != null)
+            {
+                heart_timer.Stop();
+                heart_timer.Close();
+            }
         }
 
-        private void TimerUp(object sender,ElapsedEventArgs e){
+        private void HeartTimerUp(object sender, ElapsedEventArgs e)
+        {
             System.Timers.Timer timer = sender as System.Timers.Timer;
-            try{
-                double ticks = DateTime.Now.Ticks * Math.Pow(10,-4);
+            try
+            {
+                double ticks = DateTime.Now.Ticks * Math.Pow(10, -4);
 
-                if (Math.Abs(receive_ticks) < Math.Pow(10, -2)){
-                    this.IsConnected = false;
-                }else if (Math.Abs(ticks - receive_ticks) < timer.Interval){
-                    this.IsConnected = true;
-                }else{
-                    this.IsConnected = false;
+                if (Math.Abs(ticks - receive_ticks) > timer.Interval)
+                {
+                    this.SendData(heartbeat_data);
                 }
-            }catch (Exception exception){
+            }
+            catch (Exception exception)
+            {
+                Debug.Log("Enter HeartBeat Error");
                 this.OnError(new ExceptionHandler(exception.Message, ExceptionCode.InternalError));
             }
         }
 
-        protected void UpdateReceiveTicks(){
-            this.receive_ticks = DateTime.Now.Ticks * Math.Pow(10, -4);
+        private void StartMonitorTicks(int interval)
+        {
+            if (ticks_timer != null)
+            {
+                ticks_timer.Stop();
+                ticks_timer.Close();
+            }
+            ticks_timer = new System.Timers.Timer(interval);
+            ticks_timer.Enabled = true;
+            ticks_timer.Elapsed += new ElapsedEventHandler(TicksTimerUp);
         }
 
-        public virtual void StopHeart() {
-            if (cancel_token_source != null) {
-                cancel_token_source.Cancel();
-            }
-            if (timer != null) {
-                timer.Stop();
-            }
+        private void TicksTimerUp(object sender, ElapsedEventArgs e)
+        {
+            this.IsConnected = false;
+        }
+        public void UpdateReceiveTicks()
+        {
+            this.LastReceiveTicks = DateTime.Now.Ticks * Math.Pow(10, -4);
         }
 
-        protected void OnDataReceived(byte[] buffer,int offset,int length,IPEndPoint remote_address)
+        protected void OnDataReceived(byte[] buffer, int offset, int length, IPEndPoint remote_address)
         {
             this.server_address = remote_address;
-            if(this.DataReceived != null){
-                this.DataReceived(buffer,offset,length);
+            if (this.DataReceived != null)
+            {
+                this.DataReceived(buffer, offset, length);
             }
         }
 
-        protected void OnStatusChanged(DeviceStatus status){
-            if (this.StatusChanged != null) {
+        protected void OnStatusChanged(DeviceStatus status)
+        {
+            if (this.StatusChanged != null)
+            {
                 this.StatusChanged(status);
             }
         }
 
-        protected void OnError(ExceptionHandler exception){
-            if (this.Error != null) {
+        protected void OnError(ExceptionHandler exception)
+        {
+            if (this.Error != null)
+            {
                 this.Error(exception);
             }
         }
 
-        protected ExceptionCode HandlerError(SocketError error){
-            switch (error) {
+        protected ExceptionCode HandlerError(SocketError error)
+        {
+            Console.WriteLine(error);
+            switch (error)
+            {
                 case SocketError.NetworkUnreachable:
                 case SocketError.HostUnreachable:
                     return ExceptionCode.NetworkUnreachable;
                 case SocketError.ConnectionRefused:
-                    return ExceptionCode.DeviceConnectionRefused;
+                    return ExceptionCode.ConnectionRefused;
+                case SocketError.OperationAborted:
+                    return ExceptionCode.OperationAborted;
+                case SocketError.NotConnected:
+                    return ExceptionCode.NotConnected;
+                case SocketError.ConnectionAborted:
+                    return ExceptionCode.ConnectionAborted;
                 default:
                     return ExceptionCode.None;
             }
-            return ExceptionCode.None;
         }
     }
 }

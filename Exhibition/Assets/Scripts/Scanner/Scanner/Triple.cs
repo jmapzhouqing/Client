@@ -20,14 +20,13 @@ namespace Scanner.Scanister{
 
         private long start_time_stamp;
 
-        public Triple(string name,string ip,int port,ProtocolType protocol):base(name) {
+        public Triple(string name,string ip,int port):base(name) {
             try{
                 reply_process = new Dictionary<string, Action<List<UInt32>>>();
 
                 data_buffer = new DataBuffer(102400,SocketType.Dgram);
 
-                this.end_point = new IPEndPoint(IPAddress.Parse(ip), port);
-                this.protocol = protocol;
+                this.server_address = new IPEndPoint(IPAddress.Parse(ip), port);
 
                 reply_process.Add("SCAN", MeasurementStatusProcess);
                 reply_process.Add("GSCN", ScandataProcess);
@@ -43,6 +42,7 @@ namespace Scanner.Scanister{
 
         public override void Connect() {
             this.StartProcessData(100);
+            correspond = new Correspond_UDP(new IPEndPoint(IPAddress.Any, 0), new byte[]{0x00});
             base.Connect();
         }
 

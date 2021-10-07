@@ -7,6 +7,17 @@ using System.Runtime.InteropServices;
 
 namespace Scanner.Struct
 {
+    public enum DeviceStatus:short
+    {
+        NotConnect = 0,
+        Connect,
+        DisConnect,
+        OnLine,
+        OffLine,
+        Working,
+        Idle,
+        ShutDown
+    }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct BroadcastDeviceInfo {

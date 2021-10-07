@@ -354,10 +354,19 @@ public class CoalDumpInfo{
 }
 
 public class StackCoalInfo {
+    public string dump_name;
     public int side;
-    public float device_position;
+    public float max_z;
+    public float min_z;
     public float internal_rotation;
     public float external_rotation;
     public bool is_empty_dump;
     public bool use_config_corner;
+}
+
+public class TakeCoalInfo {
+    public string dump_name;
+    public Vector3 euler;
+    public float position;
+    public int level;
 }

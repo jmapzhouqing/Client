@@ -8,6 +8,8 @@ using System.Linq;
 
 public class CoalDumpInfoEditorControl : MonoBehaviour {
 
+    public Transform delete;
+
     public CoalDumpInfo info;
 
     public VectorLine Line;
@@ -34,6 +36,13 @@ public class CoalDumpInfoEditorControl : MonoBehaviour {
         GameObject.DestroyImmediate(this.gameObject);
     }
 
+    public void Delete() {
+        if(Line != null){
+            VectorLine.Destroy(ref Line);
+        }
+        GameObject.DestroyImmediate(this.gameObject);
+    }
+
     public void Cancle() {
         if(!is_edit && Line != null){
             VectorLine.Destroy(ref Line);
@@ -45,6 +54,10 @@ public class CoalDumpInfoEditorControl : MonoBehaviour {
         this.Line = Line;
         this.info = info;
         this.is_edit = is_edit;
+
+        if (this.is_edit){
+            delete.gameObject.SetActive(true);
+        }
 
         this.SetExhibitionProperty(info);
     }

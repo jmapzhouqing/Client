@@ -19,13 +19,13 @@ namespace Scanner.Scanister
     {
         private bool isLogin = false;
 
-        public SickScanner(string name,string ip, int port,ProtocolType protocol):base(name)
+        public SickScanner(string name,string ip, int port):base(name)
         {
             try{
                 reply_process = new Dictionary<string, Action<string[]>>();
                 data_buffer = new DataBuffer(1024000,SocketType.Stream);
-                this.protocol = protocol;
-                this.end_point = new IPEndPoint(IPAddress.Parse(ip), port);
+
+                this.server_address = new IPEndPoint(IPAddress.Parse(ip), port);
                
                 reply_process.Add("sANSetAccessMode", AccessModeProcess);
                 reply_process.Add("sANLMCstartmeas", StartmeasProcess);
@@ -39,6 +39,11 @@ namespace Scanner.Scanister
             catch (Exception e){
 
             }
+        }
+
+        public override void Connect(){
+            correspond = new Correspond_TCP(new IPEndPoint(IPAddress.Any, 0), new byte[] { 0x00 });
+            base.Connect();
         }
 
         /*
@@ -104,7 +109,7 @@ namespace Scanner.Scanister
         }
 
         protected override void stop_scan_data() {
-            this.communication.SendData(this.CommandConstruct("sEN LMDscandata 0"));
+            this.correspond.SendData(this.CommandConstruct("sEN LMDscandata 0"));
         }
 
         public override void GetDeviceInfo(){
@@ -155,8 +160,7 @@ namespace Scanner.Scanister
             }
         }
 
-        public void LMDscandataProcess(string[] fields)
-        {
+        public void LMDscandataProcess(string[] fields){
             int index = 0;
             int length = fields.Length;
 
@@ -263,6 +267,7 @@ namespace Scanner.Scanister
 
             bool isError = Convert.ToBoolean(Convert.ToInt16(fields[2]));
             if (!isError) {
+                this.OnStatusChanged(DeviceStatus.Working);
                 this.start_scan_data();
             }
         }

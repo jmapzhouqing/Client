@@ -38,7 +38,7 @@ public class CoalDumpEditor : MonoBehaviour
     // Update is called once per frame
     void Update(){
         if (isHover&&camera_control.control_state.Equals(MouseControl.LeftDbclick)){
-            RectTransform confirm = UIManager.LoadUserInterface("CoalDumpInfo");
+            RectTransform confirm = UIManager.instance.LoadUserInterface("CoalDumpInfo");
             CoalDumpInfoEditorControl control = confirm?.GetComponent<CoalDumpInfoEditorControl>();
             control?.SetProperty(relink_line, info, true);
         }

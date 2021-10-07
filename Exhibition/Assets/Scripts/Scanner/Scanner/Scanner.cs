@@ -24,17 +24,15 @@ namespace Scanner.Scanister
 
         protected Task process_data_task;
 
-        protected ProtocolType protocol;
-
-        protected Communication communication;
+        protected Correspond correspond;
 
         protected DataBuffer data_buffer;
 
-        protected IPEndPoint end_point;
+        protected IPEndPoint server_address;
 
-        protected IPEndPoint self_end_point = null;
+        protected IPEndPoint client_address = null;
 
-        public int receive_size = 0;
+        public DeviceStatus device_status;
 
         public delegate void DataDecodeCompleteHandle(List<RayInfo> rays);
         public delegate void StatusChangedHandle(DeviceStatus status);
@@ -54,27 +52,33 @@ namespace Scanner.Scanister
             this.device_name = device_name;
         }
 
-        public bool IsConnected {
-            get { return this.communication.IsConnected; }
+        public bool IsConnected{
+            get { return this.correspond.IsConnected();}
         }
 
         public virtual void Connect(){
-            communication = new Client();
+            /*
+            communication = new Client(new byte[]{0x02});
             communication.DataReceived += ReceiveData;
             communication.StatusChanged += this.OnStatusChanged;
             communication.Error += this.OnError;
 
-            communication.Connect(this.end_point,this.self_end_point,this.protocol);
+            communication.Connect(this.server_address,this.client_address,this.protocol);*/
+            correspond.DataReceived += ReceiveData;
+            correspond.Error += this.OnError;
+            correspond.StatusChanged += this.OnStatusChanged;
+
+            correspond.Connect(this.server_address,5000);
         }
 
         public virtual void DisConnect(){
-            if (communication != null){
-                communication.DisConnect();
+            if (correspond != null){
+                correspond.DisConnect();
             }
         }
         public virtual void SendData(byte[] data) {
             if (this.IsConnected) {
-                this.communication.SendData(data);
+                this.correspond.SendData(data);
             }
         }
 
@@ -155,8 +159,7 @@ namespace Scanner.Scanister
 
         protected void OnStatusChanged(DeviceStatus status)
         {
-            if (this.StatusChanged != null)
-            {
+            if (this.StatusChanged != null){
                 this.StatusChanged(status);
             }
         }

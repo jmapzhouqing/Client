@@ -4,22 +4,31 @@ using UnityEngine;
 
 public class HardWareDataMonitor : MonoBehaviour
 {
-    public DeviceMonitor device_monitor;
+    public DeviceStatusControl device_yaw;
+
+    public DeviceStatusControl device_pitch;
+
+    public DeviceStatusControl device_forward;
 
     private DataMonitor<DeviceData> data_monitor;
+
+    public DeviceData data;
+
+    public bool IsConnected = false;
+
 
     private void Awake(){
         data_monitor = new DataMonitor<DeviceData>("192.168.0.144");
 
         data_monitor.OnDataUpdate += OnDataUpate;
         data_monitor.OnError += OnError;
-
+        data_monitor.OnStatusChange += OnStatusChanged;
+       
         data_monitor.Connect();
     }
 
-    // Start is called before the first frame update
     void Start(){
-        
+
     }
 
     // Update is called once per frame
@@ -28,11 +37,18 @@ public class HardWareDataMonitor : MonoBehaviour
     }
 
     void OnDataUpate(DeviceData data){
-
+        device_yaw.Status = data.SlewStatus;
+        device_pitch.Status = data.LuffStatus;
+        device_forward.Status = data.CarStatus;
+        this.data = data;
     }
 
     void OnError(Exception data){
         Debug.Log(data);
+    }
+
+    void OnStatusChanged(bool status) {
+        this.IsConnected = status;
     }
 
     private void OnDestroy(){

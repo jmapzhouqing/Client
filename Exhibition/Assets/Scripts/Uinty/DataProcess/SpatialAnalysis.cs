@@ -25,7 +25,7 @@ public class SpatialAnalysis : MonoBehaviour
 
     private List<Vector3> rotation_vertices;
 
-    private Vector3 origin_angle;
+    private List<Vector3> exhibition_vertices;
 
     private bool isLeft = false;
 
@@ -36,9 +36,29 @@ public class SpatialAnalysis : MonoBehaviour
     private bool is_update = false;
 
     private float coal_height = 0;
+
+
+    private HardWareDataMonitor hardware_monitor;
+
+    private ProgramCommunication correspond;
+
+    public Transform arm;
+    public Transform foundation;
+
+    private Vector3 arm_euler;
+    private Vector3 foundation_euler;
+
+    float step = -0.02f;
     // Start is called before the first frame update
     void Awake(){
-        origin_angle = this.transform.rotation.eulerAngles;
+        exhibition_vertices = new List<Vector3>();
+
+        hardware_monitor = FindObjectOfType<HardWareDataMonitor>();
+
+        correspond = FindObjectOfType<ProgramCommunication>();
+
+        arm_euler = arm.rotation.eulerAngles;
+        foundation_euler = foundation.rotation.eulerAngles;
 
         grid_data_manager = FindObjectOfType<GridDataManager>();
 
@@ -54,7 +74,6 @@ public class SpatialAnalysis : MonoBehaviour
 
         rotation_vertices = new List<Vector3>();
     }
-
     private void StartName(){
         /*
         Grid grid = new Grid(0, 180, 100, 3000, 0.2f, 200);
@@ -105,13 +124,12 @@ public class SpatialAnalysis : MonoBehaviour
         grid_data_manager.UpdateGridData(update_vertices);
     }*/
 
-    public void UpdateVertice()
-    {
+    public void UpdateVertice(){
         Vector3 center = this.transform.position;
 
-        float rotation = this.transform.rotation.eulerAngles.y - origin_angle.y;
+        float rotation = foundation.rotation.eulerAngles.y - foundation_euler.y;
 
-        float pitch = this.transform.rotation.eulerAngles.x - origin_angle.x;
+        float pitch = arm.rotation.eulerAngles.x - arm_euler.x;
 
         Quaternion quaternion = Quaternion.Euler(pitch,rotation,0);
         Matrix4x4 matrix = new Matrix4x4();
@@ -140,27 +158,45 @@ public class SpatialAnalysis : MonoBehaviour
         grid_data_manager.UpdateCoalYard(need_update);
     }
 
-
-    float step = -0.02f;
     // Update is called once per frame
-    void Update()
-    {
-        for (int i = 0, len = rotation_vertices.Count; i < len; i++) {
-            Vector3 _start = rotation_vertices[i % len];
-            Vector3 _end = rotation_vertices[(i+1) % len];
+    void Update(){
+        for (int i = 0, len = exhibition_vertices.Count; i < len; i++) {
+            Vector3 _start = exhibition_vertices[i % len];
+            Vector3 _end = exhibition_vertices[(i+1) % len];
 
-            Vector3 start = new Vector3(_start.x, 0, _start.y);
-            Vector3 end = new Vector3(_end.x, 0, _end.y);
+            Vector3 start = new Vector3(_start.x, 0, _start.z);
+            Vector3 end = new Vector3(_end.x, 0, _end.z);
             Debug.DrawLine(_start, _end, Color.red);
         }
 
+        if (hardware_monitor.IsConnected){
+            float yaw = hardware_monitor.data.SlewAngle;
+            float pitch = hardware_monitor.data.LuffAngle;
+            foundation.eulerAngles = new Vector3(foundation_euler.x, foundation_euler.y + yaw, foundation_euler.z);
+            arm.eulerAngles = new Vector3(arm_euler.x + pitch, arm_euler.y, arm_euler.z);
+        }
+
+        if(hardware_monitor.IsConnected){
+            DeviceData data = hardware_monitor.data;
+            if (data.SlewStatus == 1){
+                if(CheckLeftBoundary()){
+                    correspond.SendData("Boundardy Left Arrive");
+                }
+            }else if (data.SlewStatus == 2) {
+                if (CheckRightBoundary()){
+                    correspond.SendData("Boundardy Right Arrive");
+                }
+            }
+        }
+
+        UpdateVertice();
+
+        //if(is)
         //this.transform.rotation = Quaternion.Euler(angle);
         if (is_update) {
             UpdateVertice();
-            if (isLeft || isRight)
-            {
-                if (isLeft)
-                {
+            if(isLeft || isRight){
+                if (isLeft){
                     if (CheckLeftBoundary())
                     {
                         isLeft = false;
@@ -189,8 +225,7 @@ public class SpatialAnalysis : MonoBehaviour
         }
     }
 
-    private void FixedUpdate()
-    {
+    private void FixedUpdate(){
         //UpdateVertice();
     }
 
@@ -207,13 +242,10 @@ public class SpatialAnalysis : MonoBehaviour
     }
 
     public bool CheckLeftBoundardyPolygon() {
-
-
         return true;
     }
 
-
-    private void CaculateGridBoundary(Grid grid, int level) {
+    private void CaculateGridBoundary(Grid grid, int level){
         float height = (level - 1) * ConfigurationParameter.level_height;
     }
 
@@ -250,7 +282,7 @@ public class SpatialAnalysis : MonoBehaviour
             for(int j = start_z; j <= end_z; j++){
                 try
                 {
-                    if (vertices[i, j].y > height && vertices[i, j].y <= (height + ConfigurationParameter.level_height))
+                    if(vertices[i, j].y > height && vertices[i, j].y <= (height + ConfigurationParameter.level_height))
                     {
                         boundary_vertices.Add(vertices[i, j]);
                         break;
@@ -259,18 +291,26 @@ public class SpatialAnalysis : MonoBehaviour
                 catch (Exception e) {
                     Debug.Log(i+"#"+j);
                 }
-               
             }
         }
 
         for (int i = start_x; i <= end_x; i++){
             for (int j = end_z; j >= start_z; j--){
-                if (vertices[i, j].y > height && vertices[i, j].y < (height + 2)){
-                    boundary_vertices.Add(vertices[i, j]);
-                    break;
+                try
+                {
+                    if (vertices[i, j].y > height && vertices[i, j].y <= (height + ConfigurationParameter.level_height)) {
+                        boundary_vertices.Add(vertices[i, j]);
+                        break;
+                    }
+                }
+                catch (Exception e)
+                {
+                    Debug.Log(i + "#" + j);
                 }
             }
         }
+
+        exhibition_vertices = boundary_vertices;
 
         if (boundary_vertices.Count == 0) {
             return null;
@@ -283,6 +323,9 @@ public class SpatialAnalysis : MonoBehaviour
         radius = Mathf.Cos(pitch) * radius;
 
         List<Vector2> validate_vertices = boundary_vertices.Select(vertice => new Vector2(vertice.x, vertice.z)).ToList();
+
+
+        //exhibition_vertices = validate_vertices;
 
         float min_z = float.MaxValue;
 
@@ -367,7 +410,10 @@ public class SpatialAnalysis : MonoBehaviour
     }
 
     private void SetTransform(Vector3 rotation,Vector3 center) {
-        this.transform.rotation = Quaternion.Euler(origin_angle.x + rotation.x * Mathf.Rad2Deg, origin_angle.y + rotation.y * Mathf.Rad2Deg, origin_angle.z);
+        
+        arm.rotation = Quaternion.Euler(arm_euler.x + rotation.x * Mathf.Rad2Deg, arm_euler.y, arm_euler.z);
+        foundation.rotation = Quaternion.Euler(foundation_euler.x, foundation_euler.y + rotation.y * Mathf.Rad2Deg, foundation_euler.z);
+
         this.transform.position = center;
     }
 
@@ -484,7 +530,7 @@ public class SpatialAnalysis : MonoBehaviour
 
         Vector3 center = this.transform.position;
 
-        float rotation = this.transform.rotation.eulerAngles.y - origin_angle.y;
+        float rotation = foundation.eulerAngles.y - foundation_euler.y;
 
         Polygon update_polygon = check_left_boundary_polygon.CreateRotationPolygon(new Vector2(center.x, center.z), rotation * Mathf.Deg2Rad);
 
@@ -519,7 +565,7 @@ public class SpatialAnalysis : MonoBehaviour
     public bool CheckRightBoundary(){
         Vector3 center = this.transform.position;
 
-        float rotation = this.transform.rotation.eulerAngles.y - origin_angle.y;
+        float rotation = foundation.eulerAngles.y - foundation_euler.y;
 
         Polygon update_polygon = check_right_boundary_polygon.CreateRotationPolygon(new Vector2(center.x, center.z), rotation * Mathf.Deg2Rad);
 
