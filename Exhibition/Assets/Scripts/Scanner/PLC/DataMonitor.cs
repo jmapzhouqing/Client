@@ -53,7 +53,7 @@ public class DataMonitor<T> where T:class,new()
                 this.OnError(new ExceptionHandler("HslCommunication 授权未成功",ExceptionCode.Unauthorized));
             }
         }catch(Exception e){
-
+            throw e;
         }
     }
 

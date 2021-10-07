@@ -450,7 +450,7 @@ MonoBehaviour:
   coal_container: {fileID: 1435343955}
   area_container: {fileID: 0}
   precision: 0.2
-  width: 81
+  width: 73
   height: 650
 --- !u!4 &306177952
 Transform:
@@ -733,7 +733,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
+  near clip plane: 1
   far clip plane: 5000
   field of view: 60
   orthographic: 0
@@ -806,10 +806,20 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 745718629}
     m_Modifications:
+    - target: {fileID: 754726347316436282, guid: 81774a3a51f203f42ba16498b091ab36,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 745718630}
+    - target: {fileID: 754726347316436282, guid: 81774a3a51f203f42ba16498b091ab36,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: EditCoalDump
+      objectReference: {fileID: 0}
     - target: {fileID: 754726347808804784, guid: 81774a3a51f203f42ba16498b091ab36,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.000000035070105
+      value: 0.0000009955841
       objectReference: {fileID: 0}
     - target: {fileID: 754726347852099450, guid: 81774a3a51f203f42ba16498b091ab36,
         type: 3}
@@ -1065,7 +1075,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1222559593
 Transform:
   m_ObjectHideFlags: 0
@@ -1374,7 +1384,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 43d129e34cb519d44b51df8bba311669, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 43d129e34cb519d44b51df8bba311669, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1750,6 +1760,7 @@ MonoBehaviour:
   device_pitch: {fileID: 1124451380}
   device_forward: {fileID: 258044685}
   IsConnected: 0
+  ip: 192.168.0.144
 --- !u!4 &2028106357
 Transform:
   m_ObjectHideFlags: 0

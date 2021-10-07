@@ -16,9 +16,10 @@ public class HardWareDataMonitor : MonoBehaviour
 
     public bool IsConnected = false;
 
+    public string ip;
 
     private void Awake(){
-        data_monitor = new DataMonitor<DeviceData>("192.168.0.144");
+        data_monitor = new DataMonitor<DeviceData>(ip);
 
         data_monitor.OnDataUpdate += OnDataUpate;
         data_monitor.OnError += OnError;

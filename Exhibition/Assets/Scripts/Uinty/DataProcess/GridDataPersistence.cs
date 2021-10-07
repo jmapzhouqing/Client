@@ -40,9 +40,6 @@ public class GridDataPersistence
     }
 
     public static void ReadData(string fileLocation,Vector3[,] data) {
-
-        Debug.Log(data.GetLength(0));
-        Debug.Log(data.GetLength(1));
         byte[] buffered = File.ReadAllBytes(fileLocation);
         int a = 0;
         int yHeight = 0;
@@ -63,9 +60,8 @@ public class GridDataPersistence
 
         //data = new Vector3[xCnt, zCnt];
 
-        for (int i = 0; i < xCnt; i++)
-        {
-            for (int j = 0; j < zCnt; j++){
+        for (int i = 0; i < data.GetLength(0); i++){
+            for (int j = 0; j < data.GetLength(1); j++){
                 yHeight = 0;
                 yHeight += buffered[a++] & 0xFF;
                 yHeight += (buffered[a++] & 0xFF) << 8;

@@ -21,7 +21,7 @@ public class GridDataManager : MonoBehaviour{
 
     public float precision = 0.2f;
 
-    public float width = 81;
+    public float width = 73;
     public float height = 650;
 
     private int width_segment_number;
@@ -345,42 +345,54 @@ public class GridDataManager : MonoBehaviour{
         return child.transform;
     }
 
-    private int CaculateCoalDumpLevelInfo(BoundaryCoordinate<int> index_boundary,int threshold = 200) {
-        int min_x = index_boundary.min_x;
-        int max_x = index_boundary.max_x;
-        int min_z = index_boundary.min_z;
-        int max_z = index_boundary.max_z;
+    private int CaculateCoalDumpLevelInfo(BoundaryCoordinate<int> index_boundary,int threshold = 200){
+        try
+        {
+            int min_x = index_boundary.min_x;
+            int max_x = index_boundary.max_x;
+            int min_z = index_boundary.min_z;
+            int max_z = index_boundary.max_z;
 
-        float level_height = ConfigurationParameter.level_height;
-        int level_number = ConfigurationParameter.level_number;
+            float level_height = ConfigurationParameter.level_height;
+            int level_number = ConfigurationParameter.level_number;
 
-        Dictionary<int, int> level_info = new Dictionary<int, int>();
+            Dictionary<int, int> level_info = new Dictionary<int, int>();
 
-        for (int i = 0; i < level_number; i++){
-            level_info.Add(i, 0);
-        }
+            for (int i = 0; i < level_number; i++)
+            {
+                level_info.Add(i, 0);
+            }
 
-        for (int i = min_x; i <= max_x; i++){
-            for (int j = min_z; j <= max_z; j++){
-                Vector3 vertice = mesh_data[i, j];
-                if (vertice.y < Mathf.Pow(10, -2)){
-                    continue;
+            for (int i = min_x; i <= max_x; i++)
+            {
+                for (int j = min_z; j <= max_z; j++)
+                {
+                    Vector3 vertice = mesh_data[i, j];
+                    if (vertice.y < Mathf.Pow(10, -2))
+                    {
+                        continue;
+                    }
+
+                    int level = Mathf.FloorToInt(vertice.y / level_height);
+                    level = level < 0 ? 0 : level;
+                    level = level > (level_number - 1) ? level_number - 1 : level;
+                    level_info[level]++;
                 }
+            }
 
-                int level = Mathf.FloorToInt(vertice.y / level_height);
-                level = level < 0 ? 0 : level;
-                level = level > (level_number - 1) ? level_number - 1 : level;
-                level_info[level]++;
+            List<int> level_list = level_info.Where(item => item.Value > threshold).OrderByDescending(item => item.Key).Select(item => item.Key).ToList();
+
+            if (level_list.Count != 0)
+            {
+                return level_list[0] + 1;
+            }else{
+                return 0;
             }
         }
-
-        List<int> level_list = level_info.Where(item => item.Value > threshold).OrderByDescending(item => item.Key).Select(item=>item.Key).ToList();
-
-        if (level_list.Count != 0){
-            return level_list[0] + 1;
-        }else {
-            return 0;
+        catch (Exception e) {
+            Debug.Log(e.Message);
         }
+        return 0;
     }
 
     public void UpdateGridData(int x,int z,Vector3 vertice){
