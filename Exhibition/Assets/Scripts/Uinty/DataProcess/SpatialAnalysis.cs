@@ -160,6 +160,7 @@ public class SpatialAnalysis : MonoBehaviour
 
     // Update is called once per frame
     void Update(){
+        /*
         for (int i = 0, len = exhibition_vertices.Count; i < len; i++) {
             Vector3 _start = exhibition_vertices[i % len];
             Vector3 _end = exhibition_vertices[(i+1) % len];
@@ -167,6 +168,16 @@ public class SpatialAnalysis : MonoBehaviour
             Vector3 start = new Vector3(_start.x, 0, _start.z);
             Vector3 end = new Vector3(_end.x, 0, _end.z);
             Debug.DrawLine(_start, _end, Color.red);
+        }*/
+
+        for (int i = 0, len = polygon_vertices.Count; i < len; i++)
+        {
+            Vector2 _start = polygon_vertices[i % len];
+            Vector2 _end = polygon_vertices[(i + 1) % len];
+
+            Vector3 start = new Vector3(_start.x, 0, _start.y);
+            Vector3 end = new Vector3(_end.x, 0, _end.y);
+            Debug.DrawLine(start, end, Color.red);
         }
 
         if (hardware_monitor.IsConnected){
@@ -366,6 +377,8 @@ public class SpatialAnalysis : MonoBehaviour
 
         Vector2 may_point = GetLeftRightVertice(arc_vertices,grid,height,3);
 
+        Debug.Log(may_point);
+
         if (entry_point.x < may_point.x) {
             entry_point = may_point;
         }
@@ -379,7 +392,7 @@ public class SpatialAnalysis : MonoBehaviour
         check_right_boundary_polygon.CreateInteriorPoint();
 
         
-        this.SetTransform(param["rotation"],param["center"]);
+        //this.SetTransform(param["rotation"],param["center"]);
 
         return param;
     }

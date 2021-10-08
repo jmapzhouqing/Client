@@ -72,6 +72,7 @@ namespace Scanner.Communicate
                         UIManager.instance.ClearInterface();
                         break;
                     case "CommandReceive":
+                        Debug.Log(data[3]);
                         UIManager.instance.Refresh(delegate(){
                             UIManager.instance.TakeCoalExhibition(data[3]);
                         });
@@ -92,12 +93,12 @@ namespace Scanner.Communicate
 
                         break;
                     case "End":
-                        UIManager.instance.Refresh(delegate () {
+                        UIManager.instance.Refresh(delegate (){
                             UIManager.instance.ClearInterface();
                         });
                         break;
                     case "CommandReceive":
-                        Debug.Log("堆煤命令已经接收");
+                        Debug.Log(data[3]);
                         UIManager.instance.Refresh(delegate(){
                             UIManager.instance.StackCoalExhibition(data[3]);
                         });

@@ -64,6 +64,7 @@ public class ProgramCommunication : MonoBehaviour
     }
 
     private void StatusChanged(DeviceStatus status){
+        Debug.Log(status);
         if (status.Equals(DeviceStatus.OnLine)){
             //client.StartProcessData(100);
         }else {
