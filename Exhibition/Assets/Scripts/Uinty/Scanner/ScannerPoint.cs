@@ -41,7 +41,6 @@ public class ScannerPoint : MonoBehaviour
         grid_data_manager = this.GetComponent<GridDataManager>();
 
         hardware_monitor = FindObjectOfType<HardWareDataMonitor>();
-
     }
     // Start is called before the first frame update
     void Start(){
@@ -63,13 +62,26 @@ public class ScannerPoint : MonoBehaviour
         client.Connect(server_address, client_address, ProtocolType.Udp);*/
 
         //盘煤仪 sick
-        scanner = new LMS511("Sick", ip, port);
-        scanner.DataDecodeComplete += DataTransform;
+        /*scanner = new LMS511("Sick", ip, port);
+        scanner.DataDecodeComplete += DataTransform;*/
+
+        /*
+        scanner = new Triple("Triple",ip,port);
+        scanner.DataDecodeComplete += TripleTransform;
+        
+        scanner.StatusChanged += StatusChanged;
+        scanner.Error += OnError;
+        scanner.Connect();*/
+
+
+        scanner = new KYLE("KYLE", ip, port);
+
+        scanner.DataDecodeComplete += TripleTransform;
+
         scanner.StatusChanged += StatusChanged;
         scanner.Error += OnError;
         scanner.Connect();
 
-        
         //holder = new Holder("COM2", 4800);
         //holder.Open();
 
@@ -124,6 +136,10 @@ public class ScannerPoint : MonoBehaviour
         }
     }
 
+    public void TripleTransform(List<RayInfo> rays) {
+        Debug.Log(rays.Count);
+    }
+
     public void StartDevice() {
         /*
         CoalDumpInfo info = new CoalDumpInfo();
@@ -134,12 +150,14 @@ public class ScannerPoint : MonoBehaviour
         wit.StartReadData(10);
         triple.Start();
         holder.StartScan(1, 359);*/
-        if (scanner.IsConnected) {
-            scanner.Start();
-        }
-    }
 
-    /*
+
+        if (scanner.IsConnected){
+            //scanner.Start();
+        }
+
+        scanner.Start();
+    }
     private void OnGUI(){
         if(GUI.Button(new Rect(0, 0, 100, 60), "Click")){
             this.StartDevice();
@@ -147,7 +165,7 @@ public class ScannerPoint : MonoBehaviour
 
             //triple.Start();
         }
-    }*/
+    }
 
     public void StopDevice(){
         scanner.Stop();
@@ -159,14 +177,20 @@ public class ScannerPoint : MonoBehaviour
         }
     }
 
-    private void StatusChanged(DeviceStatus status) {
+    private void StatusChanged(DeviceStatus status)
+    {
+
         Loom.QueueOnMainThread((param) =>{
-                scanner_status.Status = (short)status;
+            //scanner_status.Status = (short)status;
+            Debug.Log(status);
             },null);
-        }
+    }
 
     private void OnError(ExceptionHandler handler) {
         //Debug.Log(handler.GetExceptionCode());
-        Debug.Log(handler.Message+"#"+handler.GetExceptionCode().ToString());
+        /*
+        Loom.instance.QueueOnMainThread((param) =>{
+            Debug.Log(handler.Message + "#" + handler.GetExceptionCode().ToString());
+        }, null);*/
     }
 }

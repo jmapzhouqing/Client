@@ -80,6 +80,8 @@ namespace Scanner.Scanister
             if (this.IsConnected) {
                 this.correspond.SendData(data);
             }
+
+            this.correspond.SendData(data);
         }
 
         protected virtual void ReceiveData(byte[] buffer, int offset, int length){
@@ -157,14 +159,14 @@ namespace Scanner.Scanister
             }
         }
 
-        protected void OnStatusChanged(DeviceStatus status)
+        protected virtual void OnStatusChanged(DeviceStatus status)
         {
             if (this.StatusChanged != null){
                 this.StatusChanged(status);
             }
         }
 
-        protected void OnError(ExceptionHandler exception){
+        protected virtual void OnError(ExceptionHandler exception){
             if (this.Error != null){
                 this.Error(exception);
             }

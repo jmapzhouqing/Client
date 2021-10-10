@@ -4,8 +4,11 @@ using System.Net.Sockets;
 using System.Net;
 using System.Text;
 
+using UnityEngine;
+
 using Scanner.Util;
 using Scanner.Struct;
+using Scanner.Communicate;
 
 namespace Scanner.Scanister
 {
@@ -14,7 +17,7 @@ namespace Scanner.Scanister
         public KYLE(string name, string ip, int port):base(name){
             try{
                 reply_process = new Dictionary<string, Action<string[]>>();
-                data_buffer = new DataBuffer(1024000, SocketType.Stream);
+                data_buffer = new DataBuffer(1024000, SocketType.Stream,new byte[] {0x02}, new byte[] { 0x03});
 
                 this.server_address = new IPEndPoint(IPAddress.Parse(ip), port);
 
@@ -30,6 +33,12 @@ namespace Scanner.Scanister
             catch (Exception e){
 
             }
+        }
+
+        public override void Connect(){
+            this.StartProcessData(100);
+            correspond = new Correspond_TCP(new IPEndPoint(IPAddress.Any, 0), new byte[] { 0x00 });
+            base.Connect();
         }
 
         public override byte[] CommandConstruct(string command){
@@ -50,7 +59,39 @@ namespace Scanner.Scanister
 
         public override void ProcessData(byte[] data)
         {
-            throw new NotImplementedException();
+            string scan_data = Encoding.ASCII.GetString(data);
+
+            string[] fields = scan_data.Split(' ');
+
+            
+
+            if (fields.Length != 0)
+            {
+                string resCode = fields[0];
+
+                Debug.Log(resCode);
+
+                if (resCode.Equals("sRA") || resCode.Equals("sSN") || resCode.Equals("sAN") || resCode.Equals("sEA"))
+                {
+                    string eventName = resCode + fields[1];
+
+                    Action<string[]> reply = null;
+
+                    if (reply_process.TryGetValue(eventName, out reply))
+                    {
+                        reply(fields);
+                    }
+                }
+                else if (resCode.Equals("sFA"))
+                {
+                    Action<string[]> reply = null;
+
+                    if (reply_process.TryGetValue(resCode, out reply))
+                    {
+                        reply(fields);
+                    }
+                }
+            }
         }
 
         protected override void scanner_login()
@@ -59,21 +100,34 @@ namespace Scanner.Scanister
         }
 
         protected override void start_scan(){
-            this.SendData(this.CommandConstruct("sEN LMDscandata 1"));
+            Debug.Log("Enter StartScan");
+
+            byte[] data = this.CommandConstruct("sRN LMDscandata");
+
+
+
+            string value = "";
+            foreach (byte item in data) {
+                value += item.ToString("X")+" ";
+            }
+
+            Debug.Log(value);
+
+            this.SendData(data);
         }
 
        
 
         protected override void stop_scan(){
-            this.SendData(this.CommandConstruct("sEN LMDscandata 0"));
+            //this.SendData(this.CommandConstruct("sEN LMDscandata 0"));
         }
 
         protected override void start_scan_data(){
-            
+            this.SendData(this.CommandConstruct("sEN LMDscandata 1"));
         }
 
         protected override void stop_scan_data(){
-            
+            this.SendData(this.CommandConstruct("sEN LMDscandata 0"));
         }
 
         public void AccessModeProcess(string[] fields){

@@ -23,7 +23,7 @@ namespace Scanner.Scanister
         {
             try{
                 reply_process = new Dictionary<string, Action<string[]>>();
-                data_buffer = new DataBuffer(1024000,SocketType.Stream);
+                data_buffer = new DataBuffer(1024000,SocketType.Stream,new byte[] { 0x02},new byte[] { 0x03});
 
                 this.server_address = new IPEndPoint(IPAddress.Parse(ip), port);
                
