@@ -81,7 +81,7 @@ namespace Scanner.Scanister
                 this.correspond.SendData(data);
             }
 
-            this.correspond.SendData(data);
+            //this.correspond.SendData(data);
         }
 
         protected virtual void ReceiveData(byte[] buffer, int offset, int length){
@@ -159,8 +159,7 @@ namespace Scanner.Scanister
             }
         }
 
-        protected virtual void OnStatusChanged(DeviceStatus status)
-        {
+        protected virtual void OnStatusChanged(DeviceStatus status){
             if (this.StatusChanged != null){
                 this.StatusChanged(status);
             }

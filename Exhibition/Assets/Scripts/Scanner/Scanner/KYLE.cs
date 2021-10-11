@@ -17,6 +17,7 @@ namespace Scanner.Scanister
         public KYLE(string name, string ip, int port):base(name){
             try{
                 reply_process = new Dictionary<string, Action<string[]>>();
+
                 data_buffer = new DataBuffer(1024000, SocketType.Stream,new byte[] {0x02}, new byte[] { 0x03});
 
                 this.server_address = new IPEndPoint(IPAddress.Parse(ip), port);
@@ -37,7 +38,7 @@ namespace Scanner.Scanister
 
         public override void Connect(){
             this.StartProcessData(100);
-            correspond = new Correspond_TCP(new IPEndPoint(IPAddress.Any, 0), new byte[] { 0x00 });
+            correspond = new Correspond_TCP(new IPEndPoint(IPAddress.Any, 0),this.CommandConstruct("sRN LMPscancfg"));
             base.Connect();
         }
 
@@ -63,10 +64,7 @@ namespace Scanner.Scanister
 
             string[] fields = scan_data.Split(' ');
 
-            
-
-            if (fields.Length != 0)
-            {
+            if (fields.Length != 0){
                 string resCode = fields[0];
 
                 Debug.Log(resCode);
@@ -100,6 +98,7 @@ namespace Scanner.Scanister
         }
 
         protected override void start_scan(){
+            /*
             Debug.Log("Enter StartScan");
 
             byte[] data = this.CommandConstruct("sRN LMDscandata");
@@ -113,21 +112,22 @@ namespace Scanner.Scanister
 
             Debug.Log(value);
 
-            this.SendData(data);
+            this.SendData(data);*/
+            this.SendData(this.CommandConstruct("sEN LMDscandata 1"));
         }
 
        
 
         protected override void stop_scan(){
-            //this.SendData(this.CommandConstruct("sEN LMDscandata 0"));
+            this.SendData(this.CommandConstruct("sEN LMDscandata 0"));
         }
 
         protected override void start_scan_data(){
-            this.SendData(this.CommandConstruct("sEN LMDscandata 1"));
+            //this.SendData(this.CommandConstruct("sEN LMDscandata 1"));
         }
 
         protected override void stop_scan_data(){
-            this.SendData(this.CommandConstruct("sEN LMDscandata 0"));
+            //this.SendData(this.CommandConstruct("sEN LMDscandata 0"));
         }
 
         public void AccessModeProcess(string[] fields){
@@ -157,117 +157,56 @@ namespace Scanner.Scanister
             }
         }
 
-        public void LMDscandataEventProcess(string[] fields)
-        {
+        public void LMDscandataEventProcess(string[] fields){
             int index = 0;
             int length = fields.Length;
 
             bool isStart = Convert.ToBoolean(Convert.ToInt16(fields[2]));
-            if (isStart)
-            {
-                //System.Threading.Thread mythread = new System.Threading.Thread(WriteData);
-                //mythread.Start();
-            }
-            else
-            {
 
+            if (isStart){
+                this.OnStatusChanged(DeviceStatus.Working);
+            }else{
+                this.OnStatusChanged(DeviceStatus.OnLine);
             }
         }
 
-        public void LMDscandataProcess(string[] fields)
-        {
-            int index = 0;
-            int length = fields.Length;
+        public void LMDscandataProcess(string[] fields){
+            try{
+                bool echo_intensity = Convert.ToBoolean(Convert.ToUInt16(fields[15]));
 
-            UInt32 scan_frequency = Convert.ToUInt32(fields[16], 16) / 100;
-            UInt32 measurement_frequency = Convert.ToUInt32(fields[17], 16);
-            UInt16 amount_channels = Convert.ToUInt16(fields[19], 16);
+                int factor = 0;
 
-            index = 19;
-
-            for (int i = 0; i < amount_channels; i++)
-            {
-                string content = fields[++index];
-                UInt32 scale_factor = Convert.ToUInt32(fields[++index], 16);
-
-                if (scale_factor == 0x3F800000)
-                {
-                    scale_factor = 1;
-                }
-                else if (scale_factor == 0x40000000)
-                {
-                    scale_factor = 2;
-                }
-                else if (scale_factor == 0x40800000)
-                {
-                    scale_factor = 4;
+                if (Convert.ToUInt32(fields[21], 16) == 0x3F800000){
+                    factor = 1;
                 }
 
-                UInt32 scale_factor_offset = Convert.ToUInt32(fields[++index], 16);
-                float start_angle = Convert.ToUInt32(fields[++index], 16) / 10000.0f;
-                float angular_step = Convert.ToUInt16(fields[++index], 16) / 10000.0f;
-                UInt16 amount_data = Convert.ToUInt16(fields[++index], 16);
+                float start_angle = Convert.ToInt32(fields[23],16) / 10000.0f;
+
+                float angle_step = Convert.ToInt32(fields[24],16) / 10000.0f;
+
+                UInt16 data_number = Convert.ToUInt16(fields[25],16);
+
+                int index = 26;
+
+                int step = 1;
+
+                if (echo_intensity){
+                    step += 2;
+                }
 
                 List<RayInfo> rays = new List<RayInfo>();
 
-                for (int j = 0; j < amount_data; j++)
-                {
+                for (int i = 0; i < data_number; i+=step){
                     RayInfo info;
-                    info.distance = Convert.ToInt16(fields[++index], 16) / 1000.0f * scale_factor;
-                    info.degree = start_angle + i * angular_step;
+                    info.distance = Convert.ToUInt32(fields[index++],16) * factor / 1000.0f;
+                    info.degree = start_angle + angle_step * i;
                     rays.Add(info);
                 }
 
                 this.OnDataDecodeComplete(rays);
+            }catch (Exception e){
+                this.OnError(new ExceptionHandler(e.Message, ExceptionCode.InternalError));
             }
-
-            /*
-            scandata.version_number = DataConvert.GetNumberFromBuffer<UInt16>(data, ref pos);
-            scandata.device_number = DataConvert.GetNumberFromBuffer<UInt16>(data, ref pos);
-            scandata.serial_number = DataConvert.GetNumberFromBuffer<UInt32>(data, ref pos);
-            scandata.device_status = DataConvert.GetNumberFromBuffer<UInt16>(data, ref pos);
-            scandata.telegram_counter = DataConvert.GetNumberFromBuffer<UInt16>(data, ref pos);
-            scandata.scan_counter = DataConvert.GetNumberFromBuffer<UInt16>(data, ref pos);
-            scandata.time_since_start = DataConvert.GetNumberFromBuffer<UInt32>(data, ref pos);
-            scandata.time_transmision = DataConvert.GetNumberFromBuffer<UInt32>(data, ref pos);
-
-            scandata.status_digital_inputs = DataConvert.GetNumberFromBuffer<UInt16>(data, ref pos);
-
-            scandata.status_digital_outputs = DataConvert.GetNumberFromBuffer<UInt16>(data, ref pos);
-            scandata.layer_angle = DataConvert.GetNumberFromBuffer<UInt16>(data, ref pos);
-
-            scandata.scan_frequency = DataConvert.GetNumberFromBuffer<UInt32>(data, ref pos)/100;
-
-            scandata.measurement_frequency = DataConvert.GetNumberFromBuffer<UInt32>(data, ref pos);
-
-            scandata.amount_encoder = DataConvert.GetNumberFromBuffer<UInt16>(data, ref pos);
-
-            if (scandata.amount_encoder != 0) {
-                scandata.encoder_position = DataConvert.GetNumberFromBuffer<UInt32>(data, ref pos);
-                scandata.encoder_speed = DataConvert.GetNumberFromBuffer<UInt16>(data, ref pos);
-            }
-
-            scandata.amount_channels = DataConvert.GetNumberFromBuffer<UInt16>(data, ref pos);
-
-            for (int i = 0; i < scandata.amount_channels;i++) {
-                scandata.content = DataConvert.GetStringFromBuffer(data, ref pos, 5);
-
-                scandata.scale_factor = DataConvert.GetNumberFromBuffer<UInt32>(data, ref pos);
-                scandata.scale_factor_offset = DataConvert.GetNumberFromBuffer<UInt32>(data, ref pos);
-                scandata.start_angle = DataConvert.GetNumberFromBuffer<UInt32>(data, ref pos) / 10000.0f;
-                scandata.angular_step = DataConvert.GetNumberFromBuffer<UInt16>(data, ref pos) / 10000.0f;
-                scandata.amount_data = DataConvert.GetNumberFromBuffer<UInt16>(data, ref pos);
-
-                for (int j = 0; j < scandata.amount_data; j++){
-                    //Console.Write("{0},",DataConvert.GetNumberFromBuffer<UInt16>(data, ref pos)/1000.0f);
-                    DataConvert.GetNumberFromBuffer<UInt16>(data, ref pos);
-                }
-
-
-
-                Console.WriteLine(scandata.content+"#"+scandata.amount_data);
-            }*/
-
         }
     }
 }

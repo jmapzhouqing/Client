@@ -62,8 +62,11 @@ public class ScannerPoint : MonoBehaviour
         client.Connect(server_address, client_address, ProtocolType.Udp);*/
 
         //盘煤仪 sick
-        /*scanner = new LMS511("Sick", ip, port);
-        scanner.DataDecodeComplete += DataTransform;*/
+        scanner = new LMS511("Sick", ip, port);
+        scanner.DataDecodeComplete += TripleTransform;
+        scanner.StatusChanged += StatusChanged;
+        scanner.Error += OnError;
+        scanner.Connect();
 
         /*
         scanner = new Triple("Triple",ip,port);
@@ -73,14 +76,14 @@ public class ScannerPoint : MonoBehaviour
         scanner.Error += OnError;
         scanner.Connect();*/
 
-
+        /*
         scanner = new KYLE("KYLE", ip, port);
 
         scanner.DataDecodeComplete += TripleTransform;
 
         scanner.StatusChanged += StatusChanged;
         scanner.Error += OnError;
-        scanner.Connect();
+        scanner.Connect();*/
 
         //holder = new Holder("COM2", 4800);
         //holder.Open();
@@ -151,13 +154,13 @@ public class ScannerPoint : MonoBehaviour
         triple.Start();
         holder.StartScan(1, 359);*/
 
-
         if (scanner.IsConnected){
-            //scanner.Start();
+            scanner.Start();
         }
 
-        scanner.Start();
+        //scanner.Start();
     }
+    /*
     private void OnGUI(){
         if(GUI.Button(new Rect(0, 0, 100, 60), "Click")){
             this.StartDevice();
@@ -165,7 +168,15 @@ public class ScannerPoint : MonoBehaviour
 
             //triple.Start();
         }
-    }
+
+        if (GUI.Button(new Rect(200, 0, 100, 60), "Click"))
+        {
+            this.StopDevice();
+            //client.SendData(new byte[] {0x00});
+
+            //triple.Start();
+        }
+    }*/
 
     public void StopDevice(){
         scanner.Stop();
@@ -179,15 +190,13 @@ public class ScannerPoint : MonoBehaviour
 
     private void StatusChanged(DeviceStatus status)
     {
-
         Loom.QueueOnMainThread((param) =>{
-            //scanner_status.Status = (short)status;
-            Debug.Log(status);
+            scanner_status.Status = (short)status;
             },null);
     }
 
     private void OnError(ExceptionHandler handler) {
-        //Debug.Log(handler.GetExceptionCode());
+        Debug.Log(handler.Message);
         /*
         Loom.instance.QueueOnMainThread((param) =>{
             Debug.Log(handler.Message + "#" + handler.GetExceptionCode().ToString());

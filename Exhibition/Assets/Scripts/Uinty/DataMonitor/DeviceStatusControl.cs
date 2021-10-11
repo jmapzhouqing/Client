@@ -1,7 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System;
-using UnityEngine;
+﻿using UnityEngine;
+
+using Scanner.Struct;
 
 public abstract class DeviceStatusControl : MonoBehaviour
 {
@@ -12,8 +11,7 @@ public abstract class DeviceStatusControl : MonoBehaviour
         get { return this.status; }
         set
         {
-            if (this.status != value)
-            {
+            if (this.status != value){
                 this.SetStatus(value.ToString());
             }
         }

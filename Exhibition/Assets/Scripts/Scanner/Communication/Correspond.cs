@@ -68,7 +68,9 @@ namespace Scanner.Communicate
                 if(this.transfer_status.Equals(DeviceStatus.NotConnect)){
                     this.StatusMonitor = DeviceStatus.Connect;
                 }else {
-                    this.StatusMonitor = DeviceStatus.OnLine;
+                    if (!this.transfer_status.Equals(DeviceStatus.Working)){
+                        this.StatusMonitor = DeviceStatus.OnLine;
+                    }
                 }
 
                 this.receive_ticks = value;

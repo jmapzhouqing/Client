@@ -73,12 +73,10 @@ namespace Scanner.Communicate
             try{
                 this.StopHeart();
                 if (this.socket != null) {
-                    this.socket.Shutdown(SocketShutdown.Both);
+                    //this.socket.Shutdown(SocketShutdown.Both);
                     this.socket.Close();
                     this.socket = null;
                     this.StatusMonitor = DeviceStatus.DisConnect;
-
-                    Debug.Log(this.StatusMonitor);
                 }
             }
             catch (Exception e) {
@@ -110,15 +108,15 @@ namespace Scanner.Communicate
             Task monitor_connect = new Task(async () => {
                 double ticks = DateTime.Now.Ticks * Math.Pow(10, -4);
 
-                while ((DateTime.Now.Ticks * Math.Pow(10, -4) - ticks) < timeout && !this.IsConnected()){
+                while((DateTime.Now.Ticks * Math.Pow(10, -4) - ticks) < timeout && !this.IsConnected()){
                     await Task.Delay(100);
                 }
 
-                if (!this.IsConnected()){
+                if(!this.IsConnected()){
                     this.OnError(new ExceptionHandler("设备连接超时", ExceptionCode.TimedOut));
                 }else{
                     this.UpdateReceiveTicks();
-                    this.StartHeart(500);
+                    this.StartHeart(100);
                 }
             });
             monitor_connect.Start();
@@ -126,13 +124,14 @@ namespace Scanner.Communicate
 
         protected override void ProcessConnect(SocketAsyncEventArgs args){
             try{
+                
                 if (args.SocketError == SocketError.IsConnected) {
                     this.StatusMonitor = DeviceStatus.Connect;
                     this.OnError(new ExceptionHandler("设备已连接，无需再次连接", this.HandlerError(args.SocketError)));
                 }else if (args.SocketError == SocketError.Success){
                     if (args.ConnectSocket.Connected){
                         this.StatusMonitor = DeviceStatus.Connect;
-
+                        
                         this.OnError(new ExceptionHandler("设备连接成功", this.HandlerError(args.SocketError)));
 
                         bool willRaiseEvent = socket.ReceiveAsync(receive_async);
@@ -145,7 +144,6 @@ namespace Scanner.Communicate
                     this.OnError(new ExceptionHandler("设备无法连接", this.HandlerError(args.SocketError)));
                 }
             }catch (Exception e){
-                Debug.Log(e.Message);
                 this.OnError(new ExceptionHandler(e.Message, ExceptionCode.InternalError));
             }
         }
@@ -153,6 +151,7 @@ namespace Scanner.Communicate
         protected override void ProcessDisConnect(SocketAsyncEventArgs args){
             try{
                 if (args.SocketError == SocketError.Success){
+                    Debug.Log("I am out");
                     this.Close();
                     this.OnError(new ExceptionHandler("设备断开连接", this.HandlerError(args.SocketError)));
                 }

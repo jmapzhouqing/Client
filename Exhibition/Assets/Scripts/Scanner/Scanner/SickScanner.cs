@@ -278,7 +278,7 @@ namespace Scanner.Scanister
 
             bool isError = Convert.ToBoolean(Convert.ToInt16(fields[2]));
             if (!isError){
-                
+                this.OnStatusChanged(DeviceStatus.OnLine);
             }
         }
 
@@ -287,12 +287,10 @@ namespace Scanner.Scanister
             int length = fields.Length;
 
             bool isStart = Convert.ToBoolean(Convert.ToInt16(fields[2]));
-            if (isStart){
-                //System.Threading.Thread mythread = new System.Threading.Thread(WriteData);
-                //mythread.Start();
-            }
-            else {
-
+            if(isStart){
+                
+            }else {
+                
             }
         }
 

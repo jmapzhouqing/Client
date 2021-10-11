@@ -9,6 +9,10 @@ public class ArtificalControl : MonoBehaviour
 
     public Image image;
 
+    public Sprite start;
+
+    public Sprite stop;
+
     private bool is_working = false;
     // Start is called before the first frame update
     void Awake(){
@@ -19,8 +23,10 @@ public class ArtificalControl : MonoBehaviour
         is_working = !is_working;
         if (is_working) {
             scanner_manager.StartScanning();
+            this.image.sprite = stop;
         } else{
             scanner_manager.StopScanning();
+            this.image.sprite = start;
         }
     }
     
