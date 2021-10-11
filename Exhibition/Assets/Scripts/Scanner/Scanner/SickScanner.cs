@@ -42,7 +42,7 @@ namespace Scanner.Scanister
         }
 
         public override void Connect(){
-            correspond = new Correspond_TCP(new IPEndPoint(IPAddress.Any, 0), new byte[] { 0x00 });
+            correspond = new Correspond_TCP(new IPEndPoint(IPAddress.Any, 0),this.CommandConstruct("sRN LMPscancfg"));
             base.Connect();
         }
 
