@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Threading;
 
+using UnityEngine;
+
 namespace Scanner.Util
 {
     public class RecvQueue<T> where T : struct
@@ -29,12 +31,17 @@ namespace Scanner.Util
 
         public bool WaitIncomingObject(int timeout)
         {
-            bool result = true;
-            while (list.Count == 0 && result)
-            {
-                result = Monitor.Wait(this, timeout);
+            try{
+                Monitor.Enter(this);
+                bool result = true;
+                while(list.Count == 0 && result){
+                    result = Monitor.Wait(this, timeout);
+                }
+                return result;
+            }finally {
+                Monitor.Exit(this);
             }
-            return result;
+            
         }
 
         public T Pop()

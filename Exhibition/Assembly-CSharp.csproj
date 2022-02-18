@@ -69,6 +69,7 @@
     <Compile Include="Assets\Demigiant\DOTween\Modules\DOTweenModuleUtils.cs" />
     <Compile Include="Assets\PhysicalDetection.cs" />
     <Compile Include="Assets\Scripts\Calc.cs" />
+    <Compile Include="Assets\Scripts\Communication\ScannerTest.cs" />
     <Compile Include="Assets\Scripts\Communication\Test.cs" />
     <Compile Include="Assets\Scripts\Config\ConfigurationParameter.cs" />
     <Compile Include="Assets\Scripts\CreateData\CreateCoalYard.cs" />
@@ -112,7 +113,7 @@
     <Compile Include="Assets\Scripts\Scanner\Scanner\SickScanner.cs" />
     <Compile Include="Assets\Scripts\Scanner\Scanner\Tele.cs" />
     <Compile Include="Assets\Scripts\Scanner\Scanner\Triple.cs" />
-    <Compile Include="Assets\Scripts\Scanner\Serial\SerialCommunication.cs" />
+    <Compile Include="Assets\Scripts\Scanner\Serial\SerialCorrespond.cs" />
     <Compile Include="Assets\Scripts\Scanner\Serial\SerialDevice.cs" />
     <Compile Include="Assets\Scripts\Scanner\Serial\WIT.cs" />
     <Compile Include="Assets\Scripts\Scanner\Struct\DataStruct.cs" />

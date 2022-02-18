@@ -7,8 +7,6 @@ using Scanner.Struct;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Threading;
-using System.Net;
-using System.Net.Sockets;
 
 namespace Scanner.Scanister
 {
@@ -34,7 +32,7 @@ namespace Scanner.Scanister
 
         public DeviceStatus device_status;
 
-        public delegate void DataDecodeCompleteHandle(List<RayInfo> rays);
+        public delegate void DataDecodeCompleteHandle(SectorInfo rays);
         public delegate void StatusChangedHandle(DeviceStatus status);
         public delegate void ErrorHandle(ExceptionHandler exception);
 
@@ -76,11 +74,10 @@ namespace Scanner.Scanister
                 correspond.DisConnect();
             }
         }
-        public virtual void SendData(byte[] data) {
-            if (this.IsConnected) {
+        public virtual void SendData(byte[] data){
+            if(this.IsConnected){
                 this.correspond.SendData(data);
             }
-
             //this.correspond.SendData(data);
         }
 
@@ -132,7 +129,7 @@ namespace Scanner.Scanister
             process_data_token_source = new CancellationTokenSource();
             process_data_token = process_data_token_source.Token;
 
-            process_data_task = new Task(async () => {
+            process_data_task = new Task(() => {
                 while (true){
                     if (process_data_token.IsCancellationRequested){
                         return;
@@ -141,7 +138,7 @@ namespace Scanner.Scanister
                     if (data != null){
                         this.ProcessData(data);
                     }
-                    await Task.Delay(delay);
+                    //await Task.Delay(delay);
                 }
             });
             process_data_task.Start();
@@ -153,9 +150,9 @@ namespace Scanner.Scanister
             }
         }
 
-        protected void OnDataDecodeComplete(List<RayInfo> rays){
+        protected void OnDataDecodeComplete(SectorInfo data){
             if (this.DataDecodeComplete != null){
-                this.DataDecodeComplete(rays);
+                this.DataDecodeComplete(data);
             }
         }
 

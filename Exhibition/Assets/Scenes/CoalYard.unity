@@ -901,7 +901,7 @@ PrefabInstance:
     - target: {fileID: 754726347808804784, guid: 81774a3a51f203f42ba16498b091ab36,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.000030486504
+      value: 0.0000002362336
       objectReference: {fileID: 0}
     - target: {fileID: 754726347852099450, guid: 81774a3a51f203f42ba16498b091ab36,
         type: 3}
@@ -1797,7 +1797,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1758957690
 Transform:
   m_ObjectHideFlags: 0
@@ -1824,8 +1824,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e03f8f98f82e0e343b712e2cf10fabe4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ip: 192.168.90.252
-  port: 8100
+  ip: 192.168.90.247
+  port: 1024
   scanner_status: {fileID: 2120960566}
 --- !u!114 &1831928846 stripped
 MonoBehaviour:

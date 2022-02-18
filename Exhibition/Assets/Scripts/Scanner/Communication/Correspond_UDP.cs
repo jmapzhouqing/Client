@@ -2,13 +2,17 @@
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
+
 using UnityEngine;
 
 using Scanner.Struct;
+
+
 namespace Scanner.Communicate
 {
     class Correspond_UDP : Correspond{
-        public Correspond_UDP(IPEndPoint client_address,byte[] heartbeat_data) : base(heartbeat_data){
+        
+        public Correspond_UDP(IPEndPoint client_address,byte[] heartbeat_data):base(heartbeat_data){
             if (client_address != null){
                 socket = new Socket(client_address.AddressFamily, SocketType.Dgram, ProtocolType.Udp);
                 socket.Bind(client_address);
@@ -18,8 +22,7 @@ namespace Scanner.Communicate
                 if (!willRaiseEvent){
                     this.ProcessReceive(receive_async);
                 }
-            }
-            else {
+            }else {
                 throw new ArgumentNullException("client_address");
             }
         }
@@ -28,8 +31,7 @@ namespace Scanner.Communicate
             if (server_address != null){
                 send_async.RemoteEndPoint = server_address;
                 this.MonitorConnect(timeout);
-            }
-            else{
+            }else{
                 throw new ArgumentNullException("server_address");
             }
         }
@@ -61,13 +63,11 @@ namespace Scanner.Communicate
 
                 bool willRaiseEvent = socket.SendToAsync(send_async);
 
-                if (!willRaiseEvent){
+                if(!willRaiseEvent){
                     this.ProcessSend(send_async);
                 }
             }
-            catch (Exception e)
-            {
-                Debug.Log("Now Error:" + e.Message);
+            catch (Exception e){
                 this.OnError(new ExceptionHandler(e.Message, ExceptionCode.InternalError));
             }
         }
@@ -100,9 +100,10 @@ namespace Scanner.Communicate
         }
 
         protected override void ProcessReceive(SocketAsyncEventArgs args){
-            try{
+            try
+            {
+                
                 if (args.SocketError == SocketError.Success){
-                    Debug.Log(args.BytesTransferred);
                     if (args.BytesTransferred > 0){
                         this.UpdateReceiveTicks();
                         this.OnDataReceived(args.Buffer, args.Offset, args.BytesTransferred, args.RemoteEndPoint as IPEndPoint);
@@ -116,7 +117,6 @@ namespace Scanner.Communicate
                         this.OnError(new ExceptionHandler("连接关闭", ExceptionCode.Shutdown));
                     }
                 }else{
-                    Debug.Log("In Receive");
                     this.OnError(new ExceptionHandler("数据接收异常", this.HandlerError(args.SocketError)));
                 }
             }catch (Exception e){
@@ -126,11 +126,11 @@ namespace Scanner.Communicate
 
         protected override void ProcessSend(SocketAsyncEventArgs args){
             if (args.SocketError == SocketError.Success){
-
+                
             }else{
-                Debug.Log("In Send");
                 this.OnError(new ExceptionHandler("数据发送异常", this.HandlerError(args.SocketError)));
             }
+
         }
 
         public override void Relink()

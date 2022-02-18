@@ -18,6 +18,14 @@ namespace Scanner.Util
             this.GetNext();
         }
 
+        public int GetPatternLength() {
+            if (this.pattern != null){
+                return this.pattern.Length;
+            }else {
+                return 0;
+            }
+        }
+
         private void GetNext() {
             int j = 0, k = -1;
             next[0] = -1;

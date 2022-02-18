@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Runtime.InteropServices;
+
+using UnityEngine;
 
 namespace Scanner.Struct
 {
@@ -57,10 +57,16 @@ namespace Scanner.Struct
     }
 
     public struct ScannerSector{
-        public float yaw;
         public float pitch;
+        public float yaw;
         public float roll;
         public float distance;
+        public List<RayInfo> rays;
+    }
+
+    public struct SectorInfo {
+        public Vector3 rotation;
+        public UInt64 ticks;
         public List<RayInfo> rays;
     }
 
@@ -73,6 +79,11 @@ namespace Scanner.Struct
     public struct HolderData {
         public UInt16 control;
         public UInt16 data;
+    }
+
+    public struct DegreeInfo{
+        public UInt64 ticks;
+        public Vector3 degree;
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]

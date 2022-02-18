@@ -2,6 +2,7 @@
 using System.Timers;
 using System.Net;
 using System.Net.Sockets;
+
 using UnityEngine;
 
 using Scanner.Struct;
@@ -44,6 +45,8 @@ namespace Scanner.Communicate
         public event ErrorHandle Error;
 
         private DeviceStatus transfer_status;
+
+        //private AutoResetEvent manual_reset;
 
         public bool IsConnected(){
             return (this.transfer_status.Equals(DeviceStatus.NotConnect) || this.transfer_status.Equals(DeviceStatus.DisConnect) || this.transfer_status.Equals(DeviceStatus.OffLine)) ? false : true;
@@ -139,7 +142,6 @@ namespace Scanner.Communicate
                 this.OnError(new ExceptionHandler(exception.Message, ExceptionCode.InternalError));
             }
         }
-
         private void StartMonitorTicks(int interval){
             if (ticks_timer != null){
                 ticks_timer.Stop();

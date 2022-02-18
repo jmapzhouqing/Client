@@ -80,7 +80,7 @@ namespace Scanner.Communicate
                 }
             }
             catch (Exception e) {
-                Debug.Log(e.Message);
+                this.OnError(new ExceptionHandler(e.Message,ExceptionCode.InternalError));
             }
         }
 
@@ -151,7 +151,6 @@ namespace Scanner.Communicate
         protected override void ProcessDisConnect(SocketAsyncEventArgs args){
             try{
                 if (args.SocketError == SocketError.Success){
-                    Debug.Log("I am out");
                     this.Close();
                     this.OnError(new ExceptionHandler("设备断开连接", this.HandlerError(args.SocketError)));
                 }
@@ -160,7 +159,7 @@ namespace Scanner.Communicate
                 }
             }
             catch (Exception e) {
-                Debug.Log(e.Message);
+                this.OnError(new ExceptionHandler(e.Message,ExceptionCode.InternalError));
             }
            
         }

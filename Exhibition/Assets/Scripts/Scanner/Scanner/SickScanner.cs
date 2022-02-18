@@ -12,6 +12,7 @@ using System.Globalization;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Net.Sockets;
+using UnityEngine;
 
 namespace Scanner.Scanister
 {
@@ -170,21 +171,18 @@ namespace Scanner.Scanister
 
             index = 19;
 
-            for (int i = 0; i < amount_channels; i++)
-            {
+            SectorInfo sector;
+            sector.ticks = Convert.ToUInt64(DateTime.Now.Ticks * Math.Pow(10,-4));
+
+            for (int i = 0; i < amount_channels; i++){
                 string content = fields[++index];
                 UInt32 scale_factor = Convert.ToUInt32(fields[++index], 16);
 
-                if (scale_factor == 0x3F800000)
-                {
+                if (scale_factor == 0x3F800000){
                     scale_factor = 1;
-                }
-                else if (scale_factor == 0x40000000)
-                {
+                }else if (scale_factor == 0x40000000){
                     scale_factor = 2;
-                }
-                else if (scale_factor == 0x40800000)
-                {
+                }else if (scale_factor == 0x40800000){
                     scale_factor = 4;
                 }
 
@@ -195,15 +193,17 @@ namespace Scanner.Scanister
 
                 List<RayInfo> rays = new List<RayInfo>();
 
-                for (int j = 0; j < amount_data; j++)
-                {
+                for (int j = 0; j < amount_data; j++){
                     RayInfo info;
                     info.distance = Convert.ToInt16(fields[++index], 16) / 1000.0f * scale_factor;
                     info.degree = start_angle + i * angular_step;
                     rays.Add(info);
                 }
 
-                this.OnDataDecodeComplete(rays);
+                sector.rays = rays;
+                sector.rotation = Vector3.zero;
+
+                this.OnDataDecodeComplete(sector);
             }
 
             /*

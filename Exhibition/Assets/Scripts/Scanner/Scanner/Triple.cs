@@ -7,6 +7,7 @@ using Scanner.Util;
 using Scanner.Struct;
 using System.Net.Sockets;
 using System.Threading;
+
 using UnityEngine;
 
 namespace Scanner.Scanister{
@@ -40,7 +41,7 @@ namespace Scanner.Scanister{
             
         }
 
-        public override void Connect() {
+        public override void Connect(){
             this.StartProcessData(100);
             correspond = new Correspond_UDP(new IPEndPoint(IPAddress.Any, 0), new byte[]{0x00});
             base.Connect();
@@ -88,24 +89,20 @@ namespace Scanner.Scanister{
         protected override void start_scan_data(){
             get_scan_token_source = new CancellationTokenSource();
             get_scan_token = get_scan_token_source.Token;
-            get_data_task = new Task(async () => {
-                while (true)
-                {
-                    if (get_scan_token.IsCancellationRequested)
-                    {
+            get_data_task = new Task(async() => {
+                while (true){
+                    if(get_scan_token.IsCancellationRequested){
                         return;
                     }
                     this.get_latest_scan();
-                    await Task.Delay(10);
+                    await Task.Delay(100);
                 }
             });
             get_data_task.Start();
         }
 
-        protected override void stop_scan_data()
-        {
-            if (get_scan_token_source != null)
-            {
+        protected override void stop_scan_data(){
+            if (get_scan_token_source != null){
                 get_scan_token_source.Cancel();
             }
         }
@@ -126,6 +123,7 @@ namespace Scanner.Scanister{
         }
 
         public override void ProcessData(byte[] data){
+            //manual_reset.Set();
 
             int pos = data.Length - 4;
 
@@ -134,9 +132,11 @@ namespace Scanner.Scanister{
             CRC32 crc = new CRC32();
             UInt32 calc_value = crc.get(data, data.Length - 4);
 
-            if (crc_value == calc_value){
+            if(crc_value == calc_value){
                 pos = 0;
+
                 string resCode = DataConvert.GetStringFromBuffer(data, ref pos, 4);
+
                 UInt32 data_length = DataConvert.GetNumberFromBuffer<UInt32>(data, ref pos);
                 List<UInt32> values = new List<UInt32>();
                 for (int i = 0; i < data_length / 4; i++){
@@ -167,9 +167,11 @@ namespace Scanner.Scanister{
             if (status){
                 start_time_stamp = DateTime.UtcNow.Ticks/10000;
                 this.start_scan_data();
+                this.OnStatusChanged(DeviceStatus.Working);
             }
             else {
                 this.stop_scan_data();
+                this.OnStatusChanged(DeviceStatus.OnLine);
             }
         }
 
@@ -182,6 +184,9 @@ namespace Scanner.Scanister{
             if (scan_nmber == 0) {
                 return;
             }
+
+            SectorInfo sector;
+            sector.ticks = 0;//Convert.ToUInt64(DateTime.Now.Ticks * Math.Pow(10,-4));
 
             UInt32 time_stamp = fields[2];
 
@@ -210,7 +215,11 @@ namespace Scanner.Scanister{
                 info.degree = scan_start_dir + i * 0.09f;
                 rays.Add(info);
             }
-            this.OnDataDecodeComplete(rays);
+            sector.rays = rays;
+            sector.rotation = Vector3.zero;
+
+
+            this.OnDataDecodeComplete(sector);
         }
 
         private void StartReceiveScanData(){

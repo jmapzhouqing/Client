@@ -24,47 +24,25 @@ namespace Scanner.Util
 
         private Queue<int> data_queue;
 
-        public DataBuffer(int capacity, SocketType type) {
-            used = 0;
-            buffer = new byte[capacity];
 
-            this.data_type = type;
-            data_queue = new Queue<int>();
-
-            /*start_pattern = new KMPSearch<byte>(new byte[] {0x02});
-            end_pattern = new KMPSearch<byte>(new byte[] {0x03 });*/
-        }
-
-        public DataBuffer(int capacity, SocketType type,byte[] start_pattern,byte[] end_pattern)
+        public DataBuffer(int capacity, SocketType type,byte[] start_pattern = null,byte[] end_pattern=null)
         {
             used = 0;
             buffer = new byte[capacity];
 
             this.data_type = type;
             data_queue = new Queue<int>();
+            if(start_pattern != null){
+                this.start_pattern = new KMPSearch<byte>(start_pattern);
+            }
 
-            this.start_pattern = new KMPSearch<byte>(start_pattern);
-            this.end_pattern = new KMPSearch<byte>(end_pattern);
-        }
-
-        public DataBuffer(int capacity, byte[] start) {
-            used = 0;
-            buffer = new byte[capacity];
-            start_pattern = new KMPSearch<byte>(start);
-            data_queue = new Queue<int>();
-        }
-
-        public DataBuffer(int capacity, byte[] start, byte[] end) {
-            used = 0;
-            buffer = new byte[capacity];
-            start_pattern = new KMPSearch<byte>(start);
-            end_pattern = new KMPSearch<byte>(end);
-            data_queue = new Queue<int>();
+            if(end_pattern != null){
+                this.end_pattern = new KMPSearch<byte>(end_pattern);
+            }
         }
 
         public void PushData(byte[] src, int offset, int length) {
-            if (this.data_type.Equals(SocketType.Stream))
-            {
+            if (this.data_type.Equals(SocketType.Stream)){
                 this.PushStreamData(src, offset, length);
             } else if (this.data_type.Equals(SocketType.Dgram)) {
                 this.PushDgramData(src, offset, length);
@@ -74,7 +52,6 @@ namespace Scanner.Util
         private void PushDgramData(byte[] src, int offset, int length) {
             try
             {
-                //Debug.Log(DateTime.Now.Ticks + ":push:" + used);
                 Monitor.Enter(locker);
 
                 length = src.Length - offset < length ? src.Length - offset : length;
@@ -87,11 +64,7 @@ namespace Scanner.Util
                 Buffer.BlockCopy(src, offset, buffer, used, length);
                 data_queue.Enqueue(length);
                 used += length;
-
-                
-            }
-            finally
-            {
+            }finally{
                 Monitor.PulseAll(locker);
                 Monitor.Exit(locker);
             }
@@ -159,13 +132,22 @@ namespace Scanner.Util
                 }
 
                 if (used > 0){
-                    int start = start_pattern.Search(buffer, 0,used);
-                    if (start != -1){
-                        int end = end_pattern.Search(buffer, start, used);
-                        if (end != -1 && end < used){
-                            result = this.PopData(start + 1, end - start - 1);
+                    if (start_pattern != null) {
+                        int start = start_pattern.Search(buffer, 0, used);
+                        if (start != -1){
+                            int end = -1;
+                            if (end_pattern != null){
+                                end = end_pattern.Search(buffer, start, used);
+                            }else {
+                                end = start_pattern.Search(buffer,start+start_pattern.GetPatternLength(),used);
+                            }
+
+                            if (end != -1 && end < used){
+                                result = this.PopData(start, end - start);
+                            }
                         }
                     }
+                    
                 }
                 return result;
             }

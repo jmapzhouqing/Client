@@ -57,9 +57,9 @@ public class GridDataManager : MonoBehaviour{
 
         this.initialize();
         
-        GridDataPersistence.ReadData(@"D:\CoalYard\coal_data.txt",mesh_data);
+        //GridDataPersistence.ReadData(@"D:\CoalYard\coal_data.txt",mesh_data);
 
-        this.SaveGridData();
+        //this.SaveGridData();
     }
 
     private void SaveGridData() {

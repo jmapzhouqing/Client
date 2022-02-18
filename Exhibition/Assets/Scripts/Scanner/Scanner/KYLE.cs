@@ -172,6 +172,9 @@ namespace Scanner.Scanister
 
         public void LMDscandataProcess(string[] fields){
             try{
+                SectorInfo sector;
+                sector.ticks = Convert.ToUInt64(DateTime.Now.Ticks * Math.Pow(10,-4));
+
                 bool echo_intensity = Convert.ToBoolean(Convert.ToUInt16(fields[15]));
 
                 int factor = 0;
@@ -202,8 +205,10 @@ namespace Scanner.Scanister
                     info.degree = start_angle + angle_step * i;
                     rays.Add(info);
                 }
+                sector.rays = rays;
+                sector.rotation = Vector3.zero;
 
-                this.OnDataDecodeComplete(rays);
+                this.OnDataDecodeComplete(sector);
             }catch (Exception e){
                 this.OnError(new ExceptionHandler(e.Message, ExceptionCode.InternalError));
             }
