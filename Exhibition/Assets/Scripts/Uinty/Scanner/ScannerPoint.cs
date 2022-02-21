@@ -58,12 +58,12 @@ public class ScannerPoint : MonoBehaviour
         client.Connect(server_address, client_address, ProtocolType.Udp);*/
 
         //盘煤仪 sick
-        /*
+        
         scanner = new LMS511("Sick", ip, port);
-        scanner.DataDecodeComplete += TripleTransform;
+        scanner.DataDecodeComplete += SickTransform;
         scanner.StatusChanged += StatusChanged;
         scanner.Error += OnError;
-        scanner.Connect();*/
+        scanner.Connect();
 
         /*
         scanner = new Triple("Triple",ip,port);
@@ -73,8 +73,9 @@ public class ScannerPoint : MonoBehaviour
         scanner.Error += OnError;
         scanner.Connect();*/
 
+        /*
         wit = new WIT("COM4",0x50, 9600);
-        wit.Open();
+        wit.Open();*/
 
         /*
         holder = new Holder("COM2", 4800);
@@ -139,6 +140,56 @@ public class ScannerPoint : MonoBehaviour
         }
     }
 
+    public void SickTransform(SectorInfo sector_info) {
+        try
+        {
+            if (hardware_monitor.IsConnected)
+            {
+                Vector3 scanner_line_dir = -1 * Vector3.right;
+                Vector3 scanner_line_rotate_dir = Vector3.forward;
+
+                Vector3 pitch_axis = -1 * Vector3.right;
+                Vector3 yaw_axis = Vector3.up;
+                Vector3 forward_dir = Vector3.forward;
+
+                float pitch = hardware_monitor.data.LuffAngle;
+                float yaw = hardware_monitor.data.SlewAngle;
+                float distance = hardware_monitor.data.CarPos;
+
+                Matrix4x4 matrix = new Matrix4x4();
+                Quaternion quaternion;
+
+                Vector3 origin = Vector3.zero;
+
+                List<Vector3> vertices = new List<Vector3>();
+
+                foreach (RayInfo info in sector_info.rays){
+                    quaternion = Quaternion.AngleAxis(info.degree, scanner_line_rotate_dir);
+                    matrix.SetTRS(Vector3.zero, quaternion, new Vector3(1, 1, 1));
+                    origin = matrix.MultiplyPoint(scanner_line_dir * info.distance);
+
+                    quaternion = Quaternion.AngleAxis(pitch, pitch_axis);
+                    matrix.SetTRS(Vector3.zero, quaternion, new Vector3(1, 1, 1));
+                    origin = matrix.MultiplyPoint(origin);
+
+                    quaternion = Quaternion.AngleAxis(yaw, yaw_axis);
+                    matrix.SetTRS(Vector3.zero, quaternion, new Vector3(1, 1, 1));
+                    origin = matrix.MultiplyPoint(origin);
+
+                    origin += forward_dir * distance;
+
+                    vertices.Add(origin);
+                }
+
+                grid_data_manager.UpdateGridData(vertices);
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e.Message);
+        }
+    }
+
     public void TripleTransform(List<RayInfo> rays) {
         try{
             Vector3 scanner_line_dir = -1 * Vector3.right;
@@ -185,14 +236,12 @@ public class ScannerPoint : MonoBehaviour
         triple.Start();
         holder.StartScan(1, 359);*/
 
-        /*
         if (scanner.IsConnected){
             scanner.Start();
-        }*/
-
-        //scanner.Start();
+        }
     }
- 
+    
+    /*
     private void OnGUI(){
         if(GUI.Button(new Rect(0, 0, 100, 60), "Click")){
             this.StartDevice();
@@ -208,7 +257,7 @@ public class ScannerPoint : MonoBehaviour
 
             //triple.Start();
         }
-    }
+    }*/
 
     public void StopDevice(){
         scanner.Stop();

@@ -57,9 +57,9 @@ public class GridDataManager : MonoBehaviour{
 
         this.initialize();
         
-        //GridDataPersistence.ReadData(@"D:\CoalYard\coal_data.txt",mesh_data);
+        GridDataPersistence.ReadData(@"D:\CoalYard\coal_data.txt",mesh_data);
 
-        //this.SaveGridData();
+        this.SaveGridData();
     }
 
     private void SaveGridData() {
@@ -80,10 +80,10 @@ public class GridDataManager : MonoBehaviour{
         save_grid_data_task.Start();
     }
 
-    /*
+    
     private void Start(){
         //StartCoroutine(UpdateCoordinate());
-    }*/
+    }
 
     public void initialize(){
         width_segment_number = Mathf.FloorToInt(width / precision);
