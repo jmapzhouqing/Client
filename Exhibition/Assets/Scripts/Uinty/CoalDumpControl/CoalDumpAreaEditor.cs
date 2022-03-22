@@ -72,7 +72,7 @@ public class CoalDumpAreaEditor : MonoBehaviour
         StopAllCoroutines();
         if (Line != null){
             Grid grid = new Grid(Line.points3,ConfigurationParameter.precision,ConfigurationParameter.mesh_segment_number);
-            if (editor_control.CheckCoalDumpSuperposition(grid,info.uuid)){
+            if (editor_control.CheckCoalDumpSize(grid,5) || editor_control.CheckCoalDumpSuperposition(grid,info.uuid)){
                 this.UpdateCoordinate(origin_vertice);
             }
             info.vertices = Line.points3.Select(vertice=>new Vector2(vertice.x,vertice.z)).ToList();

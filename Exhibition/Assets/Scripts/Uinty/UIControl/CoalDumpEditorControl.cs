@@ -18,12 +18,12 @@ public class CoalDumpEditorControl : MonoBehaviour
 
     private VectorLine rect_line;
 
-    private Transform  container;
+    private Transform container;
 
     private bool is_drag;
 
     // Start is called before the first frame update
-    void Start(){
+    void Start() {
         container = new GameObject().transform;
         container.name = "LineContainer";
         //container.hideFlags = HideFlags.HideInHierarchy;
@@ -37,15 +37,15 @@ public class CoalDumpEditorControl : MonoBehaviour
     }
 
     public void CameraOrientation() {
-        camera_control.SetRotation(new Vector2(90,0));
+        camera_control.SetRotation(new Vector2(90, 0));
         camera_control.SetRotationControl(false);
 
-        if(rect_line != null) {
+        if (rect_line != null) {
             VectorLine.Destroy(ref rect_line);
         }
     }
-   
-    Coordinate GetCoalYardPosition(Vector3 input){
+
+    Coordinate GetCoalYardPosition(Vector3 input) {
         Coordinate result = null;
 
         RaycastHit hit;
@@ -58,9 +58,9 @@ public class CoalDumpEditorControl : MonoBehaviour
         return result;
     }
 
-    public void Save(){
+    public void Save() {
         List<CoalDumpInfo> list = new List<CoalDumpInfo>();
-        foreach (CoalDumpEditor dump_editor in container.GetComponentsInChildren<CoalDumpEditor>(true)){
+        foreach (CoalDumpEditor dump_editor in container.GetComponentsInChildren<CoalDumpEditor>(true)) {
             //string data = JsonMapper.ToJson(dump_editor.info);
             //Debug.Log(data);
             list.Add(dump_editor.info);
@@ -77,11 +77,11 @@ public class CoalDumpEditorControl : MonoBehaviour
     }
 
     public void SetAddStation() {
-        CoalDumpEditorAddControl editor_add = this.gameObject.GetComponent<CoalDumpEditorAddControl>()??this.gameObject.AddComponent<CoalDumpEditorAddControl>();
+        CoalDumpEditorAddControl editor_add = this.gameObject.GetComponent<CoalDumpEditorAddControl>() ?? this.gameObject.AddComponent<CoalDumpEditorAddControl>();
         editor_add.container = container;
     }
 
-    public void AddCoalDump(VectorLine line,CoalDumpInfo info){
+    public void AddCoalDump(VectorLine line, CoalDumpInfo info) {
         line.rectTransform.SetParent(container);
         CoalDumpEditor dump_editor = line.rectTransform.gameObject.AddComponent<CoalDumpEditor>();
 
@@ -91,14 +91,27 @@ public class CoalDumpEditorControl : MonoBehaviour
         //dump_editor.CreateEditor();
     }
 
-    public bool CheckCoalDumpSuperposition(Grid grid,string key=""){
+    public bool CheckCoalDumpSuperposition(Grid grid, string key = "") {
         bool result = false;
-        foreach (CoalDumpEditor dump_editor in container.GetComponentsInChildren<CoalDumpEditor>(true)){
-            Grid check_grid = new Grid(dump_editor.relink_line.points3,ConfigurationParameter.precision,ConfigurationParameter.mesh_segment_number);
-            if (!key.Equals(dump_editor.info.uuid)&&grid.CheckPolygonIntersection(check_grid)){
+        foreach (CoalDumpEditor dump_editor in container.GetComponentsInChildren<CoalDumpEditor>(true)) {
+            Grid check_grid = new Grid(dump_editor.relink_line.points3, ConfigurationParameter.precision, ConfigurationParameter.mesh_segment_number);
+            if (!key.Equals(dump_editor.info.uuid) && grid.CheckPolygonIntersection(check_grid)) {
                 result = true;
             }
         }
+        return result;
+    }
+
+    public bool CheckCoalDumpSize(Grid grid,float value = 5) {
+        bool result = false;
+
+        Vector2 size = grid.GetSize();
+
+        if (size.x < value || size.y < value)
+        {
+            result = true;
+        }
+
         return result;
     }
 

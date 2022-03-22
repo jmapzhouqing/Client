@@ -12,7 +12,7 @@ public class GridDataPersistence
 
         int i = 0;
         int j = 0;
-        using (FileStream stream = new FileStream(@"D:\CoalYard\coal_data.txt", FileMode.Create))
+        using (FileStream stream = new FileStream(@"E:\CoalYard\coal_data.txt", FileMode.Create))
         using (BinaryWriter writer = new BinaryWriter(stream)) {
             try
             {

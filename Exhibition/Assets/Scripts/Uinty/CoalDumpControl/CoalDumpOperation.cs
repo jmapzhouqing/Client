@@ -19,8 +19,12 @@ public class CoalDumpOperation : MonoBehaviour,IPointerEnterHandler,IPointerExit
     private Vector2 delta;
 
     private CoalDumpManager coalDumpManager;
+
+    private GridDataManager grid_data_manager;
     // Start is called before the first frame update
     void Awake(){
+
+        grid_data_manager = FindObjectOfType<GridDataManager>();
 
         wheel = GameObject.Find("wheel").transform;
 
@@ -111,6 +115,14 @@ public class CoalDumpOperation : MonoBehaviour,IPointerEnterHandler,IPointerExit
         }else {
             GameObject.DestroyImmediate(analysis);
         }*/
+    }
+
+    public void ClearCoal() {
+        Grid grid = dump_info.CreateGrid();
+
+        BoundaryCoordinate<int> boundary = grid.index_boundary;
+
+        grid_data_manager?.SetRegionData(boundary,0);
     }
 
     private int CheckCoalDumpSide(Grid grid) {

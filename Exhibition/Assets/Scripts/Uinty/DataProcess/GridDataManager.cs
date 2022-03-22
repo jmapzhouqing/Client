@@ -57,7 +57,7 @@ public class GridDataManager : MonoBehaviour{
 
         this.initialize();
         
-        GridDataPersistence.ReadData(@"D:\CoalYard\coal_data.txt",mesh_data);
+        GridDataPersistence.ReadData(@"E:\CoalYard\coal_data.txt",mesh_data);
 
         this.SaveGridData();
     }
@@ -79,7 +79,6 @@ public class GridDataManager : MonoBehaviour{
 
         save_grid_data_task.Start();
     }
-
     
     private void Start(){
         //StartCoroutine(UpdateCoordinate());
@@ -98,6 +97,16 @@ public class GridDataManager : MonoBehaviour{
                 mesh_data[i, j] = new Vector3(i * precision, 0, j * precision);
             }
         }
+    }
+
+    public void SetRegionData(BoundaryCoordinate<int> boundary,float value){
+        for (int i = boundary.min_x; i <= boundary.max_x; i++){
+            for (int j = boundary.min_z; j <= boundary.max_z; j++){
+                this.mesh_data[i,j].y = value;
+                this.UpdateCoalYard(i,j);
+            }
+        }
+        GridDataPersistence.SaveData("", this.precision, this.mesh_data);
     }
 
     private void FixedUpdate(){

@@ -9,7 +9,7 @@ public class DataRead
 {
     public static List<CoalDumpInfo> ReadCoalDumpData() {
         List<CoalDumpInfo> coal_dump = new List<CoalDumpInfo>();
-        using (TextReader reader = new StreamReader(@"D:\CoalYard\info.txt", false))
+        using (TextReader reader = new StreamReader(@"E:\CoalYard\info.txt", false))
         {
             string data = reader.ReadToEnd();
             List<string> data_list = JsonConvert.DeserializeObject<List<string>>(data);
@@ -30,7 +30,7 @@ public class DataRead
     }
 
     public static void SaveCoalDumpData(List<CoalDumpInfo> infos){
-        using (TextWriter writer = new StreamWriter(@"D:\CoalYard\info.txt",false)) {
+        using (TextWriter writer = new StreamWriter(@"E:\CoalYard\info.txt",false)) {
             List<string> data_list = new List<string>();
             foreach (CoalDumpInfo info in infos) {
                 if (info.vertices.Count > 4) {

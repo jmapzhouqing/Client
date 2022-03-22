@@ -157,6 +157,13 @@ public class Grid{
         Polygon polygon = new Polygon(vertices);
         return polygon;
     }
+
+    public Vector2 GetSize() {
+        Vector2 value = Vector2.zero;
+        value.x = vertice_boundary.max_x - vertice_boundary.min_x;
+        value.y = vertice_boundary.max_z - vertice_boundary.min_z;
+        return value;
+    }
 }
 
 public class Polygon{
