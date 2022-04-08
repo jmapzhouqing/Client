@@ -923,6 +923,16 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 21300000, guid: 62235cd57fdca7447b94e9552489eb21,
         type: 3}
+    - target: {fileID: 754726346739090644, guid: 81774a3a51f203f42ba16498b091ab36,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -239.99997
+      objectReference: {fileID: 0}
+    - target: {fileID: 754726347277803168, guid: 81774a3a51f203f42ba16498b091ab36,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -319.99997
+      objectReference: {fileID: 0}
     - target: {fileID: 754726347316436282, guid: 81774a3a51f203f42ba16498b091ab36,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -936,7 +946,7 @@ PrefabInstance:
     - target: {fileID: 754726347808804784, guid: 81774a3a51f203f42ba16498b091ab36,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.000031419164
+      value: 0.0010265688
       objectReference: {fileID: 0}
     - target: {fileID: 754726347808804784, guid: 81774a3a51f203f42ba16498b091ab36,
         type: 3}
@@ -1053,6 +1063,11 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 754726347852099454, guid: 81774a3a51f203f42ba16498b091ab36,
+        type: 3}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 426996607}
     - target: {fileID: 754726348237674445, guid: 81774a3a51f203f42ba16498b091ab36,
         type: 3}
       propertyPath: m_Sprite
@@ -1273,7 +1288,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3d23091f22ee4b44a279b6378b66734, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ip: 192.168.90.97
+  ip: 127.0.0.1
   port: 9001
   timeout: 5000
 --- !u!1 &1283955333

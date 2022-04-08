@@ -40,6 +40,7 @@ public class TakeCoalControl : MonoBehaviour
         if (param != null){
             info.euler = param["rotation"];
             info.position = param["center"].z;
+
             communication.SendData("TakeCoal Command " + JsonUtility.ToJson(info));
         }
 

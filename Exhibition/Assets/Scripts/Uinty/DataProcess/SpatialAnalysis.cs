@@ -415,7 +415,7 @@ public class SpatialAnalysis : MonoBehaviour
 
         rotation = rotation - wheel_rotation;
 
-        dic.Add("rotation", new Vector3(-1 * pitch, rotation, 0));
+        dic.Add("rotation", new Vector3(-1 * pitch * Mathf.Rad2Deg, rotation * Mathf.Rad2Deg, 0));
 
         dic.Add("center", center_coordinate);
 
