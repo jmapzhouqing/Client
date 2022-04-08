@@ -78,6 +78,7 @@ public class UIManager : MonoBehaviour
     }
 
     public void StackCoalExhibition(string data) {
+        Debug.Log(data);
         StackCoalInfo info = JsonUtility.FromJson<StackCoalInfo>(data);
 
         string path = Path.Combine(root_path, "StackCoalExhibition");

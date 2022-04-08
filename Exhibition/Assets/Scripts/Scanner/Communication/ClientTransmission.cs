@@ -28,13 +28,19 @@ namespace Scanner.Communicate
         {
             string scan_data = Encoding.ASCII.GetString(data);
 
+            scan_data = scan_data.Substring(1, scan_data.Length - 1);
+
             string[] fields = scan_data.Split(' ');
+
+            //Debug.Log(fields.Length);
 
             if (fields.Length != 0)
             {
                 string resCode = fields[0];
+     
                 if (resCode.Equals("Heart") || resCode.Equals("StackCoal") || resCode.Equals("TakeCoal") || resCode.Equals("Boundary") || resCode.Equals("Scanner") || resCode.Equals("Info"))
                 {
+
                     Action<string[]> reply = null;
 
                     if (reply_process.TryGetValue(resCode, out reply))
@@ -64,18 +70,18 @@ namespace Scanner.Communicate
                 switch (data[2])
                 {
                     case "Start":
+                        UIManager.instance.Refresh(delegate () {
+                            UIManager.instance.TakeCoalExhibition(data[3]);
+                        });
                         break;
                     case "End":
                         UIManager.instance.Refresh(delegate () {
                             UIManager.instance.ClearInterface();
                         });
-                        UIManager.instance.ClearInterface();
+                        //UIManager.instance.ClearInterface();
                         break;
                     case "CommandReceive":
-                        Debug.Log(data[3]);
-                        UIManager.instance.Refresh(delegate(){
-                            UIManager.instance.TakeCoalExhibition(data[3]);
-                        });
+                        
                         break;
                     default:
                         break;
@@ -90,7 +96,9 @@ namespace Scanner.Communicate
                 switch (data[2])
                 {
                     case "Start":
-
+                        UIManager.instance.Refresh(delegate () {
+                            UIManager.instance.StackCoalExhibition(data[3]);
+                        });
                         break;
                     case "End":
                         UIManager.instance.Refresh(delegate (){
@@ -98,10 +106,7 @@ namespace Scanner.Communicate
                         });
                         break;
                     case "CommandReceive":
-                        Debug.Log(data[3]);
-                        UIManager.instance.Refresh(delegate(){
-                            UIManager.instance.StackCoalExhibition(data[3]);
-                        });
+                        
                         break;
                     default:
                         break;
