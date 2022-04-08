@@ -74,6 +74,7 @@
     <Compile Include="Assets\Scripts\Config\ConfigurationParameter.cs" />
     <Compile Include="Assets\Scripts\CreateData\CreateCoalYard.cs" />
     <Compile Include="Assets\Scripts\DataLoad.cs" />
+    <Compile Include="Assets\Scripts\DataProcess\DataProcess.cs" />
     <Compile Include="Assets\Scripts\Scanner\Communication\BufferManager.cs" />
     <Compile Include="Assets\Scripts\Scanner\Communication\Client.cs" />
     <Compile Include="Assets\Scripts\Scanner\Communication\ClientTransmission.cs" />
