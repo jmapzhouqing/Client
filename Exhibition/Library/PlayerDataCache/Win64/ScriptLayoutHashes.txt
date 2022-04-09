@@ -1,13 +1,15 @@
 Win64
 PlayerPath?
-C:/Users/nanhuan/Desktop/CoalYard/Exhibition.exe
+C:/Users/jmapzhouqing/Desktop/Exhibition/Exhibition.exe
 SceneListBegin?
 Assets/Scenes/CoalYard.unity
 SceneListEnd?
 2d1b3efb639dd4f39999d50e0c417288 Assembly-CSharp.dll:.Simple3D2
 3c08375166df118bd1801438fc36b92f Unity.TextMeshPro.dll:TMPro.TMP_SelectionCaret
 7ff3462e7290ae2fc5268c84dc271629 Assembly-CSharp.dll:.CoalDumpEditorAddControl
+d34c3b0a63e697c7086200044f183c29 Assembly-CSharp.dll:.TipControl
 71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp-firstpass.dll:Vectrosity.VectorObject3D
+24e35f797819c777b32ffdf8877b6837 Assembly-CSharp.dll:.ScannerTest
 71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:.ScannerManager
 77c21079ace8d76ce6e941d3dabbfe6e Unity.TextMeshPro.dll:TMPro.TMP_Dropdown
 71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:UnityStandardAssets.ImageEffects.PostEffectsBase
@@ -32,7 +34,7 @@ e7a73f5f78ba6445195ec23b74a1ce2d Unity.TextMeshPro.dll:TMPro.TMP_ScrollbarEventH
 493f749fe4f27f0b2666d08e7a5b6660 Assembly-CSharp.dll:.SelectionBox2
 01b9c8787b31e1c0e42dc24ab2931dd6 Assembly-CSharp.dll:.SimpleCurve
 71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp-firstpass.dll:Vectrosity.VisibilityControl
-71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:.ProgramCommunication
+acff4bf808c33eecaee9f1fb11c85da1 Assembly-CSharp.dll:.ProgramCommunication
 cf9f5cf2c3145a37ac07f00e50e460f9 UnityEngine.UI.dll:UnityEngine.UI.AspectRatioFitter
 71bb6a6b6c8f052f948db64c7dd3ca4f UnityEngine.UI.dll:UnityEngine.EventSystems.BaseInput
 507174d46dacbc5fe45e28485db5dd1e UnityEngine.UI.dll:UnityEngine.UI.Button
@@ -107,7 +109,7 @@ abf1930d8126d0b2e00e9449129a0190 UnityEngine.UI.dll:UnityEngine.EventSystems.Tou
 64e54c0cbb0177c5ea26f340efb9ff85 UnityEngine.UI.dll:UnityEngine.UI.VerticalLayoutGroup
 71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:.PhysicalDetection
 7b58da42ea960ca7ddaf830d9441ff9f Assembly-CSharp.dll:.JsonNetSample
-71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:.ExceptionHandler
+71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:.DeviceExhibition
 cb5d767a5785d23f577b4cb304f2b2e2 Assembly-CSharp.dll:.MakeSpheres
 71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:.LogCallBack
 f6f25e95f174e192141639577eb5761e Assembly-CSharp.dll:.DrawLinesMouse
@@ -123,7 +125,9 @@ e1bbf0ab858085e38fae6b12ebbdcd35 UnityEngine.Timeline.dll:UnityEngine.Timeline.C
 e1bbf0ab858085e38fae6b12ebbdcd35 UnityEngine.Timeline.dll:UnityEngine.Timeline.GroupTrack
 e1bbf0ab858085e38fae6b12ebbdcd35 UnityEngine.Timeline.dll:UnityEngine.Timeline.PlayableTrack
 201e3fde670b00545944bb3db215c80a UnityEngine.Timeline.dll:UnityEngine.Timeline.TimelineAsset
+71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:.BucketWheel
 4e9333594897a1fb8b136ad2eae996c7 Unity.TextMeshPro.dll:TMPro.TMP_SubMeshUI
+1b4f6cea4c86fe55e130d64e6bc56ca1 Assembly-CSharp.dll:.StackCoalExhibition
 e6ae40841db498b6e673877ac45ad208 UnityEngine.Networking.dll:UnityEngine.Networking.NetworkAnimator
 71bb6a6b6c8f052f948db64c7dd3ca4f UnityEngine.Networking.dll:UnityEngine.Networking.NetworkBehaviour
 1dcb82730d983b77cec736c6ef19f814 UnityEngine.Networking.dll:UnityEngine.Networking.NetworkDiscovery
@@ -138,7 +142,7 @@ e0ee4b3d4e27318934cc940a969d3d96 UnityEngine.Networking.dll:UnityEngine.Networki
 ad9173d3a69d99153f38ed4b62226129 UnityEngine.Networking.dll:UnityEngine.Networking.NetworkTransform
 9b895dcabbc1faf095c000c32d471fd0 UnityEngine.Networking.dll:UnityEngine.Networking.NetworkTransformChild
 5887ef1bc706b22b773d253fd443ceef UnityEngine.Networking.dll:UnityEngine.Networking.NetworkTransformVisualizer
-e5b6bbf3585e96701f80c382b4d5cc47 Assembly-CSharp.dll:.CoalDumpInfoEditorControl
+eb910c35909d990109b18088caf29f2c Assembly-CSharp.dll:.CoalDumpInfoEditorControl
 d251bf88db6c95a6b1aa0b69298da9ef UnityEngine.SpatialTracking.dll:UnityEngine.SpatialTracking.TrackedPoseDriver
 303ad70ce203ad874efe2965d0fbcff9 Unity.Analytics.Tracker.dll:UnityEngine.Analytics.AnalyticsEventTracker
 7fb9de8dcf73854b6b328eca1f7a6e6d Unity.Analytics.Tracker.dll:UnityEngine.Analytics.AnalyticsTracker
@@ -147,12 +151,14 @@ b8a5e8091ab0b8861d2add371082c5e0 Unity.TextMeshPro.dll:TMPro.TMP_SpriteAsset
 71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:.UIManager
 b85cfc6615d7e7f9241f0e9a7975e81b Assembly-CSharp.dll:.DrawLines
 71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:.LoggerInfo
+71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:.Loom
 71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:.Calc
 71bb6a6b6c8f052f948db64c7dd3ca4f Unity.UIWidgets.dll:Unity.UIWidgets.engine.UIWidgetsMessageManager
 a97d80ff9a974154b3183d73994a1e8e Assembly-CSharp.dll:.Ellipse2
 71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp-firstpass.dll:Vectrosity.BrightnessControl
 b167c3f9672470a6d15055a1cddd8997 Assembly-CSharp.dll:.SplineFollow2D
 b3ab2106268377ffe25dd18ac23dca28 Unity.TextMeshPro.dll:TMPro.TMP_Asset
+2f12a4707f4c5a3d7bf881ace1731f5d Assembly-CSharp.dll:.ScannerStatusControl
 b5fc3843e35dd6d09a719cb0d10ff4a5 DemiLib.dll:DG.DemiLib.External.DeHierarchyComponent
 5681e78452448a599e4a86aa2dcc6333 Assembly-CSharp.dll:.CurvePointControl
 aa2e2f4b542ce4769add33bae8093625 Assembly-CSharp.dll:.UniformTexturedLine
@@ -162,6 +168,7 @@ aa2e2f4b542ce4769add33bae8093625 Assembly-CSharp.dll:.UniformTexturedLine
 48789f85643f33995dcf568cafb7abff Assembly-CSharp-firstpass.dll:Vectrosity.VectorObject2D
 7095bd495bbce1559e40361a13c33c18 Assembly-CSharp.dll:.MakeSpline
 1e49fa51de8370b37c6bd32569019982 Assembly-CSharp.dll:.AnimatePartialLine
+2f12a4707f4c5a3d7bf881ace1731f5d Assembly-CSharp.dll:.BucketWheelStatusControl
 103275b73ee8ba4bb9e877afe4b4b8be Assembly-CSharp.dll:.CreateHills
 704dcd31abc789439bc3f3cd10b58c2b DOTween.dll:DG.Tweening.Core.DOTweenComponent
 179648033371456981a3c08cb9f47477 DOTween.dll:DG.Tweening.Core.DOTweenSettings
@@ -172,7 +179,7 @@ aa2e2f4b542ce4769add33bae8093625 Assembly-CSharp.dll:.UniformTexturedLine
 71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp-firstpass.dll:Vectrosity.VisibilityControlStatic
 4fd8bf02e3089425d3502e26c44ba31a Unity.TextMeshPro.dll:TMPro.TextContainer
 0897431c75e7302c0f2bbccf91f32fed Assembly-CSharp.dll:.CameraZoom
-71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:.ScannerPoint
+fe779a78bf80bf8d9ea622feb228c8be Assembly-CSharp.dll:.ScannerPoint
 8d727ca466e2711592cb70c8ce6de81e Assembly-CSharp.dll:.SelectLine
 5bddb32bcb848f51c6efb9a0b86ba855 Assembly-CSharp.dll:.RotateViewpoint
 6c2011f772ddfc08f78c92203ddd26e6 Assembly-CSharp.dll:.CameraControl
@@ -204,13 +211,14 @@ e1300922cc039f41ab46a47f4cb05898 Unity.TextMeshPro.dll:TMPro.TMP_Settings
 fb6a1ea36b4f6ef5948d283d93760765 UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioRoom
 5b0391b7e3d9ea9db6c0a8fbd0ca23f6 UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioSoundfieldExtension
 5b0391b7e3d9ea9db6c0a8fbd0ca23f6 UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioSourceExtension
-71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:.SpatialAnalysis
+8e69c01ba069c130b66727785c9fd54e Assembly-CSharp.dll:.SpatialAnalysis
 931f489e44eadf809e9310429c99dde5 UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioListenerExtension
 fb6a1ea36b4f6ef5948d283d93760765 UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioRoom
 5b0391b7e3d9ea9db6c0a8fbd0ca23f6 UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioSoundfieldExtension
 5b0391b7e3d9ea9db6c0a8fbd0ca23f6 UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioSourceExtension
 71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:.Grandmaster
 71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:.CoalDumpEditorControl
+3afc815aa01947ad84681577814eb6a2 Assembly-CSharp.dll:.TakeCoalControl
 5c32f35af896309309c06f1c0d1675bb Assembly-CSharp.dll:.SplineFollow3D
 71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:.Simple3D3
 3b760e6526e13f7504f59e210145899a Unity.TextMeshPro.dll:TMPro.TextMeshProUGUI
@@ -218,11 +226,13 @@ fb6a1ea36b4f6ef5948d283d93760765 UnityEngine.GoogleAudioSpatializer.dll:UnityEng
 07fbf290f67fb8551bc2b6baa34eb563 Assembly-CSharp.dll:.Grid3D
 71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:.ReadData
 d251bf88db6c95a6b1aa0b69298da9ef UnityEngine.SpatialTracking.dll:UnityEngine.SpatialTracking.TrackedPoseDriver
+71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:.DeviceMonitor
 336fe83f0c0acfbaa3da8676b38181d3 Assembly-CSharp.dll:.CoalDumpAreaEditor
 71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:.BlockManager
 3ebde396f207d56d27947193f766d126 Assembly-CSharp.dll:.DrawCurve
 a670fbe87e5fcda06e9c768ea7d9deb1 Assembly-CSharp.dll:.StackCoalControl
 50f03a728de46ef8fbf963950396b3fa Assembly-CSharp.dll:.ScribbleCube
+d531edf7e3110a28e8dfca46fc5faf71 Assembly-CSharp.dll:.TakeCoalExhibition
 d40cd24a4b70fd832dd6c6632900d1dd Assembly-CSharp.dll:.PowerBar
 ffb867398987aaa1b73540d58bfa79af Assembly-CSharp.dll:.DrawGrid
 73590a3ec8032c27240d5440f7704f51 Assembly-CSharp.dll:.Ellipse1
@@ -235,11 +245,13 @@ df434544c9f7b33d1cc7e635b180d279 Unity.TextMeshPro.dll:TMPro.TextMeshPro
 3165968ba45c74472d279ba04455fccb Unity.TextMeshPro.dll:TMPro.TMP_ColorGradient
 71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:.CreateCoalYard
 f914498c9bff7eba21511194f835806a Assembly-CSharp.dll:.DrawPath
-71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:.HardWareDataMonitor
+1103de3e2a7d55e75eb2b2bc685424e5 Assembly-CSharp.dll:.HardWareDataMonitor
 9ca6d5903d8912a5306909c81d5bb268 Assembly-CSharp.dll:.VectorObject
 71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:.ReallyBasicLine
+72a743b91ad125ed9abd89cdf9f4c48c Assembly-CSharp.dll:.ArtificalControl
 71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:.DataLoad
 8649814970b42d345b89944b862453cc Unity.TextMeshPro.dll:TMPro.TMP_SubMesh
-71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:.CoalDumpOperation
+267c8cfef25c8955748387f79e6b895f Assembly-CSharp.dll:.CoalDumpOperation
+71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:.Test
 670650cbc7a81acbf10647bba667485d Assembly-CSharp.dll:.Orbit
 cf104be48e0dc18b94098a583610377d Assembly-CSharp.dll:.LeftControl

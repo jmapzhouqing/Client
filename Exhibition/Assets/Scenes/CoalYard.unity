@@ -926,12 +926,12 @@ PrefabInstance:
     - target: {fileID: 754726346739090644, guid: 81774a3a51f203f42ba16498b091ab36,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -239.99997
+      value: -240
       objectReference: {fileID: 0}
     - target: {fileID: 754726347277803168, guid: 81774a3a51f203f42ba16498b091ab36,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -319.99997
+      value: -319.99994
       objectReference: {fileID: 0}
     - target: {fileID: 754726347316436282, guid: 81774a3a51f203f42ba16498b091ab36,
         type: 3}
@@ -943,10 +943,45 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: EditCoalDump
       objectReference: {fileID: 0}
+    - target: {fileID: 754726347685610584, guid: 81774a3a51f203f42ba16498b091ab36,
+        type: 3}
+      propertyPath: m_Name
+      value: right-container
+      objectReference: {fileID: 0}
+    - target: {fileID: 754726347685610585, guid: 81774a3a51f203f42ba16498b091ab36,
+        type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 754726347685610585, guid: 81774a3a51f203f42ba16498b091ab36,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 754726347685610585, guid: 81774a3a51f203f42ba16498b091ab36,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 754726347685610585, guid: 81774a3a51f203f42ba16498b091ab36,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 754726347685610585, guid: 81774a3a51f203f42ba16498b091ab36,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 1920
+      objectReference: {fileID: 0}
+    - target: {fileID: 754726347685610585, guid: 81774a3a51f203f42ba16498b091ab36,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 1080
+      objectReference: {fileID: 0}
     - target: {fileID: 754726347808804784, guid: 81774a3a51f203f42ba16498b091ab36,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.0007447504
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 754726347808804784, guid: 81774a3a51f203f42ba16498b091ab36,
         type: 3}
@@ -1068,6 +1103,11 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 426996607}
+    - target: {fileID: 754726347852099454, guid: 81774a3a51f203f42ba16498b091ab36,
+        type: 3}
+      propertyPath: m_RenderMode
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 754726348237674445, guid: 81774a3a51f203f42ba16498b091ab36,
         type: 3}
       propertyPath: m_Sprite
@@ -1143,7 +1183,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 745718628}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 531.5, y: 299, z: 0}
+  m_LocalPosition: {x: 1179, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 59520063}

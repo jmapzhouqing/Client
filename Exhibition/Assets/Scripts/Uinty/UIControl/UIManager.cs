@@ -31,7 +31,7 @@ public class UIManager : MonoBehaviour
 
         left_control = FindObjectOfType<LeftControl>();
 
-        control_container = GameObject.Find("container")?.GetComponent<RectTransform>();
+        control_container = GameObject.Find("right-container")?.GetComponent<RectTransform>();
         info_container = GameObject.Find("info")?.GetComponent<RectTransform>();
     }
 
@@ -71,6 +71,9 @@ public class UIManager : MonoBehaviour
             RectTransform prefab = Resources.Load<RectTransform>(path);
 
             control = GameObject.Instantiate<RectTransform>(prefab, control_container);
+            control.localScale = new Vector3(1,1,1);
+            control.anchoredPosition3D = Vector3.zero;
+            control.rotation = Quaternion.identity;
         }catch (Exception e){
             Debug.Log(e.Message);
         }
