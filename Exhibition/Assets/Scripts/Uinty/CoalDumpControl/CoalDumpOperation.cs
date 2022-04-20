@@ -10,6 +10,10 @@ public class CoalDumpOperation : MonoBehaviour,IPointerEnterHandler,IPointerExit
 
     public Text coal_type;
 
+    public Text coal_id;
+
+    public Text coal_number;
+
     private CoalDumpInfo dump_info;
 
     private Transform wheel;
@@ -20,13 +24,14 @@ public class CoalDumpOperation : MonoBehaviour,IPointerEnterHandler,IPointerExit
 
     private CoalDumpManager coalDumpManager;
 
-    private GridDataManager grid_data_manager;
+    private Image image;
+
     // Start is called before the first frame update
     void Awake(){
 
-        grid_data_manager = FindObjectOfType<GridDataManager>();
-
         wheel = GameObject.Find("wheel").transform;
+
+        image = this.GetComponent<Image>();
 
         camera_control = FindObjectOfType<CameraControl>();
 
@@ -36,6 +41,8 @@ public class CoalDumpOperation : MonoBehaviour,IPointerEnterHandler,IPointerExit
     public void SetInfo(CoalDumpInfo info) {
         this.dump_info = info;
         coal_type.text = info.dump_name;
+        coal_id.text = info.coal_id;
+        coal_number.text = info.number.ToString();
     }
 
     public void StackCoal(){
@@ -118,11 +125,16 @@ public class CoalDumpOperation : MonoBehaviour,IPointerEnterHandler,IPointerExit
     }
 
     public void ClearCoal() {
+        /*
         Grid grid = dump_info.CreateGrid();
 
         BoundaryCoordinate<int> boundary = grid.index_boundary;
 
-        grid_data_manager?.SetRegionData(boundary,0);
+        grid_data_manager?.SetRegionData(boundary,0);*/
+
+        RectTransform rect = UIManager.instance.LoadUserInterface("ClearDumpConfirm");
+        ClearDumpControl clearDumpControl = rect.GetComponentInChildren<ClearDumpControl>();
+        clearDumpControl?.SetProperty(dump_info);
     }
 
     private int CheckCoalDumpSide(Grid grid) {
@@ -144,6 +156,8 @@ public class CoalDumpOperation : MonoBehaviour,IPointerEnterHandler,IPointerExit
         }
 
         coalDumpManager?.material.SetColor("_Emission", new Color(0, 0, 0, 0));
+
+        image.color = new Color32(0x02, 0x5D, 0xE6, 25);
     }
 
     public void OnPointerEnter(PointerEventData eventData)
@@ -154,5 +168,7 @@ public class CoalDumpOperation : MonoBehaviour,IPointerEnterHandler,IPointerExit
         }
 
         coalDumpManager?.material.SetColor("_Emission", new Color(1, 0, 0, 0.3f));
+
+        image.color = new Color32(0xE6,0x50,0x03, 25);
     }
 }

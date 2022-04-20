@@ -11,9 +11,12 @@ public class BlockManager : MonoBehaviour
 
     GridDataManager gridDataManager;
 
+    private CoalDumpManager coalDumpManager;
+
 
     private void Awake()
     {
+        coalDumpManager = this.GetComponentInParent<CoalDumpManager>();
         BoxCollider collider = this.gameObject.AddComponent<BoxCollider>();
         collider.isTrigger = true;
     }
@@ -34,9 +37,13 @@ public class BlockManager : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void OnMouseEnter(){
+        coalDumpManager?.material.SetColor("_Emission", new Color(1, 0, 0, 0.3f));
+    }
+
+    void OnMouseExit()
     {
-        
+        coalDumpManager?.material.SetColor("_Emission", new Color(0, 0, 0, 0f));
     }
 
     public void UpdateBlock(int x,int z) {

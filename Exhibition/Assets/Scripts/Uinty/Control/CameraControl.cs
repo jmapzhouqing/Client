@@ -65,11 +65,13 @@ public class CameraControl : MonoBehaviour
 
         target_position = target.position;
 
-        rotation = Vector2.zero;
+        //rotation = Vector2.zero;
 
         matrix = new Matrix4x4();
 
         origin = this.distance * Vector3.forward;
+
+        this.transform.rotation = Quaternion.Euler(rotation.x, rotation.y, 0);
     }
 
     // Update is called once per frame
@@ -102,6 +104,9 @@ public class CameraControl : MonoBehaviour
                     target_position = new Vector3(vertice.x, 0, vertice.z);
                     distance = 20;
                 }
+            }else if (rotation_control && control_state.Equals(MouseControl.RightDbClick))
+            {
+                string name = this.GetCoalDumpUUID("CoalYard|CoalDump");
             }
         }
         else {
@@ -185,6 +190,21 @@ public class CameraControl : MonoBehaviour
 
         if (Physics.Raycast(ray, out hit)){
             result = new Coordinate(hit.point);
+        }
+
+        return result;
+    }
+
+    public string GetCoalDumpUUID(string layerName) {
+        string result = null;
+
+        RaycastHit hit;
+
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        if (Physics.Raycast(ray, out hit))
+        {
+            result = hit.transform.parent.name;
         }
 
         return result;

@@ -130,6 +130,7 @@
     <Compile Include="Assets\Scripts\Scanner\Util\SpatialAlternation.cs" />
     <Compile Include="Assets\Scripts\Transportation.cs" />
     <Compile Include="Assets\Scripts\Uinty\BucketWheel\BucketWheel.cs" />
+    <Compile Include="Assets\Scripts\Uinty\CoalDumpControl\ClearDumpControl.cs" />
     <Compile Include="Assets\Scripts\Uinty\CoalDumpControl\CoalDumpAreaEditor.cs" />
     <Compile Include="Assets\Scripts\Uinty\CoalDumpControl\CoalDumpEditor.cs" />
     <Compile Include="Assets\Scripts\Uinty\CoalDumpControl\CoalDumpOperation.cs" />

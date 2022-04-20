@@ -335,7 +335,9 @@ public class Polygon{
 
 public class CoalDumpInfo{
     public string uuid;
+    public string coal_id;
     public string dump_name;
+    public float number;
     public List<Vector2> vertices;
     public int level;
 
