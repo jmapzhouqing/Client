@@ -57,7 +57,7 @@ public class SpatialAnalysis : MonoBehaviour
 
         correspond = FindObjectOfType<ProgramCommunication>();
 
-        arm_euler = arm.rotation.eulerAngles;
+        arm_euler = arm.localRotation.eulerAngles;
         foundation_euler = foundation.rotation.eulerAngles;
 
         grid_data_manager = FindObjectOfType<GridDataManager>();
@@ -180,14 +180,16 @@ public class SpatialAnalysis : MonoBehaviour
             Debug.DrawLine(start, end, Color.red);
         }
 
-        if (hardware_monitor.IsConnected){
+        if (hardware_monitor.IsConnected && hardware_monitor.data!=null){
             float yaw = hardware_monitor.data.SlewAngle;
             float pitch = hardware_monitor.data.LuffAngle;
             foundation.eulerAngles = new Vector3(foundation_euler.x, foundation_euler.y + yaw, foundation_euler.z);
-            arm.eulerAngles = new Vector3(arm_euler.x + pitch, arm_euler.y, arm_euler.z);
+            arm.localEulerAngles = new Vector3(arm_euler.x + pitch, arm_euler.y, arm_euler.z);
+
+            this.transform.position = new Vector3(this.transform.position.x,this.transform.position.y,hardware_monitor.data.CarPos);
         }
 
-        if(hardware_monitor.IsConnected){
+        if(hardware_monitor.IsConnected && hardware_monitor.data!=null){
             DeviceData data = hardware_monitor.data;
             if (data.SlewStatus == 1){
                 if(CheckLeftBoundary()){

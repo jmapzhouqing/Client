@@ -18,18 +18,13 @@ public class BucketWheelStatusControl :DeviceStatusControl
     }
 
     public override void SetStatus(string value){
-        DeviceStatus status = (DeviceStatus)Enum.ToObject(typeof(DeviceStatus), Convert.ToInt16(value));
-        if (status.Equals(DeviceStatus.DisConnect) || status.Equals(DeviceStatus.NotConnect) || status.Equals(DeviceStatus.OffLine))
-        {
-            status_icon.sprite = this.disconnect;
-        }
-        else if (status.Equals(DeviceStatus.Connect) || status.Equals(DeviceStatus.OnLine))
+        if (value.Equals("1"))
         {
             status_icon.sprite = this.connect;
         }
-        else if (status.Equals(DeviceStatus.Working))
+        else if (value.Equals("2"))
         {
-            status_icon.sprite = this.working;
+            status_icon.sprite = this.disconnect;
         }
     }
 }

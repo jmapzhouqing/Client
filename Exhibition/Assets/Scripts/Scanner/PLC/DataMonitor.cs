@@ -85,8 +85,9 @@ public class DataMonitor<T> where T:class,new()
         cancel_token_source = new CancellationTokenSource();
         cancel_token = cancel_token_source.Token;
 
-        task = new Task(async ()=>{
-            while (true) {
+        
+        task = new Task(async()=>{
+            while(true) {
                 if (cancel_token.IsCancellationRequested) {
                     return;
                 }
@@ -98,6 +99,7 @@ public class DataMonitor<T> where T:class,new()
     }
 
     public void StopReadData(){
+        Debug.Log("StopReadData");
         if (cancel_token_source != null){
             cancel_token_source.Cancel();
         }
@@ -105,15 +107,22 @@ public class DataMonitor<T> where T:class,new()
 
     private void ReadData(){
         OperateResult<T> operate = allenBradleyNet.Read<T>();
-        if(operate.IsSuccess){
+
+        if (operate.IsSuccess)
+        {
             this.IsConnected = true;
             data = operate.Content;
-            if (this.OnDataUpdate != null){
+
+            if (this.OnDataUpdate != null)
+            {
                 this.OnDataUpdate(data);
             }
-        }else{
+        }
+        else
+        {
             this.IsConnected = false;
             this.OnError(new ExceptionHandler("PLC数据读取异常", ExceptionCode.Disconnect));
         }
+
     }
 }

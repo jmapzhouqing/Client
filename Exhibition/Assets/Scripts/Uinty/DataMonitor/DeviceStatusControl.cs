@@ -5,7 +5,7 @@ using Scanner.Struct;
 public abstract class DeviceStatusControl : MonoBehaviour
 {
 
-    protected short status;
+    protected short status = -1;
     public short Status
     {
         get { return this.status; }

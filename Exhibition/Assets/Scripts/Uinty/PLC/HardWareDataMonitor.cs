@@ -38,6 +38,7 @@ public class HardWareDataMonitor : MonoBehaviour
     }
 
     void OnDataUpate(DeviceData data){
+        Debug.Log(data.SlewStatus+":"+data.LuffStatus+":"+data.CarStatus);
         device_yaw.Status = data.SlewStatus;
         device_pitch.Status = data.LuffStatus;
         device_forward.Status = data.CarStatus;

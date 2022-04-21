@@ -1156,6 +1156,42 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 21300000, guid: cd754590a4f23cc469d7b7ab4469886d,
         type: 3}
+    - target: {fileID: 5692248608801797184, guid: 81774a3a51f203f42ba16498b091ab36,
+        type: 3}
+      propertyPath: connect
+      value: 
+      objectReference: {fileID: 21300000, guid: a5cadf9047bf23d47b79e1dba6ca02ca,
+        type: 3}
+    - target: {fileID: 5692248608801797184, guid: 81774a3a51f203f42ba16498b091ab36,
+        type: 3}
+      propertyPath: disconnect
+      value: 
+      objectReference: {fileID: 21300000, guid: cd754590a4f23cc469d7b7ab4469886d,
+        type: 3}
+    - target: {fileID: 5692248609116245496, guid: 81774a3a51f203f42ba16498b091ab36,
+        type: 3}
+      propertyPath: connect
+      value: 
+      objectReference: {fileID: 21300000, guid: a5cadf9047bf23d47b79e1dba6ca02ca,
+        type: 3}
+    - target: {fileID: 5692248609116245496, guid: 81774a3a51f203f42ba16498b091ab36,
+        type: 3}
+      propertyPath: disconnect
+      value: 
+      objectReference: {fileID: 21300000, guid: cd754590a4f23cc469d7b7ab4469886d,
+        type: 3}
+    - target: {fileID: 6827384969684507297, guid: 81774a3a51f203f42ba16498b091ab36,
+        type: 3}
+      propertyPath: connect
+      value: 
+      objectReference: {fileID: 21300000, guid: a5cadf9047bf23d47b79e1dba6ca02ca,
+        type: 3}
+    - target: {fileID: 6827384969684507297, guid: 81774a3a51f203f42ba16498b091ab36,
+        type: 3}
+      propertyPath: disconnect
+      value: 
+      objectReference: {fileID: 21300000, guid: cd754590a4f23cc469d7b7ab4469886d,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 81774a3a51f203f42ba16498b091ab36, type: 3}
 --- !u!1 &745718628
