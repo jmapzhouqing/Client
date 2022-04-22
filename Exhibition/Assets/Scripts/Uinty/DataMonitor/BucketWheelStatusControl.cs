@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 using Scanner.Struct;
 
-public class BucketWheelStatusControl :DeviceStatusControl
+public class BucketWheelStatusControl : DeviceStatusControl
 {
     public Image status_icon;
 
@@ -17,14 +17,18 @@ public class BucketWheelStatusControl :DeviceStatusControl
         this.Status = (short)DeviceStatus.NotConnect;
     }
 
-    public override void SetStatus(string value){
-        if (value.Equals("1"))
+    public override void SetStatus(string value)
+    {
+        Loom.QueueOnMainThread((param) =>
         {
-            status_icon.sprite = this.connect;
-        }
-        else if (value.Equals("2"))
-        {
-            status_icon.sprite = this.disconnect;
-        }
+            if (value.Equals("1"))
+            {
+                status_icon.sprite = this.connect;
+            }
+            else if (value.Equals("2"))
+            {
+                status_icon.sprite = this.disconnect;
+            }
+        }, null);
     }
 }

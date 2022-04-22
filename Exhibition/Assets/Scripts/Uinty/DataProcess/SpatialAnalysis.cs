@@ -233,7 +233,6 @@ public class SpatialAnalysis : MonoBehaviour
 
                 angle += new Vector3(0, step, 0);
                 this.transform.rotation = Quaternion.Euler(angle);
-
             }
         }
     }
@@ -420,6 +419,8 @@ public class SpatialAnalysis : MonoBehaviour
         dic.Add("rotation", new Vector3(-1 * pitch * Mathf.Rad2Deg, rotation * Mathf.Rad2Deg, 0));
 
         dic.Add("center", center_coordinate);
+
+        Debug.Log(new Vector3(-1 * pitch * Mathf.Rad2Deg, rotation * Mathf.Rad2Deg, 0));
 
         return dic;
     }
