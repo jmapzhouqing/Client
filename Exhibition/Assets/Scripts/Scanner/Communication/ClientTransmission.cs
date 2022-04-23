@@ -70,18 +70,14 @@ namespace Scanner.Communicate
                 switch (data[2])
                 {
                     case "Start":
-                        UIManager.instance.Refresh(delegate () {
-                            UIManager.instance.TakeCoalExhibition(data[3]);
-                        });
+                        TaskManager.instance.StartTakeCoal(data);
                         break;
                     case "End":
-                        UIManager.instance.Refresh(delegate () {
-                            UIManager.instance.ClearInterface();
-                        });
+                        TaskManager.instance.StopStackCoal();
                         //UIManager.instance.ClearInterface();
                         break;
                     case "CommandReceive":
-                        
+                        TaskManager.instance.TaskCommandReceived();
                         break;
                     default:
                         break;
@@ -96,17 +92,13 @@ namespace Scanner.Communicate
                 switch (data[2])
                 {
                     case "Start":
-                        UIManager.instance.Refresh(delegate () {
-                            UIManager.instance.StackCoalExhibition(data[3]);
-                        });
+                        TaskManager.instance.StartStackCoal(data);
                         break;
                     case "End":
-                        UIManager.instance.Refresh(delegate (){
-                            UIManager.instance.ClearInterface();
-                        });
+                        TaskManager.instance.StopStackCoal();
                         break;
                     case "CommandReceive":
-                        
+                        TaskManager.instance.TaskCommandReceived();
                         break;
                     default:
                         break;

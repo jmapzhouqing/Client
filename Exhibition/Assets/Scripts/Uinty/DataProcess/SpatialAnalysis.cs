@@ -11,6 +11,8 @@ public class SpatialAnalysis : MonoBehaviour
 
     private List<Vector2> polygon_vertices;
 
+    private Polygon check_forward_polygon;
+
     private Polygon check_polygon;
 
     private Polygon wheel_polygon;
@@ -75,6 +77,10 @@ public class SpatialAnalysis : MonoBehaviour
         update_vertices = this.CreateUpdateVertices();
 
         rotation_vertices = new List<Vector3>();
+
+        check_forward_polygon = this.CreateForwardBoundaryOrthogon(0);
+        check_forward_polygon.CreateInteriorPoint();
+
     }
 
 
@@ -174,6 +180,8 @@ public class SpatialAnalysis : MonoBehaviour
             Vector3 end = new Vector3(_end.x, 0, _end.z);
             Debug.DrawLine(_start, _end, Color.red);
         }*/
+        CheckFowardBoundary();
+
 
         for (int i = 0, len = polygon_vertices.Count; i < len; i++)
         {
@@ -200,12 +208,27 @@ public class SpatialAnalysis : MonoBehaviour
             if (data.SlewStatus == 1){
                 if(CheckLeftBoundary()){
                     correspond.SendData("Boundardy Left Arrive");
+
+                    if (total_number < 100) {
+                        correspond.SendData("Boundardy Foward Arrive");
+                    }
+
+                    total_number = 0;
                 }
             }else if (data.SlewStatus == 2) {
                 if (CheckRightBoundary()){
                     correspond.SendData("Boundardy Right Arrive");
+
+                    if (total_number < 100)
+                    {
+                        correspond.SendData("Boundardy Foward Arrive");
+                    }
+
+                    total_number = 0;
                 }
             }
+
+            CheckFowardBoundary();
         }
 
         UpdateVertice();
@@ -394,7 +417,10 @@ public class SpatialAnalysis : MonoBehaviour
         check_right_boundary_polygon = this.CreateRightBoundaryOrthogon(pitch);
         check_right_boundary_polygon.CreateInteriorPoint();
 
-        
+        check_forward_polygon = this.CreateForwardBoundaryOrthogon(pitch);
+        check_forward_polygon.CreateInteriorPoint();
+
+
         //this.SetTransform(param["rotation"],param["center"]);
 
         return param;
@@ -534,6 +560,24 @@ public class SpatialAnalysis : MonoBehaviour
         return polygon;
     }
 
+    private Polygon CreateForwardBoundaryOrthogon(float pitch) {
+        float radius = Mathf.Sqrt(Mathf.Pow(ConfigurationParameter.arm_length + ConfigurationParameter.wheel_radius, 2) + Mathf.Pow(ConfigurationParameter.wheel_center_offset_height, 2));
+
+        float offset_pitch = Mathf.Asin(ConfigurationParameter.wheel_center_offset_height / radius);
+
+        radius = Mathf.Cos(pitch + offset_pitch) * radius;
+
+        Vector2 center = new Vector2(0.0f, radius + ConfigurationParameter.wheel_radius);
+
+        float width = 1.0f;
+
+        float height = ConfigurationParameter.wheel_radius;
+
+        Polygon polygon = this.CreateOrthogon(center, width, height);
+
+        return polygon;
+    }
+
     private float ClampRotation(float value) {
         float param = -value / Mathf.Abs(value);
         if ((Mathf.Abs(value) - 180) > Mathf.Pow(10,-2)) {
@@ -608,15 +652,45 @@ public class SpatialAnalysis : MonoBehaviour
             }
             
         }
-
-        //Debug.Log(count);
-
         if (count == 0){
             return true;
         }else{
             return false;
         }
     }
+
+    private int total_number = 0;
+
+    public void CheckFowardBoundary()
+    {
+        Vector3 center = this.transform.position;
+
+        float rotation = foundation.eulerAngles.y - foundation_euler.y;
+
+        Polygon update_polygon = check_forward_polygon.CreateRotationPolygon(new Vector2(center.x, center.z), rotation * Mathf.Deg2Rad);
+
+        polygon_vertices = update_polygon.interior_vertices;
+
+        foreach (Vector2 vertice in polygon_vertices)
+        {
+            int x = Mathf.FloorToInt(vertice.x / 0.2f);
+            int y = Mathf.FloorToInt(vertice.y / 0.2f);
+
+            try
+            {
+                if (grid_data_manager.mesh_data[x, y].y > coal_height)
+                {
+                    total_number++;
+                }
+            }
+            catch (Exception e)
+            {
+                //Debug.Log(x+"#"+y);
+            }
+
+        }
+    }
+
 
     public Vector2 GetLeftRightVertice(List<Vector2> arc_vertices,Grid grid,float height,int threshold){
         bool[] bool_value = new bool[arc_vertices.Count];

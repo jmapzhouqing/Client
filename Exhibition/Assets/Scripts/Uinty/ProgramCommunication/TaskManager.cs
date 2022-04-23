@@ -1,27 +1,48 @@
 ﻿using UnityEngine;
 
-namespace Assets.Scripts.Uinty.ProgramCommunication
+class TaskManager : MonoBehaviour
 {
-    class TaskManager:MonoBehaviour{
 
-        public static TaskManager instance;
+    public static TaskManager instance;
 
-        public void StartTakeCoal()
-        {
+    private SpatialAnalysis spatialAnalysis;
 
-        }
+    private void Awake()
+    {
+        spatialAnalysis = FindObjectOfType<SpatialAnalysis>();
+    }
 
-        public void StopTakeCoal() {
-               
-        }
+    public void StartTakeCoal(string[] data)
+    {
+        UIManager.instance.Refresh(delegate () {
+            UIManager.instance.TakeCoalExhibition(data[3]);
+        });
+        spatialAnalysis.take_coal_status = true;
+    }
 
-        public void StopStackCoal() {
+    public void StopTakeCoal()
+    {
+        UIManager.instance.Refresh(delegate () {
+            UIManager.instance.ClearInterface();
+        });
+        spatialAnalysis.take_coal_status = false;
+    }
 
-        }
+    public void StopStackCoal()
+    {
+        UIManager.instance.Refresh(delegate () {
+            UIManager.instance.ClearInterface();
+        });
+    }
 
-        public void StartStackCoal() {
+    public void StartStackCoal(string[] data)
+    {
+        UIManager.instance.Refresh(delegate () {
+            UIManager.instance.StackCoalExhibition(data[3]);
+        });
+    }
 
-        }
+    public void TaskCommandReceived() {
 
     }
 }
