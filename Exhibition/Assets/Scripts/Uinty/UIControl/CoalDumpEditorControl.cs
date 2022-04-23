@@ -102,7 +102,8 @@ public class CoalDumpEditorControl : MonoBehaviour
         return result;
     }
 
-    public bool CheckCoalDumpSize(Grid grid,float value = 5) {
+    public bool CheckCoalDumpSize(Grid grid, float value = 5)
+    {
         bool result = false;
 
         Vector2 size = grid.GetSize();

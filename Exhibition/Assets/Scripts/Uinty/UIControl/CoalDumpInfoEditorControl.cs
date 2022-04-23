@@ -31,8 +31,9 @@ public class CoalDumpInfoEditorControl : MonoBehaviour {
     public void Confirm() {
         info.dump_name = coal_dump_name.text;
         info.coal_id = coal_id.text;
-        info.number =  Convert.ToSingle(coal_number.text);
-
+        if (!string.IsNullOrEmpty(coal_number.text)) {
+            info.number = Convert.ToSingle(coal_number.text);
+        }
         info.vertices = Line.points3.Select(vertice=>new Vector2(vertice.x,vertice.z)).ToList();
         if (!is_edit) {
             editor_control.AddCoalDump(Line, info);

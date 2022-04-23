@@ -55,7 +55,7 @@ public class CoalDumpEditorAddControl : MonoBehaviour
         }else if (camera_control.control_state.Equals(MouseControl.LeftUp)){
             if (is_drag && rect_line != null){
                 Grid grid = new Grid(rect_line.points3,ConfigurationParameter.precision,ConfigurationParameter.mesh_segment_number);
-                if (editor_control.CheckCoalDumpSuperposition(grid)){
+                if (editor_control.CheckCoalDumpSize(grid) || editor_control.CheckCoalDumpSuperposition(grid)){
                     if (rect_line != null){
                         VectorLine.Destroy(ref rect_line);
                         rect_line = null;

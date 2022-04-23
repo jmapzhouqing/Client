@@ -49,6 +49,8 @@ public class SpatialAnalysis : MonoBehaviour
     private Vector3 foundation_euler;
 
     float step = -0.02f;
+
+    public bool take_coal_status = false;
     // Start is called before the first frame update
     void Awake(){
         exhibition_vertices = new List<Vector3>();
@@ -74,6 +76,9 @@ public class SpatialAnalysis : MonoBehaviour
 
         rotation_vertices = new List<Vector3>();
     }
+
+
+
     private void StartName(){
         /*
         Grid grid = new Grid(0, 180, 100, 3000, 0.2f, 200);
@@ -178,6 +183,7 @@ public class SpatialAnalysis : MonoBehaviour
             Vector3 start = new Vector3(_start.x, 0, _start.y);
             Vector3 end = new Vector3(_end.x, 0, _end.y);
             Debug.DrawLine(start, end, Color.red);
+
         }
 
         if (hardware_monitor.IsConnected && hardware_monitor.data!=null){
@@ -189,7 +195,7 @@ public class SpatialAnalysis : MonoBehaviour
             this.transform.position = new Vector3(this.transform.position.x,this.transform.position.y,hardware_monitor.data.CarPos);
         }
 
-        if(hardware_monitor.IsConnected && hardware_monitor.data!=null){
+        if(hardware_monitor.IsConnected && hardware_monitor.data!=null && take_coal_status){
             DeviceData data = hardware_monitor.data;
             if (data.SlewStatus == 1){
                 if(CheckLeftBoundary()){
@@ -204,8 +210,6 @@ public class SpatialAnalysis : MonoBehaviour
 
         UpdateVertice();
 
-        //if(is)
-        //this.transform.rotation = Quaternion.Euler(angle);
         if (is_update) {
             UpdateVertice();
             if(isLeft || isRight){
@@ -266,8 +270,6 @@ public class SpatialAnalysis : MonoBehaviour
         Dictionary<string, Vector3> param = null;
 
         coal_height = height;
-
-        Debug.Log(DateTime.Now.ToLocalTime());
 
         Vector2 entry_point = Vector2.zero;
 
