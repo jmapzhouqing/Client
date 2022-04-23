@@ -5,13 +5,13 @@ using HslCommunication;
 using HslCommunication.Reflection;
 
 public class DeviceData{
-    [HslDeviceAddress("HS_Car_FaultS")]
+    [HslDeviceAddress("HS_Car_Status")]
     public short CarStatus { get; set; }
 
-    [HslDeviceAddress("HS_Slew_FaultS")]
+    [HslDeviceAddress("HS_Slew_Status")]
     public short SlewStatus { get; set; }
 
-    [HslDeviceAddress("HS_Luff_FaultS")]
+    [HslDeviceAddress("HS_Luff_Status")]
     public short LuffStatus { get; set; }
 
     [HslDeviceAddress("HS_Car_POS_KU_R")]

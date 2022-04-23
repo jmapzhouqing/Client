@@ -21,13 +21,16 @@ public class BucketWheelStatusControl : DeviceStatusControl
     {
         Loom.QueueOnMainThread((param) =>
         {
-            if (value.Equals("1"))
+            if (value.Equals("0")) {
+                status_icon.sprite = this.disconnect;
+            }
+            else if (value.Equals("1"))
             {
                 status_icon.sprite = this.connect;
             }
             else if (value.Equals("2"))
             {
-                status_icon.sprite = this.disconnect;
+                status_icon.sprite = this.working;
             }
         }, null);
     }

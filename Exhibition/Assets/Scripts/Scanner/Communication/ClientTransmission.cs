@@ -70,9 +70,17 @@ namespace Scanner.Communicate
                 switch (data[2])
                 {
                     case "Start":
-                        TaskManager.instance.StartTakeCoal(data);
+                        
+                        Loom.QueueOnMainThread((param) =>
+                        {
+                            Debug.Log("EnterTake");
+                            TaskManager.instance.StartTakeCoal(data);
+                            Debug.Log("Enter2Take");
+                        }, null);
+                        
                         break;
                     case "End":
+                        Debug.Log("Enter End");
                         TaskManager.instance.StopStackCoal();
                         //UIManager.instance.ClearInterface();
                         break;

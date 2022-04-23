@@ -78,9 +78,8 @@ public class SpatialAnalysis : MonoBehaviour
 
         rotation_vertices = new List<Vector3>();
 
-        check_forward_polygon = this.CreateForwardBoundaryOrthogon(0);
-        check_forward_polygon.CreateInteriorPoint();
 
+        StartCoroutine(MonitorBoundary());
     }
 
 
@@ -169,6 +168,9 @@ public class SpatialAnalysis : MonoBehaviour
         grid_data_manager.UpdateCoalYard(need_update);
     }
 
+    private bool arrive_left = false;
+    private bool arrive_right = false;
+
     // Update is called once per frame
     void Update(){
         /*
@@ -180,19 +182,18 @@ public class SpatialAnalysis : MonoBehaviour
             Vector3 end = new Vector3(_end.x, 0, _end.z);
             Debug.DrawLine(_start, _end, Color.red);
         }*/
-        CheckFowardBoundary();
 
-
-        for (int i = 0, len = polygon_vertices.Count; i < len; i++)
+        /*
+        for (int i = 0, len = update_vertices.Count; i < len; i++)
         {
-            Vector2 _start = polygon_vertices[i % len];
-            Vector2 _end = polygon_vertices[(i + 1) % len];
+            Vector3 _start = update_vertices[i % len];
+            Vector3 _end = update_vertices[(i + 1) % len];
 
-            Vector3 start = new Vector3(_start.x, 0, _start.y);
-            Vector3 end = new Vector3(_end.x, 0, _end.y);
-            Debug.DrawLine(start, end, Color.red);
+            Vector3 start = new Vector3(_start.x, 0, _start.z);
+            Vector3 end = new Vector3(_end.x, 0, _end.z);
+            Debug.DrawLine(_start, _end, Color.red);
 
-        }
+        }*/
 
         if (hardware_monitor.IsConnected && hardware_monitor.data!=null){
             float yaw = hardware_monitor.data.SlewAngle;
@@ -203,35 +204,35 @@ public class SpatialAnalysis : MonoBehaviour
             this.transform.position = new Vector3(this.transform.position.x,this.transform.position.y,hardware_monitor.data.CarPos);
         }
 
-        if(hardware_monitor.IsConnected && hardware_monitor.data!=null && take_coal_status){
+        if (hardware_monitor.IsConnected && hardware_monitor.data != null && take_coal_status) {
             DeviceData data = hardware_monitor.data;
-            if (data.SlewStatus == 1){
-                if(CheckLeftBoundary()){
-                    correspond.SendData("Boundardy Left Arrive");
-
-                    if (total_number < 100) {
-                        correspond.SendData("Boundardy Foward Arrive");
-                    }
-
-                    total_number = 0;
+            if (data.SlewStatus == 1)
+            {
+                this.arrive_right = false;
+                if (CheckLeftBoundary()){
+                    this.arrive_left = true;
+                   
                 }
-            }else if (data.SlewStatus == 2) {
-                if (CheckRightBoundary()){
-                    correspond.SendData("Boundardy Right Arrive");
-
-                    if (total_number < 100)
-                    {
-                        correspond.SendData("Boundardy Foward Arrive");
-                    }
-
-                    total_number = 0;
+            }
+            else if (data.SlewStatus == 2)
+            {
+                this.arrive_left = false;
+                if (CheckRightBoundary())
+                {
+                    this.arrive_right = true;
                 }
+            }
+            else {
+                this.arrive_left = false;
+                this.arrive_right = false;
             }
 
             CheckFowardBoundary();
+
+            UpdateVertice();
         }
 
-        UpdateVertice();
+        
 
         if (is_update) {
             UpdateVertice();
@@ -266,6 +267,31 @@ public class SpatialAnalysis : MonoBehaviour
 
     private void FixedUpdate(){
         //UpdateVertice();
+    }
+
+    private IEnumerator MonitorBoundary() {
+        while (true)
+        {
+            if (this.arrive_left) {
+                correspond.SendData("Boundardy Left Arrive");
+                Debug.Log("SendLeftBoundary");
+            }
+
+            if (this.arrive_right)
+            {
+                correspond.SendData("Boundardy Right Arrive");
+                Debug.Log("SendRightBoundary");
+            }
+
+            if (this.arrive_left || this.arrive_right) {
+                if(total_number < 100){
+                    correspond.SendData("Boundardy Foward Arrive");
+                }
+                total_number = 0;
+            }
+
+            yield return new WaitForSeconds(1.0f);
+        }
     }
 
     private Vector2 Vector2Rotate(Vector2 vertice,float rotation){
@@ -616,7 +642,7 @@ public class SpatialAnalysis : MonoBehaviour
             
         }
 
-        if (count == 0){
+        if (count < 30){
             return true;
         }
         else {
@@ -652,7 +678,7 @@ public class SpatialAnalysis : MonoBehaviour
             }
             
         }
-        if (count == 0){
+        if (count < 30){
             return true;
         }else{
             return false;
