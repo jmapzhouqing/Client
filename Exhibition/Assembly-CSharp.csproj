@@ -143,10 +143,12 @@
     <Compile Include="Assets\Scripts\Uinty\Control\CameraControl.cs" />
     <Compile Include="Assets\Scripts\Uinty\Control\Loom.cs" />
     <Compile Include="Assets\Scripts\Uinty\DataManager\Grandmaster.cs" />
+    <Compile Include="Assets\Scripts\Uinty\DataMonitor\BucketArmStatusControl.cs" />
     <Compile Include="Assets\Scripts\Uinty\DataMonitor\BucketWheelStatusControl.cs" />
     <Compile Include="Assets\Scripts\Uinty\DataMonitor\DeviceExhibition.cs" />
     <Compile Include="Assets\Scripts\Uinty\DataMonitor\DeviceMonitor.cs" />
     <Compile Include="Assets\Scripts\Uinty\DataMonitor\DeviceStatusControl.cs" />
+    <Compile Include="Assets\Scripts\Uinty\DataMonitor\ProgramCommunicationStatusControl.cs" />
     <Compile Include="Assets\Scripts\Uinty\DataMonitor\ScannerStatusControl.cs" />
     <Compile Include="Assets\Scripts\Uinty\DataProcess\BlockManager.cs" />
     <Compile Include="Assets\Scripts\Uinty\DataProcess\CoalDumpManager.cs" />

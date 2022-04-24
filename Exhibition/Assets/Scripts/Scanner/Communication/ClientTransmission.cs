@@ -73,19 +73,23 @@ namespace Scanner.Communicate
                         
                         Loom.QueueOnMainThread((param) =>
                         {
-                            Debug.Log("EnterTake");
                             TaskManager.instance.StartTakeCoal(data);
-                            Debug.Log("Enter2Take");
+                            Debug.Log("EnterTakeCoal");
                         }, null);
                         
                         break;
                     case "End":
-                        Debug.Log("Enter End");
-                        TaskManager.instance.StopStackCoal();
-                        //UIManager.instance.ClearInterface();
+                        Loom.QueueOnMainThread((param) =>
+                        {
+                            TaskManager.instance.StopStackCoal();
+                            Debug.Log("EnterEndCoal");
+                        }, null);
                         break;
                     case "CommandReceive":
-                        TaskManager.instance.TaskCommandReceived();
+                        Loom.QueueOnMainThread((param)=> {
+                            TaskManager.instance.TaskCommandReceived();
+                        },null);
+                        
                         break;
                     default:
                         break;
@@ -100,13 +104,21 @@ namespace Scanner.Communicate
                 switch (data[2])
                 {
                     case "Start":
-                        TaskManager.instance.StartStackCoal(data);
+                        Loom.QueueOnMainThread((param) => {
+                            TaskManager.instance.StartStackCoal(data);
+                        }, null);
                         break;
                     case "End":
-                        TaskManager.instance.StopStackCoal();
+                        Loom.QueueOnMainThread((param) => {
+                            TaskManager.instance.StopStackCoal();
+                        }, null);
+                        
                         break;
                     case "CommandReceive":
-                        TaskManager.instance.TaskCommandReceived();
+                        Loom.QueueOnMainThread((param) => {
+                            TaskManager.instance.TaskCommandReceived();
+                        }, null);
+                        
                         break;
                     default:
                         break;

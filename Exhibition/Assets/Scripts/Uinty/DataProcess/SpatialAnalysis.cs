@@ -392,7 +392,10 @@ public class SpatialAnalysis : MonoBehaviour
 
         float min_z = float.MaxValue;
 
+        float max_z = float.MinValue;
+
         float entry_rotation = 0;
+        Vector2 end_point = Vector2.zero;
 
         float max_rotation = float.MinValue;
         float min_rotation = float.MaxValue;
@@ -418,6 +421,11 @@ public class SpatialAnalysis : MonoBehaviour
 
                 entry_rotation = rotation;
             }
+
+            if (z > max_z) {
+                max_z = z;
+                end_point = vertice;
+            }
         }
 
         Vector3 center = ConfigurationParameter.rotation_center + new Vector3(0, 0, min_z);
@@ -435,7 +443,7 @@ public class SpatialAnalysis : MonoBehaviour
             entry_point = may_point;
         }
 
-        param  = this.CaculatePosture(entry_point, ConfigurationParameter.bucket_wheel_bottom_coordinate,pitch);
+        param  = this.CaculatePosture(entry_point,max_z,ConfigurationParameter.bucket_wheel_bottom_coordinate,pitch);
 
         check_left_boundary_polygon = this.CreateLeftBoundaryOrthogon(pitch);
         check_left_boundary_polygon.CreateInteriorPoint();
@@ -452,7 +460,7 @@ public class SpatialAnalysis : MonoBehaviour
         return param;
     }
 
-    private Dictionary<string,Vector3> CaculatePosture(Vector2 target,Vector3 origin,float pitch) {
+    private Dictionary<string,Vector3> CaculatePosture(Vector2 target,float max_z,Vector3 origin,float pitch) {
 
         Dictionary<string, Vector3> dic = new Dictionary<string, Vector3>();
 
@@ -468,21 +476,27 @@ public class SpatialAnalysis : MonoBehaviour
 
         Vector3 center_coordinate = rotation_center + new Vector3(0, 0, target.y - radius * Mathf.Cos(rotation));
 
+        Vector3 stop_coordinate = rotation_center + new Vector3(0, 0, max_z - radius * Mathf.Cos(rotation));
+
         rotation = rotation - wheel_rotation;
 
         dic.Add("rotation", new Vector3(-1 * pitch * Mathf.Rad2Deg, rotation * Mathf.Rad2Deg, 0));
 
         dic.Add("center", center_coordinate);
 
-        Debug.Log(new Vector3(-1 * pitch * Mathf.Rad2Deg, rotation * Mathf.Rad2Deg, 0));
+        dic.Add("stop", stop_coordinate);
+
+        //Debug.Log(new Vector3(-1 * pitch * Mathf.Rad2Deg, rotation * Mathf.Rad2Deg, 0));
 
         return dic;
     }
 
     private void SetTransform(Vector3 rotation,Vector3 center) {
-        
-        arm.rotation = Quaternion.Euler(arm_euler.x + rotation.x * Mathf.Rad2Deg, arm_euler.y, arm_euler.z);
-        foundation.rotation = Quaternion.Euler(foundation_euler.x, foundation_euler.y + rotation.y * Mathf.Rad2Deg, foundation_euler.z);
+
+        Debug.Log(rotation);
+
+        arm.localRotation = Quaternion.Euler(rotation.x, 0, 0);
+        foundation.rotation = Quaternion.Euler(0, rotation.y, 0);
 
         this.transform.position = center;
     }

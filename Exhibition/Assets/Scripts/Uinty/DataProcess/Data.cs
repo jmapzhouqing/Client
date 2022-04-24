@@ -377,5 +377,6 @@ public class TakeCoalInfo {
     public string dump_name;
     public Vector3 euler;
     public float position;
+    public float stop_position;
     public int level;
 }
