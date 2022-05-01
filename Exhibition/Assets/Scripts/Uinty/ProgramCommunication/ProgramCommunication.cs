@@ -27,7 +27,7 @@ public class ProgramCommunication : MonoBehaviour
         //server_address = new IPEndPoint(IPAddress.Parse("192.168.90.252"), 8100);
         //client_address = new IPEndPoint(IPAddress.Any,0);
 
-        client = new ClientTransmission(ip,port);
+        client = new ClientTransmission("控制端",ip,port);
         client.StatusChanged += StatusChanged;
         client.Error += OnError;
         client.Connect(timeout);
@@ -74,11 +74,22 @@ public class ProgramCommunication : MonoBehaviour
         }
         else {
             client_server.Status = 2;
+            UIManager.instance.ReLinkServer("控制端连接断开,请检查控制端并重新连接", client.ReLink);
             //client.StopProcessData();
         }
     }
 
     private void OnError(ExceptionHandler exception) {
-        Debug.Log(exception.Message+"#"+exception.GetExceptionCode().ToString());
+        //Debug.Log(exception.Message+"#"+exception.GetExceptionCode().ToString());
+
+        //exception.GetExceptionCode().Equals(ExceptionCode.ConnectionRefused)
+
+        if (exception.GetExceptionCode().Equals(ExceptionCode.ConnectionRefused))
+        {
+            UIManager.instance.ReLinkServer("连接控制端被拒,请检查控制端是否启动并重新连接", client.ReLink);
+        }
+        else {
+            UIManager.instance.ExhibitionInfo(exception.Message);
+        }
     }
 }

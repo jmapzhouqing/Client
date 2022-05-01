@@ -160,6 +160,7 @@
     <Compile Include="Assets\Scripts\Uinty\DataProcess\SpatialAnalysis.cs" />
     <Compile Include="Assets\Scripts\Uinty\PLC\HardWareDataMonitor.cs" />
     <Compile Include="Assets\Scripts\Uinty\ProgramCommunication\ProgramCommunication.cs" />
+    <Compile Include="Assets\Scripts\Uinty\ProgramCommunication\ReLink.cs" />
     <Compile Include="Assets\Scripts\Uinty\ProgramCommunication\TaskManager.cs" />
     <Compile Include="Assets\Scripts\Uinty\Scanner\ScannerManager.cs" />
     <Compile Include="Assets\Scripts\Uinty\Scanner\ScannerPoint.cs" />

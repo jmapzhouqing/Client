@@ -39,6 +39,8 @@ namespace Scanner.Communicate
         public event StatusChangedHandle StatusChanged;
         public event ErrorHandle Error;
 
+        private int timeout;
+
         public DataTransmission(string ip, int port){
             try
             {
@@ -62,6 +64,7 @@ namespace Scanner.Communicate
 
 
         public virtual void Connect(int timeout){
+            this.timeout = timeout;
             this.StartProcessData(100);
             
             correspond.DataReceived += ReceiveData;
@@ -69,7 +72,10 @@ namespace Scanner.Communicate
             correspond.Error += this.OnError;
 
             correspond.Connect(this.server_address,timeout);
+        }
 
+        public void ReLink() {
+            correspond?.Connect(this.server_address,this.timeout);
         }
 
         public void Connect(Socket socket){

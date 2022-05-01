@@ -10,7 +10,8 @@ using Scanner.Struct;
 namespace Scanner.Communicate
 {
     class Correspond_TCP : Correspond{
-        public Correspond_TCP(IPEndPoint client_address,byte[] heartbeat_data):base(heartbeat_data){
+        public Correspond_TCP(string name,IPEndPoint client_address,byte[] heartbeat_data):base(heartbeat_data){
+            this.device_name = name;
             if (client_address != null){
                 this.client_address = client_address;
                 socket = new Socket(client_address.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
@@ -113,7 +114,7 @@ namespace Scanner.Communicate
                 }
 
                 if(!this.IsConnected()){
-                    this.OnError(new ExceptionHandler("设备连接超时", ExceptionCode.TimedOut));
+                    //this.OnError(new ExceptionHandler("设备连接超时", ExceptionCode.TimedOut));
                 }else{
                     this.UpdateReceiveTicks();
                     this.StartHeart(100);
@@ -127,12 +128,12 @@ namespace Scanner.Communicate
                 
                 if (args.SocketError == SocketError.IsConnected) {
                     this.StatusMonitor = DeviceStatus.Connect;
-                    this.OnError(new ExceptionHandler("设备已连接，无需再次连接", this.HandlerError(args.SocketError)));
+                    this.OnError(new ExceptionHandler(this.device_name+"已连接，无需再次连接", this.HandlerError(args.SocketError)));
                 }else if (args.SocketError == SocketError.Success){
                     if (args.ConnectSocket.Connected){
                         this.StatusMonitor = DeviceStatus.Connect;
                         
-                        this.OnError(new ExceptionHandler("设备连接成功", this.HandlerError(args.SocketError)));
+                        this.OnError(new ExceptionHandler(this.device_name+"连接成功", this.HandlerError(args.SocketError)));
 
                         bool willRaiseEvent = socket.ReceiveAsync(receive_async);
 
@@ -141,7 +142,7 @@ namespace Scanner.Communicate
                         }
                     }
                 }else{
-                    this.OnError(new ExceptionHandler("设备无法连接", this.HandlerError(args.SocketError)));
+                    this.OnError(new ExceptionHandler(this.device_name+"无法连接!", this.HandlerError(args.SocketError)));
                 }
             }catch (Exception e){
                 this.OnError(new ExceptionHandler(e.Message, ExceptionCode.InternalError));
@@ -152,10 +153,10 @@ namespace Scanner.Communicate
             try{
                 if (args.SocketError == SocketError.Success){
                     this.Close();
-                    this.OnError(new ExceptionHandler("设备断开连接", this.HandlerError(args.SocketError)));
+                    this.OnError(new ExceptionHandler(this.device_name+"断开连接", this.HandlerError(args.SocketError)));
                 }
                 else{
-                    this.OnError(new ExceptionHandler("通讯连接断开异常", this.HandlerError(args.SocketError)));
+                    this.OnError(new ExceptionHandler(this.device_name+"通讯连接断开异常", this.HandlerError(args.SocketError)));
                 }
             }
             catch (Exception e) {
@@ -177,10 +178,10 @@ namespace Scanner.Communicate
                             this.ProcessReceive(args);
                         }
                     }else{
-                        this.OnError(new ExceptionHandler("连接关闭", ExceptionCode.Shutdown));
+                        this.OnError(new ExceptionHandler(this.device_name+"连接关闭", ExceptionCode.Shutdown));
                     }
                 }else{
-                    this.OnError(new ExceptionHandler("数据接收异常", this.HandlerError(args.SocketError)));
+                    this.OnError(new ExceptionHandler(this.device_name+"数据接收异常", this.HandlerError(args.SocketError)));
                 }
             }catch (Exception e){
                 Debug.Log("Enter Receive Error");
@@ -192,7 +193,7 @@ namespace Scanner.Communicate
             if (args.SocketError == SocketError.Success){
 
             }else{
-                this.OnError(new ExceptionHandler("数据发送异常", this.HandlerError(args.SocketError)));
+                this.OnError(new ExceptionHandler(this.device_name+"数据发送异常", this.HandlerError(args.SocketError)));
             }
         }
     }

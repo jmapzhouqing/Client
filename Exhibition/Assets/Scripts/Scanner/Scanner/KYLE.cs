@@ -38,7 +38,7 @@ namespace Scanner.Scanister
 
         public override void Connect(){
             this.StartProcessData(100);
-            correspond = new Correspond_TCP(new IPEndPoint(IPAddress.Any, 0),this.CommandConstruct("sRN LMPscancfg"));
+            correspond = new Correspond_TCP("KYLE",new IPEndPoint(IPAddress.Any, 0),this.CommandConstruct("sRN LMPscancfg"));
             base.Connect();
         }
 

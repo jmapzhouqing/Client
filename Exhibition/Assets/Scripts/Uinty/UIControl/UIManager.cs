@@ -67,6 +67,7 @@ public class UIManager : MonoBehaviour
         CoalDumpOperation dump_operation = this.GetCoalDumpInfo(key);
 
         if (dump_operation != null) {
+            /*
             ScrollRect scroll_rect = dump_operation.GetComponentInParent<ScrollRect>();
 
             float view_height = scroll_rect.GetComponent<RectTransform>().rect.size.y;
@@ -74,12 +75,13 @@ public class UIManager : MonoBehaviour
             float per_height = dump_operation.GetComponent<LayoutElement>().preferredHeight;
 
 
-
             float total_height = per_height * dump_operation.transform.parent.childCount;
 
             float height = (1 + dump_operation.transform.GetSiblingIndex()) * per_height;
 
-            scroll_rect.verticalNormalizedPosition = height < view_height ? 1.0f : (total_height - height) / (total_height - view_height);
+            scroll_rect.verticalNormalizedPosition = height < view_height ? 1.0f : (total_height - height) / (total_height - view_height);*/
+
+            dump_operation.transform.SetSiblingIndex(0);
 
             dump_operation.EnterCoalDump();
         }
@@ -91,10 +93,12 @@ public class UIManager : MonoBehaviour
 
         if (dump_operation != null)
         {
+            /*
             ScrollRect scroll_rect = dump_operation.GetComponentInParent<ScrollRect>();
 
+            scroll_rect.verticalNormalizedPosition = 1.0f;*/
 
-            scroll_rect.verticalNormalizedPosition = 1.0f;
+            dump_operation.transform.SetSiblingIndex(dump_operation.index);
 
             dump_operation.ExitCoalDump();
         }
@@ -167,12 +171,39 @@ public class UIManager : MonoBehaviour
     public void ExhibitionInfo(string data) {
         string path = Path.Combine(root_path, "Tip");
 
-        RectTransform prefab = Resources.Load<RectTransform>(path);
+        Loom.QueueOnMainThread((param) =>
+        {
+            RectTransform prefab = Resources.Load<RectTransform>(path);
 
-        RectTransform control = GameObject.Instantiate<RectTransform>(prefab, info_container);
+            RectTransform control = GameObject.Instantiate<RectTransform>(prefab, info_container);
 
-        TipControl tip = control.GetComponent<TipControl>();
-        tip.SetInfo(data);
+            control.anchoredPosition = new Vector2(0, -90);
+
+            TipControl tip = control.GetComponent<TipControl>();
+            tip.SetInfo(data);
+
+
+
+        }, null);
+    }
+
+    public void ReLinkServer(string data,ReLink.LinkServer server) {
+        string path = Path.Combine(root_path, "ReLink");
+
+        Loom.QueueOnMainThread((param) =>
+        {
+            RectTransform prefab = Resources.Load<RectTransform>(path);
+
+            RectTransform control = GameObject.Instantiate<RectTransform>(prefab, info_container);
+
+            control.anchoredPosition = new Vector2(0, -700);
+
+            ReLink link = control.GetComponent<ReLink>();
+            link.SetInfo(data);
+            link.server = server;
+
+
+        }, null);
     }
 
     public void Refresh(Action action) {

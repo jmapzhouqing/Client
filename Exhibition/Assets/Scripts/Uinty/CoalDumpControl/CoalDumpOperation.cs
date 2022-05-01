@@ -26,6 +26,8 @@ public class CoalDumpOperation : MonoBehaviour,IPointerEnterHandler,IPointerExit
 
     private Image image;
 
+    public int index;
+
     // Start is called before the first frame update
     void Awake(){
 
@@ -36,6 +38,9 @@ public class CoalDumpOperation : MonoBehaviour,IPointerEnterHandler,IPointerExit
         camera_control = FindObjectOfType<CameraControl>();
 
         delta = new Vector2(5,5);
+
+
+        this.index = this.transform.GetSiblingIndex();
     }
 
     public void SetInfo(CoalDumpInfo info) {

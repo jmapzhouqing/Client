@@ -9,9 +9,9 @@ namespace Scanner.Communicate
     class ClientTransmission : DataTransmission
     {
 
-        public ClientTransmission(string ip, int port) : base(ip, port){
+        public ClientTransmission(string name,string ip, int port) : base(ip, port){
             byte[] heartbeat_data = this.CommandConstruct("Heart Request");
-            correspond = new Correspond_TCP(new IPEndPoint(IPAddress.Any, 0), heartbeat_data);
+            correspond = new Correspond_TCP(name,new IPEndPoint(IPAddress.Any, 0), heartbeat_data);
         }
 
         protected override void CreateReplayProcess(){

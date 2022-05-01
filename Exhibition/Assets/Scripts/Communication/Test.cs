@@ -16,7 +16,7 @@ public class Test : MonoBehaviour
     {
         IPEndPoint client_address = new IPEndPoint(IPAddress.Any, 0);
 
-        correspond = new Correspond_TCP(client_address,new byte[]{0x02});
+        correspond = new Correspond_TCP("",client_address,new byte[]{0x02});
 
         correspond.Error += OnError;
         correspond.StatusChanged += OnStatusChanged;

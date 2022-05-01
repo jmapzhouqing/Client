@@ -12,7 +12,7 @@ namespace Scanner.Scanister
 {
     abstract class Scanner
     {
-        private string device_name;
+        protected string device_name;
 
         protected Dictionary<string, Action<string[]>> reply_process;
 

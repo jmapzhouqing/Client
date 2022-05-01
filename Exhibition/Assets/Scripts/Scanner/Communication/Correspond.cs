@@ -10,6 +10,8 @@ using Scanner.Struct;
 namespace Scanner.Communicate
 {
     abstract class Correspond{
+        protected string device_name;
+
         private double receive_ticks;
 
         private bool connected = false;

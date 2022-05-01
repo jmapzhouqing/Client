@@ -10,7 +10,7 @@ public class TipControl : MonoBehaviour{
     public Text info;
     // Start is called before the first frame update
     void Start(){
-        tween = this.GetComponent<RectTransform>().DOAnchorPosY(120, 0.5f, true).OnComplete(delegate{
+        tween = this.GetComponent<RectTransform>().DOAnchorPosY(0,0.5f, true).OnComplete(delegate{
             StartCoroutine(AutoDestory());
         });
         tween.Play();
@@ -18,7 +18,7 @@ public class TipControl : MonoBehaviour{
 
     IEnumerator AutoDestory(){
         yield return new WaitForSeconds(2.0f);
-        GameObject.DestroyImmediate(this);
+        GameObject.DestroyImmediate(this.gameObject);
     }
 
     public void SetInfo(string data) {
