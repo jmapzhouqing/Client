@@ -64,6 +64,7 @@ public class LeftControl : MonoBehaviour
 
     public void CreateCoalDump(CoalDumpInfo info) {
         RectTransform coal_dump = GameObject.Instantiate<RectTransform>(coaldump_prefab, container);
+        coal_dump.name = info.uuid;
         CoalDumpOperation operation = coal_dump.GetComponent<CoalDumpOperation>();
         operation.SetInfo(info);
     } 

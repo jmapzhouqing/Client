@@ -39,11 +39,14 @@ public class BlockManager : MonoBehaviour
     // Update is called once per frame
     void OnMouseEnter(){
         coalDumpManager?.material.SetColor("_Emission", new Color(1, 0, 0, 0.3f));
+
+        UIManager.instance.EnterCoalDump(this.transform.parent.name);
     }
 
     void OnMouseExit()
     {
         coalDumpManager?.material.SetColor("_Emission", new Color(0, 0, 0, 0f));
+        UIManager.instance.ExitCoalDump(this.transform.parent.name);
     }
 
     public void UpdateBlock(int x,int z) {

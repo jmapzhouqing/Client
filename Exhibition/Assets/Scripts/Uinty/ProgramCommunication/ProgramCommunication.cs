@@ -20,6 +20,9 @@ public class ProgramCommunication : MonoBehaviour
 
     private ClientTransmission client;
 
+
+    public DeviceStatusControl client_server;
+
     void Start(){
         //server_address = new IPEndPoint(IPAddress.Parse("192.168.90.252"), 8100);
         //client_address = new IPEndPoint(IPAddress.Any,0);
@@ -67,7 +70,10 @@ public class ProgramCommunication : MonoBehaviour
         Debug.Log(status);
         if (status.Equals(DeviceStatus.OnLine)){
             //client.StartProcessData(100);
-        }else {
+            client_server.Status = 1;
+        }
+        else {
+            client_server.Status = 2;
             //client.StopProcessData();
         }
     }

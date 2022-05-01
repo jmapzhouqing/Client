@@ -35,7 +35,7 @@ public class TakeCoalControl : MonoBehaviour
 
         Grid grid = dump_info.CreateGrid();
 
-        Dictionary<string, Vector3> param = analysis.CaculateGridBoundary(grid, ConfigurationParameter.level_height * (info.level-1));
+        Dictionary<string, Vector3> param = analysis.CaculateGridBoundary(grid, ConfigurationParameter.level_height * (info.level-1),ConfigurationParameter.level_height * (info.level));
 
         if (param != null){
             info.euler = param["rotation"];

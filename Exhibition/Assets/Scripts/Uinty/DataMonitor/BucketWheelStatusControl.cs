@@ -12,7 +12,7 @@ public class BucketWheelStatusControl : DeviceStatusControl
     public Sprite connect;
     public Sprite working;
 
-    private void Awake()
+    private void Start()
     {
         this.Status = (short)DeviceStatus.NotConnect;
     }

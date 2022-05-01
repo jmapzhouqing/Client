@@ -171,4 +171,12 @@ public class CoalDumpOperation : MonoBehaviour,IPointerEnterHandler,IPointerExit
 
         image.color = new Color32(0xE6,0x50,0x03, 25);
     }
+
+    public void EnterCoalDump() {
+        image.color = new Color32(0xE6, 0x50, 0x03, 25);
+    }
+
+    public void ExitCoalDump() {
+        image.color = new Color32(0x02, 0x5D, 0xE6, 25);
+    }
 }

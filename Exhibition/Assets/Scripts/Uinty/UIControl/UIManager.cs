@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using DG.Tweening;
 using System;
 using System.Threading;
@@ -53,6 +54,50 @@ public class UIManager : MonoBehaviour
 
     public void EditCoalDump(string name) {
         LoadUserInterface(name);
+    }
+
+    private CoalDumpOperation GetCoalDumpInfo(string key) {
+        CoalDumpOperation dump_operation = this.transform.Find("Canvas/left/bottom/view/container/" + key)?.GetComponent<CoalDumpOperation>();
+        
+
+        return dump_operation;
+    }
+
+    public void EnterCoalDump(string key) {
+        CoalDumpOperation dump_operation = this.GetCoalDumpInfo(key);
+
+        if (dump_operation != null) {
+            ScrollRect scroll_rect = dump_operation.GetComponentInParent<ScrollRect>();
+
+            float view_height = scroll_rect.GetComponent<RectTransform>().rect.size.y;
+
+            float per_height = dump_operation.GetComponent<LayoutElement>().preferredHeight;
+
+
+
+            float total_height = per_height * dump_operation.transform.parent.childCount;
+
+            float height = (1 + dump_operation.transform.GetSiblingIndex()) * per_height;
+
+            scroll_rect.verticalNormalizedPosition = height < view_height ? 1.0f : (total_height - height) / (total_height - view_height);
+
+            dump_operation.EnterCoalDump();
+        }
+    }
+
+    public void ExitCoalDump(string key)
+    {
+        CoalDumpOperation dump_operation = this.GetCoalDumpInfo(key);
+
+        if (dump_operation != null)
+        {
+            ScrollRect scroll_rect = dump_operation.GetComponentInParent<ScrollRect>();
+
+
+            scroll_rect.verticalNormalizedPosition = 1.0f;
+
+            dump_operation.ExitCoalDump();
+        }
     }
 
     public void CreateCoalDump(List<CoalDumpInfo> data) {

@@ -11,7 +11,7 @@ public class ProgramCommunicationStatusControl: DeviceStatusControl
     public Sprite connect;
     public Sprite working;
 
-    private void Awake(){
+    private void Start(){
         this.Status = (short)DeviceStatus.NotConnect;
     }
 
@@ -22,7 +22,7 @@ public class ProgramCommunicationStatusControl: DeviceStatusControl
             {
                 status_icon.sprite = this.connect;
             }
-            else if (value.Equals("2"))
+            else if (value.Equals("2")||value.Equals("0"))
             {
                 status_icon.sprite = this.disconnect;
             }

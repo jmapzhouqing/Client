@@ -39,6 +39,8 @@ public class SpatialAnalysis : MonoBehaviour
 
     private float coal_height = 0;
 
+    private float upper_level_height = 0;
+
 
     private HardWareDataMonitor hardware_monitor;
 
@@ -284,10 +286,19 @@ public class SpatialAnalysis : MonoBehaviour
             }
 
             if (this.arrive_left || this.arrive_right) {
-                if(total_number < 100){
-                    correspond.SendData("Boundardy Foward Arrive");
+                if (this.upper_level_total_number < 200)
+                {
+                    if (this.total_number < 100)
+                    {
+                        correspond.SendData("Boundardy Foward Arrive");
+                    }
                 }
-                total_number = 0;
+                else {
+                    correspond.SendData("Boundardy Foward Upper");
+                }
+
+                this.total_number = 0;
+                this.upper_level_total_number = 0;
             }
 
             yield return new WaitForSeconds(1.0f);
@@ -314,11 +325,14 @@ public class SpatialAnalysis : MonoBehaviour
         float height = (level - 1) * ConfigurationParameter.level_height;
     }
 
-    public Dictionary<string, Vector3> CaculateGridBoundary(Grid grid, float height){
+    public Dictionary<string, Vector3> CaculateGridBoundary(Grid grid, float height,float upper_level_height)
+    {
 
         Dictionary<string, Vector3> param = null;
 
         coal_height = height;
+
+        this.upper_level_height = upper_level_height;
 
         Vector2 entry_point = Vector2.zero;
 
@@ -646,7 +660,7 @@ public class SpatialAnalysis : MonoBehaviour
             int y = Mathf.FloorToInt(vertice.y / 0.2f);
             try
             {
-                if (grid_data_manager.mesh_data[x, y].y > coal_height){
+                if(grid_data_manager.mesh_data[x, y].y > coal_height){
                     count++;
                 }
             }
@@ -701,6 +715,8 @@ public class SpatialAnalysis : MonoBehaviour
 
     private int total_number = 0;
 
+    private int upper_level_total_number = 0;
+
     public void CheckFowardBoundary()
     {
         Vector3 center = this.transform.position;
@@ -716,11 +732,17 @@ public class SpatialAnalysis : MonoBehaviour
             int x = Mathf.FloorToInt(vertice.x / 0.2f);
             int y = Mathf.FloorToInt(vertice.y / 0.2f);
 
+            float height = grid_data_manager.mesh_data[x, y].y;
+
             try
             {
-                if (grid_data_manager.mesh_data[x, y].y > coal_height)
+                if (height > coal_height && height < this.upper_level_height)
                 {
                     total_number++;
+                }
+
+                if (height > this.upper_level_height){
+                    upper_level_total_number++;
                 }
             }
             catch (Exception e)
