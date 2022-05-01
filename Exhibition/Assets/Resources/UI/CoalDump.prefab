@@ -533,7 +533,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u6570\u91CF:"
+  m_Text: "\u4F53\u79EF:"
 --- !u!1 &5216616134471362249
 GameObject:
   m_ObjectHideFlags: 0
@@ -1026,6 +1026,7 @@ MonoBehaviour:
   coal_type: {fileID: 2031825823799900221}
   coal_id: {fileID: 8451571021743893144}
   coal_number: {fileID: 4086219505704513286}
+  index: 0
 --- !u!114 &3360611888818106876
 MonoBehaviour:
   m_ObjectHideFlags: 0
