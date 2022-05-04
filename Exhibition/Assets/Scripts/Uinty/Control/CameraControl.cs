@@ -23,7 +23,7 @@ public enum MouseControl {
 }
 public class CameraControl : MonoBehaviour
 {
-    public float distance = 100;
+    public float origin_distance = 100;
 
     public float pitch_min = 0;
 
@@ -43,7 +43,7 @@ public class CameraControl : MonoBehaviour
 
     private Vector3 origin;
 
-    public Vector2 rotation;
+    public Vector2 origin_rotation;
 
     private Vector2 pre_rotation;
 
@@ -58,20 +58,30 @@ public class CameraControl : MonoBehaviour
     private Transform follow_target;
 
     private Transform origin_target;
+
+    private float distance;
+
+    private Vector2 rotation;
     // Start is called before the first frame update
     void Awake()
     {
+        matrix = new Matrix4x4();
+
+        this.recover_camera();
+    }
+
+    public void recover_camera() {
         pre_distance = distance;
 
         target_position = target.position;
 
-        //rotation = Vector2.zero;
-
-        matrix = new Matrix4x4();
-
         origin = this.distance * Vector3.forward;
 
-        this.transform.rotation = Quaternion.Euler(rotation.x, rotation.y, 0);
+        this.transform.rotation = Quaternion.Euler(origin_rotation.x, origin_rotation.y, 0);
+
+        this.rotation = this.origin_rotation;
+
+        this.distance = this.origin_distance;
     }
 
     // Update is called once per frame
