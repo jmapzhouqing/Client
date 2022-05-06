@@ -856,8 +856,6 @@ MonoBehaviour:
   control_state: 0
   target: {fileID: 28199224}
   origin_rotation: {x: 47, y: 90}
-  distance: 0
-  rotation: {x: 0, y: 0}
 --- !u!114 &534669907
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -889,6 +887,11 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1852963600, guid: 81774a3a51f203f42ba16498b091ab36, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 8ef3f74b9d1a89b42ad62377cfbda4ea,
+        type: 3}
     - target: {fileID: 754726347316436282, guid: 81774a3a51f203f42ba16498b091ab36,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
