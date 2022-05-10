@@ -81,6 +81,10 @@ public class UIManager : MonoBehaviour
 
             scroll_rect.verticalNormalizedPosition = height < view_height ? 1.0f : (total_height - height) / (total_height - view_height);*/
 
+            ScrollRect scroll_rect = dump_operation.GetComponentInParent<ScrollRect>();
+
+            scroll_rect.verticalNormalizedPosition = 1;
+
             dump_operation.transform.SetSiblingIndex(0);
 
             dump_operation.EnterCoalDump();

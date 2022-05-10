@@ -5,6 +5,14 @@ using UnityEngine;
 namespace Scanner.DataProcess
 {
 
+    class VectorCompare : IComparer<Vector3>
+    {
+        public int Compare(Vector3 x, Vector3 y)
+        {
+            return x.y.CompareTo(y.y);
+        }
+    }
+
     class Index
     {
         public int valida_number { get; set; } = 0;
@@ -698,6 +706,20 @@ namespace Scanner.DataProcess
                 B[i, 0] = value;
             }
             return B;
+        }
+
+        public static float Calculate(Vector3[] points, float meshAccuracy){
+            float volume = 0;
+            Array.Sort(points, new VectorCompare());
+
+            volume += points[0].y * 0.5F * meshAccuracy * meshAccuracy;
+            Vector3 a = new Vector3(points[0].x - points[1].x, 0, points[0].z - points[1].z);
+            Vector3 b = new Vector3(points[2].x - points[1].x, 0, points[2].z - points[1].z);
+
+            float h = Vector3.Cross(a, b).magnitude / b.magnitude;
+            volume += 1.0F / 3.0F * 0.5F * (points[1].y + points[2].y - 2 * points[0].y) * Vector2.Distance(new Vector2(points[2].x, points[2].z), new Vector2(points[1].x, points[1].z)) * h;
+
+            return volume;
         }
     }
 }

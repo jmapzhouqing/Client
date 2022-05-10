@@ -8,8 +8,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using Vectrosity;
 
-
-
+using Scanner.DataProcess;
 
 public class GridDataManager : MonoBehaviour{
 
@@ -572,6 +571,32 @@ public class GridDataManager : MonoBehaviour{
     public CoalDumpManager SearchCoalDump(string name) {
         CoalDumpManager coalDumpManager = coaldump_container.Find(name)?.GetComponent<CoalDumpManager>();
         return coalDumpManager;
+    }
+    public float CaculateVolume(Grid grid)
+    {
+        float volume = 0;
+        BoundaryCoordinate<int> boundary = grid.index_boundary;
+
+        for (int i = boundary.min_x; i < boundary.max_x; i++)
+        {
+            for (int j = boundary.min_z; j < boundary.max_z; j++)
+            {
+                List<Vector3> data = new List<Vector3>();
+                data.Add(mesh_data[i, j]);
+                data.Add(mesh_data[i, j+1]);
+                data.Add(mesh_data[i+1, j]);
+
+                volume += DataProcess.Calculate(data.ToArray(), precision);
+
+                data.Clear();
+
+                data.Add(mesh_data[i, j+1]);
+                data.Add(mesh_data[i+1, j]);
+                data.Add(mesh_data[i + 1, j+1]);
+                volume += DataProcess.Calculate(data.ToArray(), precision);
+            }
+        }
+        return volume;
     }
 
     private void OnApplicationQuit()

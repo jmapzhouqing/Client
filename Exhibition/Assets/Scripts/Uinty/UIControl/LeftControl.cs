@@ -34,8 +34,12 @@ public class LeftControl : MonoBehaviour
 
     private bool is_lock = false;
 
+    private GridDataManager data_manager;
+
     private void Awake(){
         manager = FindObjectOfType<UIManager>();
+
+        data_manager = FindObjectOfType<GridDataManager>();
 
         coaldump_prefab = Resources.Load<RectTransform>("UI/CoalDump");
     }
@@ -65,9 +69,15 @@ public class LeftControl : MonoBehaviour
     public void CreateCoalDump(CoalDumpInfo info) {
         RectTransform coal_dump = GameObject.Instantiate<RectTransform>(coaldump_prefab, container);
         coal_dump.name = info.uuid;
+
+        info.number = data_manager.CaculateVolume(info.CreateGrid());
+
         CoalDumpOperation operation = coal_dump.GetComponent<CoalDumpOperation>();
         operation.SetInfo(info);
-    } 
+    }
+
+
+    
 
     public void UpdateCoalDump(List<CoalDumpInfo> data){
         foreach (CoalDumpInfo info in data) {
