@@ -74,7 +74,7 @@ public class ProgramCommunication : MonoBehaviour
         }
         else {
             client_server.Status = 2;
-            UIManager.instance.ReLinkServer("控制端连接断开,请检查控制端并重新连接", client.ReLink);
+            //UIManager.instance.ReLinkServer("控制端连接断开,请检查控制端并重新连接", client.ReLink);
             //client.StopProcessData();
         }
     }
@@ -86,10 +86,10 @@ public class ProgramCommunication : MonoBehaviour
 
         if (exception.GetExceptionCode().Equals(ExceptionCode.ConnectionRefused))
         {
-            UIManager.instance.ReLinkServer("连接控制端被拒,请检查控制端是否启动并重新连接", client.ReLink);
+            //UIManager.instance.ReLinkServer("连接控制端被拒,请检查控制端是否启动并重新连接", client.ReLink);
         }
         else {
-            UIManager.instance.ExhibitionInfo(exception.Message);
+            //UIManager.instance.ExhibitionInfo(exception.Message);
         }
     }
 }

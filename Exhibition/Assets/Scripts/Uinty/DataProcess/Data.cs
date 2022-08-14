@@ -333,6 +333,25 @@ public class Polygon{
     }
 }
 
+public class CoalPosition
+{
+    public double StartX;
+    public double StartY;
+    public double Width;
+    public double Length;
+
+    public CoalPosition() {
+
+    }
+
+    public CoalPosition(float StartX, float StartY, float Width, float Length) {
+        this.StartX = StartX;
+        this.StartY = StartY;
+        this.Width = Width;
+        this.Length = Length;
+    }
+}
+
 public class CoalDumpInfo{
     public string uuid;
     public string coal_id;

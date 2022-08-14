@@ -6,6 +6,7 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 using Vectrosity;
+using LitJson;
 
 public class CoalDumpEditorControl : MonoBehaviour
 {
@@ -22,7 +23,15 @@ public class CoalDumpEditorControl : MonoBehaviour
 
     private bool is_drag;
 
+    private ProgramCommunication communication;
     // Start is called before the first frame update
+    void Awake()
+    {
+        communication = FindObjectOfType<ProgramCommunication>();
+
+    }
+
+        // Start is called before the first frame update
     void Start() {
         container = new GameObject().transform;
         container.name = "LineContainer";
@@ -60,12 +69,23 @@ public class CoalDumpEditorControl : MonoBehaviour
 
     public void Save() {
         List<CoalDumpInfo> list = new List<CoalDumpInfo>();
+        List<CoalPosition> list_position = new List<CoalPosition>();
         foreach (CoalDumpEditor dump_editor in container.GetComponentsInChildren<CoalDumpEditor>(true)) {
             //string data = JsonMapper.ToJson(dump_editor.info);
             //Debug.Log(data);
             list.Add(dump_editor.info);
+
+            Grid grid = dump_editor.info.CreateGrid();
+            BoundaryCoordinate<float>  vertice_boundary = grid.vertice_boundary;
+
+            Vector2 size = grid.GetSize();
+            CoalPosition coal_position = new CoalPosition(vertice_boundary.min_x, vertice_boundary.min_z, size.x, size.y);
+
+            list_position.Add(coal_position);
         }
         DataRead.SaveCoalDumpData(list);
+
+        communication.SendData("CoalManager Position " + JsonMapper.ToJson(list_position));
 
         this.Cancel();
     }

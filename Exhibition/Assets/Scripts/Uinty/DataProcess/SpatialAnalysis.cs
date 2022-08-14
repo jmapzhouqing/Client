@@ -451,8 +451,6 @@ public class SpatialAnalysis : MonoBehaviour
 
         Vector2 may_point = GetLeftRightVertice(arc_vertices,grid,height,3);
 
-        Debug.Log(may_point);
-
         if (entry_point.x < may_point.x) {
             entry_point = may_point;
         }
@@ -490,7 +488,7 @@ public class SpatialAnalysis : MonoBehaviour
 
         Vector3 center_coordinate = rotation_center + new Vector3(0, 0, target.y - radius * Mathf.Cos(rotation));
 
-        Vector3 stop_coordinate = rotation_center + new Vector3(0, 0, max_z - radius * Mathf.Cos(rotation));
+        Vector3 stop_coordinate = rotation_center + new Vector3(0, 0, max_z);
 
         rotation = rotation - wheel_rotation;
 

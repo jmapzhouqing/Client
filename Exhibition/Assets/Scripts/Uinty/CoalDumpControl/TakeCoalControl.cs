@@ -42,6 +42,8 @@ public class TakeCoalControl : MonoBehaviour
             info.position = param["center"].z;
             info.stop_position = param["stop"].z;
 
+            Debug.Log(JsonUtility.ToJson(info));
+
             communication.SendData("TakeCoal Command " + JsonUtility.ToJson(info));
         }
 
