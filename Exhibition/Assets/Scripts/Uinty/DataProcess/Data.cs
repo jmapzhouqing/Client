@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-
+using LitJson;
 using UnityEngine;
 
 public class CoordinateIndex{
@@ -163,6 +164,122 @@ public class Grid{
         value.x = vertice_boundary.max_x - vertice_boundary.min_x;
         value.y = vertice_boundary.max_z - vertice_boundary.min_z;
         return value;
+    }
+
+    public string CaculateRealBoundary(Vector3[,] data,CoalDumpInfo info,int threshold = 5) {
+        int min_x = int.MaxValue, max_x = int.MinValue, min_z = int.MaxValue, max_z = int.MinValue;
+
+        Dictionary<int, BoundaryCoordinate<int>> boundary_dic = new Dictionary<int, BoundaryCoordinate<int>>();
+        Dictionary<int, int> validate_dic = new Dictionary<int, int>();
+
+        for (int i = 0; i < ConfigurationParameter.level_number; i++) {
+            boundary_dic.Add(i, new BoundaryCoordinate<int>(min_x, max_x, min_z, max_z));
+            validate_dic.Add(i, 0);
+        }
+
+        for (int i = index_boundary.min_z; i < index_boundary.max_z; i++) {
+            foreach (int key in validate_dic.Keys.ToList())
+            {
+                validate_dic[key] = 0;
+            }
+
+            for (int j = index_boundary.min_x; j < index_boundary.max_x; j++) {
+                if (Mathf.Abs(data[j, i].y) > Mathf.Pow(10, -2)) {
+                    int level = Mathf.FloorToInt(data[j, i].y / ConfigurationParameter.level_height);
+
+                    validate_dic[level]++;
+                }
+            }
+
+            foreach (int key in boundary_dic.Keys){
+
+                //Debug.Log(i+"_"+ key +"_"+validate_dic[key]);
+
+                if (validate_dic[key] > threshold)
+                {
+                    BoundaryCoordinate<int> boundary = boundary_dic[key];
+                    if (boundary.min_z > i)
+                    {
+                        boundary.min_z = i;
+                    }
+
+                    if (boundary.max_z < i)
+                    {
+                        boundary.max_z = i;
+                    }
+                }
+            }
+        }
+
+        for (int i = index_boundary.min_x; i < index_boundary.max_x; i++){
+            foreach (int key in validate_dic.Keys.ToList())
+            {
+                validate_dic[key] = 0;
+            }
+
+            for (int j = index_boundary.min_z; j < index_boundary.max_z; j++)
+            {
+                if (Mathf.Abs(data[i,j].y) > Mathf.Pow(10, -2))
+                {
+                    int level = Mathf.FloorToInt(data[i, j].y / ConfigurationParameter.level_height);
+
+                    validate_dic[level]++;
+                }
+            }
+
+            foreach (int key in boundary_dic.Keys)
+            {
+                if (validate_dic[key] > threshold)
+                {
+                    BoundaryCoordinate<int> boundary = boundary_dic[key];
+                    if (boundary.min_x > i)
+                    {
+                        boundary.min_x = i;
+                    }
+
+                    if (boundary.max_x < i)
+                    {
+                        boundary.max_x = i;
+                    }
+                }
+            }
+        }
+
+        string show = "";
+        foreach (KeyValuePair<int, BoundaryCoordinate<int>> pair in boundary_dic)
+        {
+            BoundaryCoordinate<int> boundary = boundary_dic[pair.Key];
+            show += $"min_x:{boundary.min_x},max_x:{boundary.max_x},min_z:{boundary.min_z},max_z:{boundary.max_z}"+"\n";
+        }
+
+        Dictionary<string,string> coal_boundary = new Dictionary<string, string>();
+        foreach (KeyValuePair<int,BoundaryCoordinate<int>> pair in boundary_dic)
+        {
+            BoundaryCoordinate<int> boundary = pair.Value;
+            if (boundary.min_x >= boundary.max_x || boundary.min_z >= boundary.max_z)
+            {
+                continue;
+            }
+
+            boundary.min_x = Convert.ToInt32(boundary.min_x * precision);
+            boundary.max_x = Convert.ToInt32(boundary.max_x * precision);
+            boundary.min_z = Convert.ToInt32(boundary.min_z * precision);
+            boundary.max_z = Convert.ToInt32(boundary.max_z * precision);
+
+            coal_boundary.Add(pair.Key.ToString(),JsonUtility.ToJson(boundary));
+
+            Debug.Log(JsonUtility.ToJson(boundary));
+        }
+
+
+        Dictionary<string, string> result = new Dictionary<string, string>();
+        result.Add("boundary", LitJson.JsonMapper.ToJson(coal_boundary));
+
+        result.Add("info", JsonUtility.ToJson(info));
+
+        return LitJson.JsonMapper.ToJson(result);
+
+        //Debug.Log(JsonUtility.ToJson(result));
     }
 }
 

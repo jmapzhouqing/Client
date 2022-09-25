@@ -158,6 +158,7 @@
     <Compile Include="Assets\Scripts\Uinty\DataProcess\GridDataManager.cs" />
     <Compile Include="Assets\Scripts\Uinty\DataProcess\GridDataPersistence.cs" />
     <Compile Include="Assets\Scripts\Uinty\DataProcess\SpatialAnalysis.cs" />
+    <Compile Include="Assets\Scripts\Uinty\Log\LogManager.cs" />
     <Compile Include="Assets\Scripts\Uinty\PLC\HardWareDataMonitor.cs" />
     <Compile Include="Assets\Scripts\Uinty\ProgramCommunication\ProgramCommunication.cs" />
     <Compile Include="Assets\Scripts\Uinty\ProgramCommunication\ReLink.cs" />

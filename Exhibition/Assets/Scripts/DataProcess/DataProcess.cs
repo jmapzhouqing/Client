@@ -75,6 +75,7 @@ namespace Scanner.DataProcess
             }
         }
 
+        /*
         public static void EliminateLoop(float[,] mesh_data, int dimension, int times)
         {
             try
@@ -167,8 +168,103 @@ namespace Scanner.DataProcess
             {
 
             }
+        }*/
+
+        public static void EliminateLoop(Vector3[,] mesh_data, int dimension, int times)
+        {
+            try
+            {
+                int width = mesh_data.GetLength(0);
+                int height = mesh_data.GetLength(1);
+
+                int center_index = dimension / 2;
+                while (true)
+                {
+                    int deal_number = 0;
+                    for (int i = 0; i < width; i++)
+                    {
+                        for (int j = 0; j < height; j++)
+                        {
+                            float correct_data = mesh_data[i, j].y;
+                            if (correct_data > Mathf.Pow(10, -2))
+                            {
+                                float result = 0;
+                                int index = 0;
+
+                                float difference = 0;
+
+                                for (int m = -center_index; m <= center_index; m++)
+                                {
+                                    for (int n = -center_index; n <= center_index; n++)
+                                    {
+                                        int row_index = i + m;
+                                        int column_index = j + n;
+
+                                        if (row_index < 0 || row_index > (width - 1) || column_index < 0 || column_index > (height - 1))
+                                        {
+                                            continue;
+                                        }
+
+                                        float origin_data = mesh_data[row_index, column_index].y;
+                                        if (m != 0 && n != 0)
+                                        {
+                                            result += origin_data;
+                                            index++;
+                                        }
+                                    }
+                                }
+
+                                if (index != 0)
+                                {
+                                    result /= index;
+
+                                    for (int m = -center_index; m <= center_index; m++)
+                                    {
+                                        for (int n = -center_index; n <= center_index; n++)
+                                        {
+                                            int row_index = i + m;
+                                            int column_index = j + n;
+
+                                            if (row_index < 0 || row_index > (width - 1) || column_index < 0 || column_index > (height - 1))
+                                            {
+                                                continue;
+                                            }
+
+                                            float origin_data = mesh_data[row_index, column_index].y;
+                                            if (m != 0 && n != 0)
+                                            {
+                                                difference += Mathf.Abs(origin_data - result);
+                                            }
+                                        }
+                                    }
+
+                                    difference /= index;
+
+                                    float ratio = Mathf.Abs(correct_data - result) / difference;
+
+                                    if (ratio > times || ratio < 1 / times)
+                                    {
+                                        mesh_data[i, j].y = 0;
+                                        deal_number++;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    if (deal_number == 0)
+                    {
+                        break;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+
+            }
         }
 
+        /*
         public static void Denoising(int extrude_number, float gradient_value, float[,] mesh_data, float precision)
         {
             int width = mesh_data.GetLength(0);
@@ -245,9 +341,87 @@ namespace Scanner.DataProcess
                     }
                 }
             }
+        }*/
+
+        public static void Denoising(int extrude_number, float gradient_value, Vector3[,] mesh_data, float precision)
+        {
+            int width = mesh_data.GetLength(0);
+            int height = mesh_data.GetLength(1);
+
+            int index = int.MaxValue;
+            int pre_index = int.MinValue;
+            while (index != pre_index)
+            {
+                pre_index = index;
+                index = 0;
+
+                for (int i = 0; i < width; i++)
+                {
+                    for (int j = 1; j < height; j++)
+                    {
+                        float fir_gradient = Mathf.Atan((mesh_data[i, j].y - mesh_data[i, j - 1].y) / precision) * Mathf.Rad2Deg;
+                        if (fir_gradient > gradient_value || fir_gradient < gradient_value * -1)
+                        {
+                            for (int k = j + 1; k < height; k++)
+                            {
+                                float gradient = Mathf.Atan((mesh_data[i, k].y - mesh_data[i, k - 1].y) / precision) * Mathf.Rad2Deg;
+                                if ((gradient > gradient_value || gradient < gradient_value * -1) && fir_gradient * gradient < 0)
+                                {
+                                    if (k - j < extrude_number)
+                                    {
+                                        index++;
+                                        for (int m = j - 1; m <= k; m++)
+                                        {
+                                            mesh_data[i, m].y = 0;
+                                        }
+                                    }
+                                    j = k;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            index = int.MaxValue;
+            pre_index = int.MinValue;
+            while (index != pre_index)
+            {
+                pre_index = index;
+                index = 0;
+
+                for (int i = 0; i < height; i++)
+                {
+                    for (int j = 1; j < width; j++)
+                    {
+                        float fir_gradient = Mathf.Atan((mesh_data[j, i].y - mesh_data[j - 1, i].y) / precision) * Mathf.Rad2Deg;
+                        if (fir_gradient > gradient_value || fir_gradient < gradient_value * -1)
+                        {
+                            for (int k = j + 1; k < width; k++)
+                            {
+                                float gradient = Mathf.Atan((mesh_data[k, i].y - mesh_data[k - 1, i].y) / precision) * Mathf.Rad2Deg;
+                                if ((gradient > gradient_value || gradient < gradient_value * -1) && fir_gradient * gradient < 0)
+                                {
+                                    if (k - j < extrude_number)
+                                    {
+                                        index++;
+                                        for (int m = j - 1; m <= k; m++)
+                                        {
+                                            mesh_data[m, i].y = 0;
+                                        }
+                                    }
+                                    j = k;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
 
-
+        /*
         public static void CorrectDataArea(int dimension, int beta, float[,] mesh_data, float times)
         {
             int grid_width = mesh_data.GetLength(0);
@@ -331,6 +505,93 @@ namespace Scanner.DataProcess
                 else
                 {
                     mesh_data[index_x, index_z] = 0;
+                }
+            }
+        }*/
+
+        public static void CorrectDataArea(int dimension, int beta, Vector3[,] mesh_data, float times)
+        {
+            int grid_width = mesh_data.GetLength(0);
+            int grid_height = mesh_data.GetLength(1);
+
+            float[,] template = new float[dimension, dimension];
+            int[] center = { dimension / 2, dimension / 2 };
+            for (int i = 0; i < dimension; i++)
+            {
+                for (int j = 0; j < dimension; j++)
+                {
+                    float distance = Mathf.Sqrt(Mathf.Pow(i - center[0], 2) + Mathf.Pow(j - center[1], 2));
+                    template[i, j] = Mathf.Pow(1.0f / distance, beta);
+                }
+            }
+
+            List<Index> list = new List<Index>();
+
+            int center_index = dimension / 2;
+
+            for (int i = center_index; i < grid_width - center_index; i++)
+            {
+                for (int j = center_index; j < grid_height - center_index; j++)
+                {
+
+                    float correct_data = mesh_data[i, j].y;
+                    if (correct_data < Mathf.Pow(10, -2))
+                    {
+                        int valid_number = 0;
+
+                        for (int m = -center_index; m < center_index; m++)
+                        {
+                            for (int n = -center_index; n < center_index; n++)
+                            {
+                                float origin_data = mesh_data[i + m, j + n].y;
+                                if (m != 0 && n != 0 && origin_data > Mathf.Pow(10, -2))
+                                {
+                                    valid_number++;
+                                }
+                            }
+                        }
+                        list.Add(new Index(valid_number, i, j));
+                    }
+                }
+            }
+
+            list.Sort((first, second) =>
+            {
+                return second.valida_number.CompareTo(first.valida_number);
+            });
+
+            foreach (Index value in list)
+            {
+                int index_x = value.index_x;
+                int index_z = value.index_z;
+
+                float correct_data = mesh_data[index_x, index_z].y;
+                float result = 0;
+                float denominator = 0;
+                int valid_number = 0;
+
+                for (int m = -center_index; m < center_index; m++)
+                {
+                    for (int n = -center_index; n < center_index; n++)
+                    {
+                        float origin_data = mesh_data[index_x + m, index_z + n].y;
+                        if (m != 0 && n != 0 && origin_data > Mathf.Pow(10, -2))
+                        {
+                            result += origin_data * template[center_index + m, center_index + n];
+                            denominator += template[center_index + m, center_index + n];
+                            valid_number++;
+                        }
+                    }
+                }
+
+                if (valid_number > (Mathf.Pow(dimension, 2) * times))
+                {
+
+                    mesh_data[index_x, index_z].y = result / denominator;
+                }
+                else
+                {
+                    mesh_data[index_x, index_z].y = 0;
                 }
             }
         }

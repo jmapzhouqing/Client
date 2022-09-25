@@ -23,6 +23,34 @@ public class ScannerPoint : MonoBehaviour
 
     public int port;
 
+    //扫描仪相对于斗轮机中心坐标
+    public Vector3 scanner_coordinate = Vector3.zero;
+
+    //扫描线初始方向
+    public Vector3 scanner_line_dir = -1 * Vector3.right;
+
+    //扫描线初始角度
+    public float scanner_line_start_angle = 0;
+
+    //扫描线旋转轴
+    public Vector3 scanner_line_rotate_dir = Vector3.forward;
+
+    //斗轮机大臂旋转轴
+    public Vector3 pitch_axis = -1 * Vector3.right;
+
+    //斗轮机初始俯仰角度
+    public float start_pitch_angle = 0;
+
+    //斗轮机水平旋转轴
+    public Vector3 yaw_axis = Vector3.up;
+
+    //斗轮机初始旋转角度
+    public float start_yaw_angle = 0;
+
+    //斗轮机行走方向
+    public Vector3 forward_dir = Vector3.forward;
+
+
     private WIT wit;
     //private 
     private Scanner.Scanister.Scanner scanner;
@@ -116,7 +144,7 @@ public class ScannerPoint : MonoBehaviour
 
                 foreach (RayInfo info in rays){
                     quaternion = Quaternion.AngleAxis(info.degree, scanner_line_rotate_dir);
-                    matrix.SetTRS(Vector3.zero, quaternion, new Vector3(1, 1, 1));
+                    matrix.SetTRS(scanner_coordinate, quaternion, new Vector3(1, 1, 1));
                     origin = matrix.MultiplyPoint(scanner_line_dir * info.distance);
 
                     quaternion = Quaternion.AngleAxis(pitch, pitch_axis);
@@ -145,15 +173,17 @@ public class ScannerPoint : MonoBehaviour
         {
             if (hardware_monitor.IsConnected)
             {
-                Vector3 scanner_line_dir = -1 * Vector3.right;
-                Vector3 scanner_line_rotate_dir = Vector3.forward;
+                /*
+                scanner_line_dir = -1 * Vector3.right;
+                scanner_line_rotate_dir = Vector3.forward;
 
-                Vector3 pitch_axis = -1 * Vector3.right;
-                Vector3 yaw_axis = Vector3.up;
-                Vector3 forward_dir = Vector3.forward;
+                pitch_axis = -1 * Vector3.right;
+                yaw_axis = Vector3.up;
+                forward_dir = Vector3.forward;*/
 
-                float pitch = hardware_monitor.data.LuffAngle;
-                float yaw = hardware_monitor.data.SlewAngle;
+                float pitch = hardware_monitor.data.LuffAngle - start_pitch_angle;
+
+                float yaw = hardware_monitor.data.SlewAngle - start_yaw_angle;
                 float distance = hardware_monitor.data.CarPos;
 
                 Matrix4x4 matrix = new Matrix4x4();
@@ -164,7 +194,7 @@ public class ScannerPoint : MonoBehaviour
                 List<Vector3> vertices = new List<Vector3>();
 
                 foreach (RayInfo info in sector_info.rays){
-                    quaternion = Quaternion.AngleAxis(info.degree, scanner_line_rotate_dir);
+                    quaternion = Quaternion.AngleAxis(info.degree - scanner_line_start_angle, scanner_line_rotate_dir);
                     matrix.SetTRS(Vector3.zero, quaternion, new Vector3(1, 1, 1));
                     origin = matrix.MultiplyPoint(scanner_line_dir * info.distance);
 

@@ -85,6 +85,8 @@ public class CoalDumpEditorControl : MonoBehaviour
         }
         DataRead.SaveCoalDumpData(list);
 
+        //Debug.Log("CoalManager Position " + JsonMapper.ToJson(list_position));
+
         communication.SendData("CoalManager Position " + JsonMapper.ToJson(list_position));
 
         this.Cancel();

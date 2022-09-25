@@ -108,6 +108,8 @@ namespace Scanner.Scanister
         #region 盘煤仪操作
         protected abstract void scanner_login();
 
+        protected abstract void scanner_loginout();
+
         protected abstract void start_scan();
 
         protected abstract void stop_scan();

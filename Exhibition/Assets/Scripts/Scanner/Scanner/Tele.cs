@@ -47,6 +47,8 @@ namespace Scanner.Scanister
         #region 盘煤仪操作
         protected override void scanner_login() { }
 
+        protected override void scanner_loginout() { }
+
         protected override void start_scan() { }
 
         protected override void stop_scan() { }

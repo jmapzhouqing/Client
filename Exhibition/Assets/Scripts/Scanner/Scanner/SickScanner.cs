@@ -95,6 +95,10 @@ namespace Scanner.Scanister
             this.SendData(this.CommandConstruct("sMN SetAccessMode 03 F4724744"));
         }
 
+        protected override void scanner_loginout() {
+            this.SendData(this.CommandConstruct("sMN Run"));
+        }
+
         protected override void start_scan(){
             this.SendData(this.CommandConstruct("sMN LMCstartmeas"));
         }
@@ -288,8 +292,9 @@ namespace Scanner.Scanister
 
             bool isStart = Convert.ToBoolean(Convert.ToInt16(fields[2]));
             if(isStart){
-                
-            }else {
+                this.scanner_loginout();
+            }
+            else {
                 
             }
         }

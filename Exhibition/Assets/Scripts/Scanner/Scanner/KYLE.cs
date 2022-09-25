@@ -97,6 +97,8 @@ namespace Scanner.Scanister
             throw new NotImplementedException();
         }
 
+        protected override void scanner_loginout() { }
+
         protected override void start_scan(){
             /*
             Debug.Log("Enter StartScan");

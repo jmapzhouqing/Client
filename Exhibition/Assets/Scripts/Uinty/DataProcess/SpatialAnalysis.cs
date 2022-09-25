@@ -414,7 +414,7 @@ public class SpatialAnalysis : MonoBehaviour
         float max_rotation = float.MinValue;
         float min_rotation = float.MaxValue;
 
-        float rotation_offset = Mathf.Atan(ConfigurationParameter.wheel_offset_center / ConfigurationParameter.arm_length);
+        float rotation_offset = Mathf.Atan(ConfigurationParameter.bucket_wheel_center_offset_width / ConfigurationParameter.arm_length);
 
         foreach(Vector2 vertice in validate_vertices){
             float rotation = Mathf.Asin((vertice.x - ConfigurationParameter.rotation_center.x)/ radius);
@@ -537,10 +537,10 @@ public class SpatialAnalysis : MonoBehaviour
         Polygon polygon = null;
         List<Vector2> vertices = new List<Vector2>();
 
-        Vector2 origin = new Vector2(ConfigurationParameter.wheel_offset_center,ConfigurationParameter.arm_length);
+        Vector2 origin = new Vector2(ConfigurationParameter.bucket_wheel_center_offset_width,ConfigurationParameter.arm_length);
 
-        float width = ConfigurationParameter.wheel_width/2.0f;
-        float height = ConfigurationParameter.wheel_radius;
+        float width = ConfigurationParameter.bucket_wheel_thickness/2.0f;
+        float height = ConfigurationParameter.bucket_wheel_radius;
 
         Vector2 fir = origin + new Vector2(-width,-height);
         Vector2 sec = origin + new Vector2(width,-height);
@@ -577,9 +577,9 @@ public class SpatialAnalysis : MonoBehaviour
 
     private Polygon CreateLeftBoundaryOrthogon(float pitch) {
 
-        float radius = Mathf.Sqrt(Mathf.Pow(ConfigurationParameter.arm_length, 2) + Mathf.Pow(ConfigurationParameter.wheel_center_offset_height, 2));
+        float radius = Mathf.Sqrt(Mathf.Pow(ConfigurationParameter.arm_length, 2) + Mathf.Pow(ConfigurationParameter.bucket_wheel_center_offset_height, 2));
 
-        float offset_pitch = Mathf.Asin(ConfigurationParameter.wheel_center_offset_height / radius);
+        float offset_pitch = Mathf.Asin(ConfigurationParameter.bucket_wheel_center_offset_height / radius);
 
         radius = Mathf.Cos(pitch + offset_pitch) * radius;
 
@@ -587,7 +587,7 @@ public class SpatialAnalysis : MonoBehaviour
 
         float width = 1.0f;
 
-        float height = ConfigurationParameter.wheel_radius;
+        float height = ConfigurationParameter.bucket_wheel_radius;
 
         Polygon polygon = this.CreateOrthogon(center, width, height);
 
@@ -595,9 +595,9 @@ public class SpatialAnalysis : MonoBehaviour
     }
 
     private Polygon CreateRightBoundaryOrthogon(float pitch){
-        float radius = Mathf.Sqrt(Mathf.Pow(ConfigurationParameter.arm_length, 2) + Mathf.Pow(ConfigurationParameter.wheel_center_offset_height, 2));
+        float radius = Mathf.Sqrt(Mathf.Pow(ConfigurationParameter.arm_length, 2) + Mathf.Pow(ConfigurationParameter.bucket_wheel_center_offset_height, 2));
 
-        float offset_pitch = Mathf.Asin(ConfigurationParameter.wheel_center_offset_height / radius);
+        float offset_pitch = Mathf.Asin(ConfigurationParameter.bucket_wheel_center_offset_height / radius);
 
         radius = Mathf.Cos(pitch + offset_pitch) * radius;
 
@@ -605,7 +605,7 @@ public class SpatialAnalysis : MonoBehaviour
 
         float width = 1.0f;
 
-        float height = ConfigurationParameter.wheel_radius;
+        float height = ConfigurationParameter.bucket_wheel_radius;
 
         Polygon polygon = this.CreateOrthogon(center, width, height);
 
@@ -613,17 +613,17 @@ public class SpatialAnalysis : MonoBehaviour
     }
 
     private Polygon CreateForwardBoundaryOrthogon(float pitch) {
-        float radius = Mathf.Sqrt(Mathf.Pow(ConfigurationParameter.arm_length + ConfigurationParameter.wheel_radius, 2) + Mathf.Pow(ConfigurationParameter.wheel_center_offset_height, 2));
+        float radius = Mathf.Sqrt(Mathf.Pow(ConfigurationParameter.arm_length + ConfigurationParameter.bucket_wheel_radius, 2) + Mathf.Pow(ConfigurationParameter.bucket_wheel_center_offset_height, 2));
 
-        float offset_pitch = Mathf.Asin(ConfigurationParameter.wheel_center_offset_height / radius);
+        float offset_pitch = Mathf.Asin(ConfigurationParameter.bucket_wheel_center_offset_height / radius);
 
         radius = Mathf.Cos(pitch + offset_pitch) * radius;
 
-        Vector2 center = new Vector2(0.0f, radius + ConfigurationParameter.wheel_radius);
+        Vector2 center = new Vector2(0.0f, radius + ConfigurationParameter.bucket_wheel_radius);
 
         float width = 1.0f;
 
-        float height = ConfigurationParameter.wheel_radius;
+        float height = ConfigurationParameter.bucket_wheel_radius;
 
         Polygon polygon = this.CreateOrthogon(center, width, height);
 
@@ -809,9 +809,9 @@ public class SpatialAnalysis : MonoBehaviour
 
         Vector3 center = ConfigurationParameter.bucket_wheel_center_coordinate - ConfigurationParameter.rotation_center;
 
-        float width = ConfigurationParameter.wheel_width/2.0f;
+        float width = ConfigurationParameter.bucket_wheel_radius / 2.0f;
 
-        float radius = ConfigurationParameter.wheel_radius;
+        float radius = ConfigurationParameter.bucket_wheel_radius;
 
         float interval = 0.5f * Mathf.Deg2Rad;
 

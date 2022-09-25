@@ -64,6 +64,8 @@ namespace Scanner.Scanister{
 
         }
 
+        protected override void scanner_loginout() { }
+
         protected override void start_scan() {
             List<byte> list = new List<byte>();
             DataConvert.AddStringToBuffer(list, "SCAN");

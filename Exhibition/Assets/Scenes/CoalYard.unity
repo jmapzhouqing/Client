@@ -574,6 +574,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 12
       objectReference: {fileID: 0}
+    - target: {fileID: 100002, guid: 3ccedae68d1396649ae35bfd01b41089, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 100004, guid: 3ccedae68d1396649ae35bfd01b41089, type: 3}
       propertyPath: m_Layer
       value: 12
@@ -765,6 +769,7 @@ GameObject:
   - component: {fileID: 534669903}
   - component: {fileID: 534669906}
   - component: {fileID: 534669907}
+  - component: {fileID: 534669908}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -866,6 +871,18 @@ MonoBehaviour:
   m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bfd1002ed4138bf47b762fe319e119ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &534669908
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 534669902}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0118d76329b5cc4c90bd5994999e930, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &654172761
@@ -1042,7 +1059,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &664883104
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1857,6 +1874,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ip: 
   port: 0
+  scanner_coordinate: {x: 0, y: 0, z: 0}
+  scanner_line_dir: {x: -1, y: -0, z: -0}
+  scanner_line_start_angle: 0
+  scanner_line_rotate_dir: {x: 0, y: 0, z: 1}
+  pitch_axis: {x: -1, y: -0, z: -0}
+  start_pitch_angle: 0
+  yaw_axis: {x: 0, y: 1, z: 0}
+  start_yaw_angle: 0
+  forward_dir: {x: 0, y: 0, z: 1}
   scanner_status: {fileID: 2017290039}
 --- !u!1 &1758957689
 GameObject:
@@ -1903,6 +1929,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ip: 192.168.90.247
   port: 1024
+  scanner_coordinate: {x: 0, y: 0, z: 0}
+  scanner_line_dir: {x: -1, y: -0, z: -0}
+  scanner_line_start_angle: 0
+  scanner_line_rotate_dir: {x: 0, y: 0, z: 1}
+  pitch_axis: {x: -1, y: -0, z: -0}
+  start_pitch_angle: 0
+  yaw_axis: {x: 0, y: 1, z: 0}
+  start_yaw_angle: 0
+  forward_dir: {x: 0, y: 0, z: 1}
   scanner_status: {fileID: 2120960566}
 --- !u!114 &1831928846 stripped
 MonoBehaviour:
@@ -2587,7 +2622,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &1014326911766386057
 GameObject:
   m_ObjectHideFlags: 0

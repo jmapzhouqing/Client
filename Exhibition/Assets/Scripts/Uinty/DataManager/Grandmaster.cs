@@ -16,6 +16,11 @@ public class Grandmaster : MonoBehaviour{
 
     private void Start(){
         UpdateCoalDumpData();
+
+        //推送煤堆各层真实的边界
+        foreach (CoalDumpManager manager in FindObjectsOfType<CoalDumpManager>()) {
+            manager.grid.CaculateRealBoundary(grid_data.mesh_data,manager.info);
+        }
     }
 
     public static void UpdateCoalDumpData() {

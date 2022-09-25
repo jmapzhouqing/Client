@@ -69,7 +69,7 @@ public class CoalDumpOperation : MonoBehaviour,IPointerEnterHandler,IPointerExit
         Vector3 center = ConfigurationParameter.rotation_center;
         float radius = ConfigurationParameter.arm_length;
 
-        float rotation_offset = Mathf.Atan(ConfigurationParameter.wheel_offset_center / radius);
+        float rotation_offset = Mathf.Atan(ConfigurationParameter.bucket_wheel_center_offset_width / radius);
 
         float left_x = boundary.min_x + delta.x;
         float right_x = boundary.max_x - delta.x;

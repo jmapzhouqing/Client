@@ -58,6 +58,13 @@ public class GridDataManager : MonoBehaviour{
         
         GridDataPersistence.ReadData(@"E:\CoalYard\coal_data.txt",mesh_data);
 
+        float name = ConfigurationParameter.precision;
+
+        /*
+        DataProcess.EliminateLoop(mesh_data, 5, 2);
+        DataProcess.CorrectDataArea(7, 2, mesh_data, 0.3f);
+        */
+
         this.SaveGridData();
     }
 

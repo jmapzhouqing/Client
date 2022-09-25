@@ -337,6 +337,8 @@ namespace Scanner.Livox
             throw new NotImplementedException();
         }
 
+        protected override void scanner_loginout() { }
+
         protected override void start_scan()
         {
             throw new NotImplementedException();
