@@ -60,10 +60,10 @@ public class GridDataManager : MonoBehaviour{
 
         float name = ConfigurationParameter.precision;
 
-        /*
-        DataProcess.EliminateLoop(mesh_data, 5, 2);
+        //滤波操作
+        DataProcess.EliminateLoop(mesh_data,7,1.5f);
         DataProcess.CorrectDataArea(7, 2, mesh_data, 0.3f);
-        */
+        
 
         this.SaveGridData();
     }

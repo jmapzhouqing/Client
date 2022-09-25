@@ -170,7 +170,7 @@ namespace Scanner.DataProcess
             }
         }*/
 
-        public static void EliminateLoop(Vector3[,] mesh_data, int dimension, int times)
+        public static void EliminateLoop(Vector3[,] mesh_data, int dimension, float times)
         {
             try
             {
@@ -242,7 +242,7 @@ namespace Scanner.DataProcess
 
                                     float ratio = Mathf.Abs(correct_data - result) / difference;
 
-                                    if (ratio > times || ratio < 1 / times)
+                                    if (ratio > times)
                                     {
                                         mesh_data[i, j].y = 0;
                                         deal_number++;

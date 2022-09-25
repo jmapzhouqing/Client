@@ -57,7 +57,7 @@ public class ConfigurationParameter {
 
 
     static ConfigurationParameter(){
-        string file_path = Path.Combine(Application.persistentDataPath,"config.ini");
+        string file_path = Path.Combine(Application.dataPath,"config.ini");
         if (File.Exists(file_path)){
             precision = Convert.ToSingle(ReadConfig(file_path, "CoalYardParam", "precision"));
 

@@ -1,6 +1,6 @@
 Win64
 PlayerPath?
-C:/Users/jmapzhouqing/Desktop/Exhibition/Exhibition.exe
+C:/Users/jmapzhouqing/Desktop/新建文件夹 (3)/Exhibition.exe
 SceneListBegin?
 Assets/Scenes/CoalYard.unity
 SceneListEnd?
@@ -225,6 +225,7 @@ fbbf64dcbe0662e3eda1dec45ea8f895 Vuforia.UnityExtensions.dll:Vuforia.WireframeBe
 a97d80ff9a974154b3183d73994a1e8e Assembly-CSharp.dll:.Ellipse2
 71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp-firstpass.dll:Vectrosity.BrightnessControl
 b167c3f9672470a6d15055a1cddd8997 Assembly-CSharp.dll:.SplineFollow2D
+608f1329e89d56cf86a8bda987d03217 Assembly-CSharp.dll:.LogManager
 b3ab2106268377ffe25dd18ac23dca28 Unity.TextMeshPro.dll:TMPro.TMP_Asset
 2f12a4707f4c5a3d7bf881ace1731f5d Assembly-CSharp.dll:.ScannerStatusControl
 b5fc3843e35dd6d09a719cb0d10ff4a5 DemiLib.dll:DG.DemiLib.External.DeHierarchyComponent
@@ -261,7 +262,7 @@ ad9173d3a69d99153f38ed4b62226129 UnityEngine.Networking.dll:UnityEngine.Networki
 71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp-firstpass.dll:Vectrosity.VisibilityControlStatic
 4fd8bf02e3089425d3502e26c44ba31a Unity.TextMeshPro.dll:TMPro.TextContainer
 0897431c75e7302c0f2bbccf91f32fed Assembly-CSharp.dll:.CameraZoom
-fe779a78bf80bf8d9ea622feb228c8be Assembly-CSharp.dll:.ScannerPoint
+ea1f2829953dbe8488dc214902eb1ddf Assembly-CSharp.dll:.ScannerPoint
 8d727ca466e2711592cb70c8ce6de81e Assembly-CSharp.dll:.SelectLine
 2f12a4707f4c5a3d7bf881ace1731f5d Assembly-CSharp.dll:.BucketArmStatusControl
 5bddb32bcb848f51c6efb9a0b86ba855 Assembly-CSharp.dll:.RotateViewpoint

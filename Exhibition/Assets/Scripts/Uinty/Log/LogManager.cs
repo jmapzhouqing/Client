@@ -16,7 +16,7 @@ public class LogManager : MonoBehaviour
     private void Awake()
     {
         Application.logMessageReceivedThreaded += OnLogByUnity;
-        LogFileDir = Path.Combine(Application.persistentDataPath,"Log");
+        LogFileDir = Path.Combine(Application.dataPath, "Log");
     }
 
     private void OnDestroy()
@@ -149,13 +149,13 @@ public class LogManager : MonoBehaviour
             }
         }
     }
-
+    /*
     private void OnGUI()
     {
-        if (GUI.Button(new Rect(0, 0, 100, 60), "Click")) {
-            float name = 1.0f / 0.0f;
-            Exception e = new Exception("I am error");
-            throw e;
+        GUI.Label(new Rect(0, 0, 300, 60), Application.dataPath);
+
+        if (GUI.Button(new Rect(0, 100, 100, 60), "Click")) {
+            Debug.LogError("I am Error");
         }
-    }
+    }*/
 }

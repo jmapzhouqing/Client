@@ -267,8 +267,6 @@ public class Grid{
             boundary.max_z = Convert.ToInt32(boundary.max_z * precision);
 
             coal_boundary.Add(pair.Key.ToString(),JsonUtility.ToJson(boundary));
-
-            Debug.Log(JsonUtility.ToJson(boundary));
         }
 
 
