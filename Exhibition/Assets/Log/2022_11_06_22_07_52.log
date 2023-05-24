@@ -1,0 +1,34 @@
+[Warning]22:07:52.017 <color=#0099bc><b>DOTWEEN ► </b></color>An error inside a tween callback was silently taken care of (Void ChangeIcon()) ► Object reference not set to an instance of an object
+
+  at LeftControl.ChangeIcon () [0x0000c] in F:\Git\Client\Exhibition\Assets\Scripts\Uinty\UIControl\LeftControl.cs:119 
+  at DG.Tweening.Tween.OnTweenCallback (DG.Tweening.TweenCallback callback, DG.Tweening.Tween t) [0x00007] in D:\DG\_Develop\__UNITY3_CLASSES\_Holoville\__DOTween\_DOTween.Assembly\DOTween\Tween.cs:295 
+
+
+UnityEngine.Debug:LogWarning(Object)
+DG.Tweening.Core.Debugger:LogWarning(Object, Tween) (at D:/DG/_Develop/__UNITY3_CLASSES/_Holoville/__DOTween/_DOTween.Assembly/DOTween/Core/Debugger.cs:46)
+DG.Tweening.Tween:OnTweenCallback(TweenCallback, Tween) (at D:/DG/_Develop/__UNITY3_CLASSES/_Holoville/__DOTween/_DOTween.Assembly/DOTween/Tween.cs:298)
+DG.Tweening.Tween:DoGoto(Tween, Single, Int32, UpdateMode) (at D:/DG/_Develop/__UNITY3_CLASSES/_Holoville/__DOTween/_DOTween.Assembly/DOTween/Tween.cs:274)
+DG.Tweening.Core.TweenManager:Update(UpdateType, Single, Single) (at D:/DG/_Develop/__UNITY3_CLASSES/_Holoville/__DOTween/_DOTween.Assembly/DOTween/Core/TweenManager.cs:492)
+DG.Tweening.Core.DOTweenComponent:Update() (at D:/DG/_Develop/__UNITY3_CLASSES/_Holoville/__DOTween/_DOTween.Assembly/DOTween/Core/DOTweenComponent.cs:75)
+
+[Exception]22:07:54.652 InvalidOperationException: Sequence contains no elements
+System.Linq.Enumerable.First[TSource] (System.Collections.Generic.IEnumerable`1[T] source) (at <fbb5ed17eb6e46c680000f8910ebb50c>:0)
+SpatialAnalysis.GetLeftRightVertice (System.Collections.Generic.List`1[T] arc_vertices, Grid grid, System.Single height, System.Int32 threshold) (at Assets/Scripts/Uinty/DataProcess/SpatialAnalysis.cs:834)
+SpatialAnalysis.CaculateGridBoundary (Grid grid, System.Single height, System.Single upper_level_height) (at Assets/Scripts/Uinty/DataProcess/SpatialAnalysis.cs:470)
+TakeCoalControl.Confirm () (at Assets/Scripts/Uinty/CoalDumpControl/TakeCoalControl.cs:38)
+UnityEngine.Events.InvokableCall.Invoke () (at E:/unity/Runtime/Export/UnityEvent.cs:166)
+UnityEngine.Events.UnityEvent.Invoke () (at E:/unity/Runtime/Export/UnityEvent_0.cs:58)
+UnityEngine.UI.Button.Press () (at E:/unity/Extensions/guisystem/UnityEngine.UI/UI/Core/Button.cs:66)
+UnityEngine.UI.Button.OnPointerClick (UnityEngine.EventSystems.PointerEventData eventData) (at E:/unity/Extensions/guisystem/UnityEngine.UI/UI/Core/Button.cs:108)
+UnityEngine.EventSystems.ExecuteEvents.Execute (UnityEngine.EventSystems.IPointerClickHandler handler, UnityEngine.EventSystems.BaseEventData eventData) (at E:/unity/Extensions/guisystem/UnityEngine.UI/EventSystem/ExecuteEvents.cs:50)
+UnityEngine.EventSystems.ExecuteEvents.Execute[T] (UnityEngine.GameObject target, UnityEngine.EventSystems.BaseEventData eventData, UnityEngine.EventSystems.ExecuteEvents+EventFunction`1[T1] functor) (at E:/unity/Extensions/guisystem/UnityEngine.UI/EventSystem/ExecuteEvents.cs:261)
+UnityEngine.EventSystems.EventSystem:Update() (at E:/unity/Extensions/guisystem/UnityEngine.UI/EventSystem/EventSystem.cs:377)
+
+[Warning]22:08:58.931 A meta data file (.meta) exists but its asset 'Assets/Log/2022_11_06_21_48_08.log' can't be found. When moving or deleting files outside of Unity, please ensure that the corresponding .meta file is moved or deleted along with it.
+
+[Warning]22:10:51.326 <color=#ff7337><color=#0099bc><b>DOTWEEN ► </b></color> SAFE MODE ►</color> DOTween's safe mode captured 1 errors. This is usually ok (it's what safe mode is there for) but if your game is encountering issues you should set Log Behaviour to Default in DOTween Utility Panel in order to get detailed warnings when an error is captured (consider that these errors are always on the user side).
+- 1 errors inside callbacks (these might be important)
+UnityEngine.Debug:LogWarning(Object)
+DG.Tweening.Core.Debugger:LogSafeModeReport(Object) (at D:/DG/_Develop/__UNITY3_CLASSES/_Holoville/__DOTween/_DOTween.Assembly/DOTween/Core/Debugger.cs:66)
+DG.Tweening.Core.DOTweenComponent:OnDestroy() (at D:/DG/_Develop/__UNITY3_CLASSES/_Holoville/__DOTween/_DOTween.Assembly/DOTween/Core/DOTweenComponent.cs:156)
+

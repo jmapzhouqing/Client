@@ -7,6 +7,8 @@ using UnityEngine;
 public class SpatialAnalysis : MonoBehaviour
 {
 
+    public DeviceControl device_control;
+
     private GridDataManager grid_data_manager;
 
     private List<Vector2> polygon_vertices;
@@ -56,7 +58,7 @@ public class SpatialAnalysis : MonoBehaviour
 
     public bool take_coal_status = false;
     // Start is called before the first frame update
-    void Awake(){
+    void Start(){
         exhibition_vertices = new List<Vector3>();
 
         hardware_monitor = FindObjectOfType<HardWareDataMonitor>();
@@ -176,14 +178,23 @@ public class SpatialAnalysis : MonoBehaviour
     // Update is called once per frame
     void Update(){
         /*
-        for (int i = 0, len = exhibition_vertices.Count; i < len; i++) {
-            Vector3 _start = exhibition_vertices[i % len];
-            Vector3 _end = exhibition_vertices[(i+1) % len];
+        if (arc_vertices!=null) {
+            for (int i = 0, len = arc_vertices.Count; i < len; i++)
+            {
+                Vector2 _start = arc_vertices[i % len];
+                Vector2 _end = arc_vertices[(i + 1) % len];
 
-            Vector3 start = new Vector3(_start.x, 0, _start.z);
-            Vector3 end = new Vector3(_end.x, 0, _end.z);
-            Debug.DrawLine(_start, _end, Color.red);
+                Vector3 start = new Vector3(_start.x, 10, _start.y);
+                Vector3 end = new Vector3(_end.x, 10, _end.y);
+
+                Color color = (i % 2)!=0 ? Color.red : Color.green;
+
+                Debug.DrawLine(start, end,color);
+
+                
+            }
         }*/
+       
 
         /*
         for (int i = 0, len = update_vertices.Count; i < len; i++)
@@ -345,6 +356,9 @@ public class SpatialAnalysis : MonoBehaviour
         int start_z = index_boundary.min_z;
         int end_z = index_boundary.max_z;
 
+        int vertices_w = vertices.GetLength(0);
+        int vertices_h = vertices.GetLength(1);
+
         if (end_x * grid.precision < rotation_center.x){
             isLeft = true;
         }else if (start_x * grid.precision > rotation_center.x){
@@ -366,7 +380,7 @@ public class SpatialAnalysis : MonoBehaviour
                     }
                 }
                 catch (Exception e) {
-                    Debug.Log(i+"#"+j);
+                    //Debug.Log(i+"#"+j);
                 }
             }
         }
@@ -382,7 +396,7 @@ public class SpatialAnalysis : MonoBehaviour
                 }
                 catch (Exception e)
                 {
-                    Debug.Log(i + "#" + j);
+                    //Debug.Log(i + "#" + j);
                 }
             }
         }
@@ -395,7 +409,11 @@ public class SpatialAnalysis : MonoBehaviour
 
         float radius = ConfigurationParameter.arm_length;
 
-        float pitch = Mathf.Asin((height - ConfigurationParameter.bucket_wheel_bottom_coordinate.y) / radius);
+        float pitch = Mathf.Asin((height - ConfigurationParameter.center_height) / radius) - Mathf.Asin((ConfigurationParameter.bucket_wheel_bottom_coordinate.y - ConfigurationParameter.center_height) / radius);
+
+        float p = Mathf.Asin((height - ConfigurationParameter.bucket_wheel_bottom_coordinate.y) / radius);
+
+        Debug.Log("p value is:"+ (pitch - p)*Mathf.Rad2Deg);
 
         radius = Mathf.Cos(pitch) * radius;
 
@@ -444,8 +462,16 @@ public class SpatialAnalysis : MonoBehaviour
 
         Vector3 center = ConfigurationParameter.rotation_center + new Vector3(0, 0, min_z);
         entry_rotation -= rotation_offset;
-       
-        List<Vector2> arc_vertices = this.CreateArcLine(new Vector2(center.x, center.z), min_rotation * Mathf.Rad2Deg, 0, new Vector2(0, pitch));
+
+        List<Vector2> arc_vertices = null;
+
+        if (isLeft)
+        {
+            arc_vertices = this.CreateArcLine(new Vector2(center.x, center.z), min_rotation * Mathf.Rad2Deg, 0, new Vector2(0, pitch));
+        }
+        else {
+            arc_vertices = this.CreateArcLine(new Vector2(center.x, center.z), 0, max_rotation * Mathf.Rad2Deg, new Vector2(0, pitch));
+        }
 
         polygon_vertices = arc_vertices;
 
@@ -492,11 +518,18 @@ public class SpatialAnalysis : MonoBehaviour
 
         rotation = rotation - wheel_rotation;
 
-        dic.Add("rotation", new Vector3(-1 * pitch * Mathf.Rad2Deg, rotation * Mathf.Rad2Deg, 0));
+        dic.Add("rotation", new Vector3(pitch * Mathf.Rad2Deg, rotation * Mathf.Rad2Deg, 0));
 
         dic.Add("center", center_coordinate);
 
         dic.Add("stop", stop_coordinate);
+
+
+        Debug.Log("pitch:"+pitch+",rotation:"+rotation+",center:"+center_coordinate+",stop:"+stop_coordinate);
+
+        device_control.SetPitch(pitch * Mathf.Rad2Deg);
+        device_control.SetRotation(rotation * Mathf.Rad2Deg);
+        device_control.SetPosition(center_coordinate);
 
         //Debug.Log(new Vector3(-1 * pitch * Mathf.Rad2Deg, rotation * Mathf.Rad2Deg, 0));
 
@@ -756,8 +789,8 @@ public class SpatialAnalysis : MonoBehaviour
         bool[] bool_value = new bool[arc_vertices.Count];
         int bool_index = 0;
         foreach (Vector2 vertice in arc_vertices){
-            int x = Mathf.FloorToInt(vertice.x / grid.precision);
-            int z = Mathf.FloorToInt(vertice.y / grid.precision);
+            int x = Mathf.RoundToInt(vertice.x / grid.precision);
+            int z = Mathf.RoundToInt(vertice.y / grid.precision);
 
             bool value = false;
 
@@ -765,6 +798,10 @@ public class SpatialAnalysis : MonoBehaviour
                 if (vertices[x, z].y > height && vertices[x, z].y <= (height + ConfigurationParameter.level_height)){
                     value = true;
                 }
+            }
+
+            if (value) {
+                Debug.Log("enter true");
             }
 
             bool_value[bool_index++] = value;

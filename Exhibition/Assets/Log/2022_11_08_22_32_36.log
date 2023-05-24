@@ -1,0 +1,19 @@
+[Warning]22:32:36.527 <color=#0099bc><b>DOTWEEN ► </b></color>An error inside a tween callback was silently taken care of (Void ChangeIcon()) ► Object reference not set to an instance of an object
+
+  at LeftControl.ChangeIcon () [0x0000c] in F:\Git\Client\Exhibition\Assets\Scripts\Uinty\UIControl\LeftControl.cs:119 
+  at DG.Tweening.Tween.OnTweenCallback (DG.Tweening.TweenCallback callback, DG.Tweening.Tween t) [0x00007] in D:\DG\_Develop\__UNITY3_CLASSES\_Holoville\__DOTween\_DOTween.Assembly\DOTween\Tween.cs:295 
+
+
+UnityEngine.Debug:LogWarning(Object)
+DG.Tweening.Core.Debugger:LogWarning(Object, Tween) (at D:/DG/_Develop/__UNITY3_CLASSES/_Holoville/__DOTween/_DOTween.Assembly/DOTween/Core/Debugger.cs:46)
+DG.Tweening.Tween:OnTweenCallback(TweenCallback, Tween) (at D:/DG/_Develop/__UNITY3_CLASSES/_Holoville/__DOTween/_DOTween.Assembly/DOTween/Tween.cs:298)
+DG.Tweening.Tween:DoGoto(Tween, Single, Int32, UpdateMode) (at D:/DG/_Develop/__UNITY3_CLASSES/_Holoville/__DOTween/_DOTween.Assembly/DOTween/Tween.cs:274)
+DG.Tweening.Core.TweenManager:Update(UpdateType, Single, Single) (at D:/DG/_Develop/__UNITY3_CLASSES/_Holoville/__DOTween/_DOTween.Assembly/DOTween/Core/TweenManager.cs:492)
+DG.Tweening.Core.DOTweenComponent:Update() (at D:/DG/_Develop/__UNITY3_CLASSES/_Holoville/__DOTween/_DOTween.Assembly/DOTween/Core/DOTweenComponent.cs:75)
+
+[Warning]22:32:49.912 <color=#ff7337><color=#0099bc><b>DOTWEEN ► </b></color> SAFE MODE ►</color> DOTween's safe mode captured 1 errors. This is usually ok (it's what safe mode is there for) but if your game is encountering issues you should set Log Behaviour to Default in DOTween Utility Panel in order to get detailed warnings when an error is captured (consider that these errors are always on the user side).
+- 1 errors inside callbacks (these might be important)
+UnityEngine.Debug:LogWarning(Object)
+DG.Tweening.Core.Debugger:LogSafeModeReport(Object) (at D:/DG/_Develop/__UNITY3_CLASSES/_Holoville/__DOTween/_DOTween.Assembly/DOTween/Core/Debugger.cs:66)
+DG.Tweening.Core.DOTweenComponent:OnDestroy() (at D:/DG/_Develop/__UNITY3_CLASSES/_Holoville/__DOTween/_DOTween.Assembly/DOTween/Core/DOTweenComponent.cs:156)
+

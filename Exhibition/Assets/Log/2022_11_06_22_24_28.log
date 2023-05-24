@@ -1,0 +1,13 @@
+[Warning]22:24:28.533 <color=#0099bc><b>DOTWEEN ► </b></color>An error inside a tween callback was silently taken care of (Void ChangeIcon()) ► Object reference not set to an instance of an object
+
+  at LeftControl.ChangeIcon () [0x0000c] in F:\Git\Client\Exhibition\Assets\Scripts\Uinty\UIControl\LeftControl.cs:119 
+  at DG.Tweening.Tween.OnTweenCallback (DG.Tweening.TweenCallback callback, DG.Tweening.Tween t) [0x00007] in D:\DG\_Develop\__UNITY3_CLASSES\_Holoville\__DOTween\_DOTween.Assembly\DOTween\Tween.cs:295 
+
+
+UnityEngine.Debug:LogWarning(Object)
+DG.Tweening.Core.Debugger:LogWarning(Object, Tween) (at D:/DG/_Develop/__UNITY3_CLASSES/_Holoville/__DOTween/_DOTween.Assembly/DOTween/Core/Debugger.cs:46)
+DG.Tweening.Tween:OnTweenCallback(TweenCallback, Tween) (at D:/DG/_Develop/__UNITY3_CLASSES/_Holoville/__DOTween/_DOTween.Assembly/DOTween/Tween.cs:298)
+DG.Tweening.Tween:DoGoto(Tween, Single, Int32, UpdateMode) (at D:/DG/_Develop/__UNITY3_CLASSES/_Holoville/__DOTween/_DOTween.Assembly/DOTween/Tween.cs:274)
+DG.Tweening.Core.TweenManager:Update(UpdateType, Single, Single) (at D:/DG/_Develop/__UNITY3_CLASSES/_Holoville/__DOTween/_DOTween.Assembly/DOTween/Core/TweenManager.cs:492)
+DG.Tweening.Core.DOTweenComponent:Update() (at D:/DG/_Develop/__UNITY3_CLASSES/_Holoville/__DOTween/_DOTween.Assembly/DOTween/Core/DOTweenComponent.cs:75)
+

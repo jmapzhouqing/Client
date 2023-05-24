@@ -193,7 +193,12 @@ public class ScannerPoint : MonoBehaviour
 
                 List<Vector3> vertices = new List<Vector3>();
 
+                StringBuilder builer = new StringBuilder();
+                builer.Append(yaw).Append(" ").Append(pitch).Append(" ").Append(distance).Append(" ");
+
                 foreach (RayInfo info in sector_info.rays){
+                    builer.Append(info.distance).Append(" ");
+                    /*
                     quaternion = Quaternion.AngleAxis(info.degree - scanner_line_start_angle, scanner_line_rotate_dir);
                     matrix.SetTRS(Vector3.zero, quaternion, new Vector3(1, 1, 1));
                     origin = matrix.MultiplyPoint(scanner_line_dir * info.distance);
@@ -208,7 +213,8 @@ public class ScannerPoint : MonoBehaviour
 
                     origin += forward_dir * distance;
 
-                    vertices.Add(origin);
+
+                    vertices.Add(origin);*/
                 }
 
                 grid_data_manager.UpdateGridData(vertices);
